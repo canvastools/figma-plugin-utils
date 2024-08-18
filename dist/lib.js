@@ -1,0 +1,1 @@
+var t=(e,o)=>o.includes(e.type);var n=e=>e.type==="COMPONENT";var r=e=>e.type==="COMPONENT_SET";var s=e=>e.type==="FRAME";var p=e=>e.type==="INSTANCE";export{r as isComponenSetNode,n as isComponentNode,s as isFrameNode,p as isInstanceNode,t as isOneOfNodeType};
