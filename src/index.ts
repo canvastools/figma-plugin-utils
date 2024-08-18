@@ -1,0 +1,5 @@
+export { isOneOfNodeType } from './isType/isOneOfNodeType'
+export { isComponentNode } from './isType/isComponentNode'
+export { isComponenSetNode } from './isType/isComponenSetNode'
+export { isFrameNode } from './isType/isFrameNode'
+export { isInstanceNode } from './isType/isInstanceNode'

@@ -1,0 +1,32 @@
+{
+  "name": "figma-plugin-utils",
+  "version": "1.0.0",
+  "description": "...",
+  "author": "Canvas Tools",
+  "license": "MIT",
+  "homepage": "https://github.com/canvastools/figma-plugin-utils#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canvastools/figma-plugin-utils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/canvastools/figma-plugin-utils/issues"
+  },
+  "main": "./dist/lib.js",
+  "type": "module",
+  "devDependencies": {
+    "@figma/eslint-plugin-figma-plugins": "*",
+    "@figma/plugin-typings": "*",
+    "@types/lodash-es": "^4.17.12",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  },
+  "scripts": {
+    "build": "node esbuild",
+    "prod": "node esbuild build --prod",
+    "watch": "npm run build --watch",
+    "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
+    "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix ."
+  }
+}
