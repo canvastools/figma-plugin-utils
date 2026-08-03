@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "jsx": "preserve",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment",
-    "target": "es2017",
-    "lib": [
-      "es2017", "dom"
-    ],
+    "moduleResolution": "bundler",
+    "target": "es2020",
+    // Sandbox-only helpers — no DOM, which also avoids the `console` / `fetch`
+    // clash between lib.dom and @figma/plugin-typings
+    "lib": ["es2020"],
+
     "strict": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "baseUrl": "./src",
-    "removeComments": true,
-    "noImplicitAny": false,
-    "moduleResolution": "node",
+    "noImplicitAny": true,
+
+    "rootDir": "./src",
+    "removeComments": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": [
-      "./src/@types",
-      "./node_modules/@types",
-      "./node_modules/@figma"
-    ]
-  }
+
+    "types": ["@figma/plugin-typings"],
+
+    "noEmit": true
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts"]
 }
