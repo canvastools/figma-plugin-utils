@@ -1,7 +1,19 @@
-export { getPage } from './isType/getPage'
-export { isComponentNode } from './isType/isComponentNode'
-export { isComponenSetNode } from './isType/isComponenSetNode'
-export { isFrameNode } from './isType/isFrameNode'
-export { isInstanceNode } from './isType/isInstanceNode'
-export { isOneOfNodeType } from './isType/isOneOfNodeType'
-export { isPageNode } from './isType/isPageNode'
+export { clearChildren } from './clearChildren'
+
+export { getKeysOfInstanceSwapProperties } from './getKeysOfInstanceSwapProperties'
+export { getMainComponentOfInstanceAsync } from './getMainComponentOfInstanceAsync'
+export { getNestedInstances } from './getNestedInstances'
+export { getPage } from './getPage'
+
+export { hasBooleanProperties } from './hasBooleanProperties'
+export { hasInstanceParent } from './hasInstanceParent'
+
+export { isComponentNode } from './isComponentNode'
+export { isComponentSetNode } from './isComponentSetNode'
+export { isComponentSetVariant } from './isComponentSetVariant'
+export { isFrameNode } from './isFrameNode'
+export { isInstanceNode } from './isInstanceNode'
+export { isOneOfNodeType } from './isOneOfNodeType'
+export { isPageNode } from './isPageNode'
+
+export { isValidVariant } from './isValidVariant'
