@@ -19,18 +19,24 @@
  * its own rules and this package keeps the walking.
  */
 
+export { asSceneNode } from './asSceneNode'
+
 export { clearChildren } from './clearChildren'
 export { collectInstances } from './collectInstances'
 
 export { describeNode } from './describeNode'
 
+export { getBooleanPropertyKey } from './getBooleanPropertyKey'
 export { getComponentSetOfVariant } from './getComponentSetOfVariant'
 export { getKeysOfInstanceSwapProperties } from './getKeysOfInstanceSwapProperties'
 export { getMainComponentOfInstanceAsync } from './getMainComponentOfInstanceAsync'
+export { getNodeKey } from './getNodeKey'
 export { getPageOfNode } from './getPageOfNode'
+export { getPropertyName } from './getPropertyName'
 export { getTopmostNodes } from './getTopmostNodes'
 
 export { hasBooleanProperties } from './hasBooleanProperties'
+export { hasDescendantMatching } from './hasDescendantMatching'
 export { hasInstanceAncestor } from './hasInstanceAncestor'
 
 export { isComponentNode } from './isComponentNode'
@@ -43,8 +49,10 @@ export { isLayerVisible } from './isLayerVisible'
 export { isNodeAlive } from './isNodeAlive'
 export { isOneOfNodeType } from './isOneOfNodeType'
 export { isPageNode } from './isPageNode'
+export { isRemoteNode } from './isRemoteNode'
 
 export { isValidVariant } from './isValidVariant'
+export { parseVariantName } from './parseVariantName'
 
 /* Types */
 
