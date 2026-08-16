@@ -27,6 +27,7 @@ export { collectInstances } from './collectInstances'
 export { describeNode } from './describeNode'
 
 export { getBooleanPropertyKey } from './getBooleanPropertyKey'
+export { getBoundVariableRefs } from './getBoundVariableRefs'
 export { getComponentSetOfVariant } from './getComponentSetOfVariant'
 export { getKeysOfInstanceSwapProperties } from './getKeysOfInstanceSwapProperties'
 export { getMainComponentOfInstanceAsync } from './getMainComponentOfInstanceAsync'
@@ -54,6 +55,10 @@ export { isRemoteNode } from './isRemoteNode'
 export { isValidVariant } from './isValidVariant'
 export { parseVariantName } from './parseVariantName'
 
+export { walkNodeTree } from './walkNodeTree'
+
 /* Types */
 
 export type { TCollectInstancesOptions } from './collectInstances'
+export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
+export type { TWalkNodeTreeOptions } from './walkNodeTree'
