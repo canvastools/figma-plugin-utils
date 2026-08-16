@@ -61,4 +61,4 @@ export { walkNodeTree } from './walkNodeTree'
 
 export type { TCollectInstancesOptions } from './collectInstances'
 export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
-export type { TWalkNodeTreeOptions } from './walkNodeTree'
+export type { TWalkNodeTreeOptions, TWalkVerdict } from './walkNodeTree'

@@ -1,4 +1,4 @@
-import { isNodeAlive } from './isNodeAlive'
+import { walkNodeTree } from './walkNodeTree'
 
 /**
  * Whether anything below a node satisfies the predicate.
@@ -17,48 +17,29 @@ import { isNodeAlive } from './isNodeAlive'
  * whatever it mirrors. Use the predicate to stop at one — `collectInstances` is
  * the helper for walks that treat an instance as a boundary.
  *
- * Never throws. Deleted nodes are skipped, and a predicate that throws is not
- * caught here: it is the caller's rule, and swallowing its failure would turn a
- * broken check into a silent `false`.
+ * Never throws, because `walkNodeTree` does not: deleted nodes are skipped, and
+ * a predicate that throws ends the walk with whatever it had already found — so
+ * a broken check answers `false` rather than taking a plugin down. Catch inside
+ * the predicate when a failure has to be reported rather than logged.
  *
  * @example
  * hasDescendantMatching(frame, (node) => node.getPluginData('spec') !== '')
  */
 const hasDescendantMatching = (node: BaseNode, predicate: (node: SceneNode) => boolean): boolean => {
-  if (!isNodeAlive(node) || !('children' in node)) {
-    return false
-  }
+  let isMatching = false
 
-  const stack: BaseNode[] = [node]
-
-  while (stack.length) {
-    const current = stack.pop() as BaseNode
-
-    if (!isNodeAlive(current) || !('children' in current)) {
-      continue
+  walkNodeTree(node, (descendant) => {
+    if (!predicate(descendant)) {
+      return
     }
 
-    for (const child of current.children) {
-      if (!isNodeAlive(child)) {
-        continue
-      }
+    isMatching = true
 
-      /* Only reachable when the walk starts at the document — a page is not a scene node */
-      if (child.type === 'PAGE') {
-        stack.push(child)
+    /* The first hit is the answer — the rest of the subtree cannot change it */
+    return 'stop'
+  })
 
-        continue
-      }
-
-      if (predicate(child)) {
-        return true
-      }
-
-      stack.push(child)
-    }
-  }
-
-  return false
+  return isMatching
 }
 
 export { hasDescendantMatching }

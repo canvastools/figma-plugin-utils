@@ -1,4 +1,4 @@
-import { isNodeAlive } from './isNodeAlive'
+import { walkNodeTree } from './walkNodeTree'
 
 export type TCollectInstancesOptions = {
   /**
@@ -25,7 +25,8 @@ export type TCollectInstancesOptions = {
  * in hand.
  *
  * Both predicates are answers about one layer, which keeps the policy (what
- * counts as part of a component) with the caller and the traversal here.
+ * counts as part of a component) with the caller and the traversal in
+ * `walkNodeTree`, where every other walk in this package gets it too.
  *
  * Never throws: whatever was collected before a subtree went bad is returned as
  * the answer, since a partial list of instances is still useful and a deleted
@@ -45,47 +46,22 @@ export type TCollectInstancesOptions = {
 const collectInstances = (node: BaseNode, options: TCollectInstancesOptions = {}): InstanceNode[] => {
   const foundInstances: InstanceNode[] = []
 
-  const walk = (currentNode: BaseNode): void => {
-    if (!isNodeAlive(currentNode) || !('children' in currentNode)) {
-      return
+  walkNodeTree(node, (child) => {
+    if (child.type === 'INSTANCE') {
+      if (!options.include || options.include(child)) {
+        foundInstances.push(child)
+      }
+
+      if (!options.descendIntoInstances) {
+        return 'skip'
+      }
     }
 
-    for (const child of currentNode.children) {
-      if (!isNodeAlive(child)) {
-        continue
-      }
-
-      /* Only reachable when the walk starts at the document — a page holds no instances of its own */
-      if (child.type === 'PAGE') {
-        walk(child)
-
-        continue
-      }
-
-      if (child.type === 'INSTANCE') {
-        if (!options.include || options.include(child)) {
-          foundInstances.push(child)
-        }
-
-        if (!options.descendIntoInstances) {
-          continue
-        }
-      }
-
-      /* A container that is not walked into hides its whole subtree */
-      if (options.descend && !options.descend(child)) {
-        continue
-      }
-
-      walk(child)
+    /* A container that is not walked into hides its whole subtree */
+    if (options.descend && !options.descend(child)) {
+      return 'skip'
     }
-  }
-
-  try {
-    walk(node)
-  } catch (error) {
-    console.log('Error in collectInstances() :', error)
-  }
+  })
 
   /* Whatever was collected before a tree went bad is still a valid answer */
   return foundInstances
