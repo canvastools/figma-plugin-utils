@@ -43,6 +43,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "lockfile": "node scripts/update-lockfile.mjs",
     "watch": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && eslint . || true",
