@@ -4,4 +4,7 @@
 node_modules
 
 # System
-.DS_store
+.DS_Store
+
+# Build output
+dist

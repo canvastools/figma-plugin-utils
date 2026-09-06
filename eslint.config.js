@@ -4,7 +4,9 @@ import tseslint from 'typescript-eslint'
 import figmaPlugins from '@figma/eslint-plugin-figma-plugins'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', 'vite.config.js']),
+  // Build-time Node files: they run outside the plugin sandbox, so the
+  // Figma/browser globals this config assumes do not apply to them.
+  globalIgnores(['dist', 'node_modules', 'vite.config.js', 'scripts']),
   js.configs.recommended,
   tseslint.configs.recommended,
   {

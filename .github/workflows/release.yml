@@ -1,0 +1,102 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Creating the tag and the GitHub Release
+      contents: write
+      # Minting the OIDC token npm trusted publishing verifies
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1+; the one bundled with Node 22 is older.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          name="$(node -p "require('./package.json').name")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      # A push to main that only touched, say, the description must not try to
+      # republish a version that is already on the registry.
+      - name: Check whether this version is already published
+        id: published
+        run: |
+          if npm view "${{ steps.version.outputs.name }}@${{ steps.version.outputs.version }}" version >/dev/null 2>&1; then
+            echo "Version ${{ steps.version.outputs.version }} is already on npm — nothing to release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        if: steps.published.outputs.exists == 'false'
+        run: npm ci
+
+      - name: Typecheck
+        if: steps.published.outputs.exists == 'false'
+        run: npm run typecheck
+
+      - name: Lint
+        if: steps.published.outputs.exists == 'false'
+        run: npm run lint:ci
+
+      - name: Build
+        if: steps.published.outputs.exists == 'false'
+        run: npm run build
+
+      # Catches a build that emitted nothing, or an `exports` map pointing at a
+      # file the build does not produce — before the version is burned on npm.
+      - name: Verify the package contents
+        if: steps.published.outputs.exists == 'false'
+        run: |
+          test -f dist/index.js || { echo "dist/index.js missing"; exit 1; }
+          test -f dist/index.d.ts || { echo "dist/index.d.ts missing"; exit 1; }
+          npm pack --dry-run
+
+      - name: Publish to npm
+        if: steps.published.outputs.exists == 'false'
+        run: npm publish --access public
+
+      - name: Extract release notes from CHANGELOG
+        if: steps.published.outputs.exists == 'false'
+        run: node scripts/changelog-section.mjs "${{ steps.version.outputs.version }}" > RELEASE_NOTES.md
+
+      - name: Create the GitHub Release
+        if: steps.published.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tar -czf "${{ steps.version.outputs.name }}-${{ steps.version.outputs.version }}-dist.tar.gz" dist
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file RELEASE_NOTES.md \
+            --target "$GITHUB_SHA" \
+            "${{ steps.version.outputs.name }}-${{ steps.version.outputs.version }}-dist.tar.gz"
