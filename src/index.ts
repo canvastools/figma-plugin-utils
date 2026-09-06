@@ -17,12 +17,19 @@
  *
  * The traversal helpers take predicates rather than flags, so the caller keeps
  * its own rules and this package keeps the walking.
+ *
+ * A handful of helpers answer the same kind of question about widget nodes
+ * (`getSourceWidgetNode`, `collectWidgetNodes`, `readWidgetSyncedState`). They
+ * follow both conventions above and need nothing beyond `@figma/plugin-typings`;
+ * in a plugin, where `figma.widgetId` is undefined, each returns its empty
+ * answer rather than throwing.
  */
 
 export { asSceneNode } from './asSceneNode'
 
 export { clearChildren } from './clearChildren'
 export { collectInstances } from './collectInstances'
+export { collectWidgetNodes } from './collectWidgetNodes'
 
 export { describeNode } from './describeNode'
 
@@ -35,6 +42,7 @@ export { getNodeIdentity } from './getNodeIdentity'
 export { getNodeKey } from './getNodeKey'
 export { getPageOfNode } from './getPageOfNode'
 export { getPropertyName } from './getPropertyName'
+export { getSourceWidgetNode } from './getSourceWidgetNode'
 export { getTopmostNodes } from './getTopmostNodes'
 
 export { hasBooleanProperties } from './hasBooleanProperties'
@@ -55,6 +63,8 @@ export { isRemoteNode } from './isRemoteNode'
 
 export { isValidVariant } from './isValidVariant'
 export { parseVariantName } from './parseVariantName'
+
+export { readWidgetSyncedState } from './readWidgetSyncedState'
 
 export { walkNodeTree } from './walkNodeTree'
 
