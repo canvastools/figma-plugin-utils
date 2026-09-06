@@ -26,10 +26,7 @@ const getSourceWidgetNode = (): WidgetNode | null => {
     const selection = figma.currentPage.selection
 
     return figma.currentPage.findOne(
-      (node) =>
-        node.type === 'WIDGET' &&
-        node.widgetId === figma.widgetId &&
-        selection.includes(node),
+      (node) => node.type === 'WIDGET' && node.widgetId === figma.widgetId && selection.includes(node),
     ) as WidgetNode | null
   } catch (error) {
     console.log('Error in getSourceWidgetNode() :', error)

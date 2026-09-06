@@ -46,6 +46,7 @@
     "watch": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && eslint . || true",
+    "lint:ci": "tsc --noEmit && eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
