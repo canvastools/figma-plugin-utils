@@ -84,9 +84,11 @@ sibling. That is a promise, not an implementation detail: walk results end up in
 | `isOneOfNodeType(node, typeList)`                                                      | Whether the node is one of several types                                           |
 | `isNodeAlive(node)`                                                                    | Whether the handle still points at something — a deleted node throws on any access |
 | `isRemoteNode(node)`                                                                   | Whether the node comes from a library                                              |
-| `isLayerVisible(node, options?)`                                                       | Visibility along the whole ancestor chain, not just the node's own flag            |
+| `isLayerVisible(node, options?)`                                                       | The layer's own flag, optionally counting what a boolean property switches off     |
+| `isNodeShown(node)`                                                                    | Visibility along the whole ancestor chain, up to the page                          |
 | `hasInstanceAncestor(node)`                                                            | Whether anything above the node is an instance. Says nothing about the node itself |
 | `asSceneNode(node)`                                                                    | A `SceneNode` or `null`, for the many API calls typed as `BaseNode`                |
+| `findNodeByIdAsync(id, types)`                                                         | The node an id names if it is one of the types, narrowed to them, or `null`        |
 
 **Identity**
 
@@ -110,6 +112,43 @@ sibling. That is a promise, not an implementation detail: walk results end up in
 | `getBooleanPropertyKey(node)`, `hasBooleanProperties(node)`                         | Boolean property keys on a node and on a component                                   |
 | `getKeysOfInstanceSwapProperties(node)`, `isInstanceSwapTarget(instance, swapKeys)` | Instance-swap properties                                                             |
 | `getBoundVariableRefs(node)`                                                        | Every variable bound on a node, from all three places Figma keeps them, deduplicated |
+| `matchVariantName(name, keys)`                                                      | A variant name's values, checked against the keys its set declares                   |
+| `validateVariantNames(variants, keys)`, `findInvalidVariants(set)`                  | Which variants of a set say no state of their own, and why — duplicates included     |
+| `importComponentOrSetByKeyAsync(key, preferType?, options?)`                        | A published component or set by key, whichever it is: `found`, `empty` or `failed`   |
+
+**Colour and paints**
+
+These take and give plain numbers and strings, so the colour ones work in a plugin's UI as well as in its sandbox.
+Hex is always upper case.
+
+|                                               |                                                                             |
+| --------------------------------------------- | --------------------------------------------------------------------------- |
+| `colorToHex(color)`, `colorToHexAlpha(color)` | `#RRGGBB` and `#RRGGBBAA` out of channels in 0–1                            |
+| `hexAlphaToColor(hex)`                        | Six or eight hex digits back to `TColor`, or `null`                         |
+| `roundAlpha(alpha)`                           | An alpha to a whole percentage, for comparing a stored one with a typed one |
+| `applyOpacity(color, opacity?)`               | A paint's `opacity` folded into the colour's alpha                          |
+| `getGradientHandlePositions(paint)`           | A gradient's start, end and width handles, out of `gradientTransform`       |
+
+**Canvas**
+
+|                                    |                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| `focusNodesAsync(nodes, options?)` | Their page, the viewport around them, and the selection when `select` is on |
+| `focusNodeByIdAsync(id, options?)` | The same, for the node an id names on any page                              |
+
+**Stored data**
+
+|                                                   |                                                                                   |
+| ------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `hasRelaunchCommand(node, command)`               | Whether a node carries a relaunch command                                         |
+| `setRelaunchCommand(node, command, description?)` | Adds one command to the ones a node carries — `setRelaunchData` replaces them all |
+| `clearPluginDataAsync(keys)`                      | Every entry under the plugin's keys off the root and every node, counted          |
+
+**Fonts**
+
+|                              |                                                      |
+| ---------------------------- | ---------------------------------------------------- |
+| `canLoadFontAsync(fontName)` | Whether a font loads, before deciding to write in it |
 
 **Mutation**
 
