@@ -129,6 +129,21 @@ Hex is always upper case.
 | `applyOpacity(color, opacity?)`               | A paint's `opacity` folded into the colour's alpha                          |
 | `getGradientHandlePositions(paint)`           | A gradient's start, end and width handles, out of `gradientTransform`       |
 
+**Variables and styles**
+
+None of these keeps anything between calls: a cache of what resolved, or of what was refused, is the caller's.
+
+|                                                  |                                                                                                      |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `findVariableAsync(ref)`                         | The variable a stored `{ id, key }` names here: by id when it carries the key, else imported         |
+| `findStyleAsync(ref, type)`                      | The same for a style of one type, narrowed to it — `'TEXT'` answers a `TextStyle`                    |
+| `getLibraryVariableCollectionsAsync()`           | The enabled libraries' collections, or `[]` — without the `teamlibrary` permission the getter throws |
+| `createVariableLookup(variables?, collections?)` | Variables and collections by id, asking the API only for what it was not handed                      |
+| `resolveVariableValueAsync(variable, options?)`  | A variable's value in its collection's default mode, aliases followed, without a node                |
+| `resolveColorValueAsync(value, options?)`        | The colour such a value draws as — a colour whose opacity is a variable included — or `null`         |
+| `isVariableAlias(value)`                         | Whether a value is a reference to a variable                                                         |
+| `toPaintPreview(paints)`                         | Paints as a swatch draws them: colours, gradients with their handles, bottom first, or `null`        |
+
 **Canvas**
 
 |                                    |                                                                             |

@@ -27,6 +27,13 @@
  * The colour helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`,
  * `roundAlpha`) touch no Figma API at all, and are read by a plugin's UI as well
  * as by its sandbox.
+ *
+ * The variable and style helpers (`findVariableAsync`, `findStyleAsync`,
+ * `resolveVariableValueAsync`, `resolveColorValueAsync`, `createVariableLookup`,
+ * `getLibraryVariableCollectionsAsync`) keep nothing between calls: a cache of
+ * what resolved, or of what was refused, is the caller's to keep and to forget.
+ * `createVariableLookup` holds what it is handed for as long as its caller
+ * holds it, and no longer.
  */
 
 export { applyOpacity } from './applyOpacity'
@@ -39,11 +46,14 @@ export { collectInstances } from './collectInstances'
 export { collectWidgetNodes } from './collectWidgetNodes'
 export { colorToHex } from './colorToHex'
 export { colorToHexAlpha } from './colorToHexAlpha'
+export { createVariableLookup } from './createVariableLookup'
 
 export { describeNode } from './describeNode'
 
 export { findInvalidVariants } from './findInvalidVariants'
 export { findNodeByIdAsync } from './findNodeByIdAsync'
+export { findStyleAsync } from './findStyleAsync'
+export { findVariableAsync } from './findVariableAsync'
 export { focusNodeByIdAsync } from './focusNodeByIdAsync'
 export { focusNodesAsync } from './focusNodesAsync'
 
@@ -52,6 +62,7 @@ export { getBoundVariableRefs } from './getBoundVariableRefs'
 export { getComponentSetOfVariant } from './getComponentSetOfVariant'
 export { getGradientHandlePositions } from './getGradientHandlePositions'
 export { getKeysOfInstanceSwapProperties } from './getKeysOfInstanceSwapProperties'
+export { getLibraryVariableCollectionsAsync } from './getLibraryVariableCollectionsAsync'
 export { getMainComponentOfInstanceAsync } from './getMainComponentOfInstanceAsync'
 export { getNodeIdentity } from './getNodeIdentity'
 export { getNodeKey } from './getNodeKey'
@@ -80,6 +91,7 @@ export { isNodeShown } from './isNodeShown'
 export { isOneOfNodeType } from './isOneOfNodeType'
 export { isPageNode } from './isPageNode'
 export { isRemoteNode } from './isRemoteNode'
+export { isVariableAlias } from './isVariableAlias'
 
 export { isValidVariant } from './isValidVariant'
 export { matchVariantName } from './matchVariantName'
@@ -87,9 +99,13 @@ export { parseVariantName } from './parseVariantName'
 export { validateVariantNames } from './validateVariantNames'
 
 export { readWidgetSyncedState } from './readWidgetSyncedState'
+export { resolveColorValueAsync } from './resolveColorValueAsync'
+export { resolveVariableValueAsync } from './resolveVariableValueAsync'
 export { roundAlpha } from './roundAlpha'
 
 export { setRelaunchCommand } from './setRelaunchCommand'
+
+export { toPaintPreview } from './toPaintPreview'
 
 export { walkNodeTree } from './walkNodeTree'
 
@@ -97,8 +113,13 @@ export { walkNodeTree } from './walkNodeTree'
 
 export type { TCollectInstancesOptions } from './collectInstances'
 export type { TColor } from './colorTypes'
+export type { TVariableLookup } from './createVariableLookup'
+export type { TStyleOfType } from './findStyleAsync'
+export type { TPublishedRef } from './findVariableAsync'
 export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
 export type { TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
 export type { TInvalidVariantReason, TMatchedVariantName } from './matchVariantName'
+export type { TResolveVariableValueOptions } from './resolveVariableValueAsync'
+export type { TGradientPreview, TPaintPreview, TPaintPreviewLayer } from './toPaintPreview'
 export type { TInvalidVariant, TValidatedVariants, TVariantName } from './validateVariantNames'
 export type { TWalkNodeTreeOptions, TWalkVerdict } from './walkNodeTree'
