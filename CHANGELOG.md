@@ -1,5 +1,39 @@
 # Changelog
 
+### Version 2.1.0
+
+- Added:
+  - applyOpacity
+  - canLoadFontAsync
+  - clearPluginDataAsync
+  - colorToHex
+  - colorToHexAlpha
+  - createVariableLookup
+  - findInvalidVariants
+  - findNodeByIdAsync
+  - findStyleAsync
+  - findVariableAsync
+  - focusNodeByIdAsync
+  - focusNodesAsync
+  - getGradientHandlePositions
+  - getLibraryVariableCollectionsAsync
+  - hasRelaunchCommand
+  - hexAlphaToColor
+  - importComponentOrSetByKeyAsync
+  - isNodeShown
+  - isVariableAlias
+  - matchVariantName
+  - resolveColorValueAsync
+  - resolveVariableValueAsync
+  - roundAlpha
+  - setRelaunchCommand
+  - toPaintPreview
+  - validateVariantNames
+
+- Fixed:
+  - The README described `isLayerVisible` as walking the ancestor chain. It never did, and does not now: it answers
+    about the layer itself. `isNodeShown` is the one that walks up to the page.
+
 ### Version 2.0.0
 
 - Breaking:
