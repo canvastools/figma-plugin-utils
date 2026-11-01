@@ -26,7 +26,8 @@
  *
  * The colour helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`,
  * `roundAlpha`) touch no Figma API at all, and are read by a plugin's UI as well
- * as by its sandbox.
+ * as by its sandbox. So does fractional indexing (`midpoint`, `sortPositions`,
+ * `recalcPositions`, …), which keeps a stored list ordered by `position` strings.
  *
  * The variable and style helpers (`findVariableAsync`, `findStyleAsync`,
  * `resolveVariableValueAsync`, `resolveColorValueAsync`, `createVariableLookup`,
@@ -56,6 +57,7 @@ export { findStyleAsync } from './findStyleAsync'
 export { findVariableAsync } from './findVariableAsync'
 export { focusNodeByIdAsync } from './focusNodeByIdAsync'
 export { focusNodesAsync } from './focusNodesAsync'
+export { findPositionAfter, findPositionBefore, midpoint, recalcPositions, sortPositions } from './fractionalIndex'
 
 export { getBooleanPropertyKey } from './getBooleanPropertyKey'
 export { getBoundVariableRefs } from './getBoundVariableRefs'

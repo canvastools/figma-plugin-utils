@@ -151,6 +151,27 @@ None of these keeps anything between calls: a cache of what resolved, or of what
 | `focusNodesAsync(nodes, options?)` | Their page, the viewport around them, and the selection when `select` is on |
 | `focusNodeByIdAsync(id, options?)` | The same, for the node an id names on any page                              |
 
+**Ordering**
+
+Fractional indexing: an item keeps its place in a list through a `position` string rather than a numeric index, so
+moving one item rewrites one row instead of renumbering the list. Pure arithmetic — works in a plugin's UI as well as in
+its sandbox.
+
+|                                                       |                                                                               |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `midpoint(a, b)`                                      | A position strictly between two, `null` standing for either end of the list   |
+| `findPositionAfter(prev)`, `findPositionBefore(next)` | A position after or before one — the end or the start of the list for `null`  |
+| `sortPositions(items)`                                | Items in list order by `position`, for anything read out of a map or a record |
+| `recalcPositions(items, currentOrder, updatedOrder)`  | New positions after a drag-and-drop; the same array back when nothing moved   |
+
+```ts
+import { findPositionAfter, recalcPositions, sortPositions } from 'figma-plugin-utils'
+
+const items = sortPositions([...map.values()])
+const appended = { id, position: findPositionAfter(items.at(-1)?.position ?? null) }
+const reordered = recalcPositions(items, currentIds, draggedIds)
+```
+
 **Stored data**
 
 |                                                   |                                                                                   |
