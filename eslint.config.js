@@ -1,7 +1,7 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
 import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
 import figmaPlugins from '@figma/eslint-plugin-figma-plugins'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import tseslint from 'typescript-eslint'
 
 export default defineConfig([
   // Build-time Node files: they run outside the plugin sandbox, so the
@@ -23,12 +23,16 @@ export default defineConfig([
   },
   {
     rules: {
+      // Types are erased by the bundler one file at a time, so they are imported as types.
+      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
+          // `const { visible, ...rest } = item` takes a property out of an object.
+          ignoreRestSiblings: true,
         },
       ],
     },

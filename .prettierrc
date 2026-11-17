@@ -6,13 +6,5 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": false,
-  "semi": false,
-  "overrides": [
-    {
-      "files": "*.scss",
-      "options": {
-        "printWidth": 256
-      }
-    }
-  ]
+  "semi": false
 }

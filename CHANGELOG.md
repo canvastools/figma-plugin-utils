@@ -1,34 +1,49 @@
 # Changelog
 
+### Version 2.2.0
+
+- Added:
+  - createLogger: a logger for one scope; the payload is a function, and `isLogEnabled` is the switch of the project
+  - Added
+    - `ClientStorage`
+    - `DocumentStorage`
+    - `NodeStorage`
+    - `initStorageAsync` (was `initStorage`)
+    - `clientStorageAdapter`
+    - `pluginDataAdapter`
+    - `Payment`
+    - `uuid`
+    - fractionalIndex: `findPositionAfter`, `findPositionBefore`, `midpoint`, `recalcPositions`, `sortPositions`
+
 ### Version 2.1.0
 
 - Added:
-  - applyOpacity
-  - canLoadFontAsync
-  - clearPluginDataAsync
-  - colorToHex
-  - colorToHexAlpha
-  - createVariableLookup
-  - findInvalidVariants
-  - findNodeByIdAsync
-  - findStyleAsync
-  - findVariableAsync
-  - focusNodeByIdAsync
-  - focusNodesAsync
-  - getGradientHandlePositions
-  - getLibraryVariableCollectionsAsync
-  - hasRelaunchCommand
-  - hexAlphaToColor
-  - importComponentOrSetByKeyAsync
-  - isNodeShown
-  - isVariableAlias
-  - matchVariantName
-  - resolveColorValueAsync
-  - resolveVariableValueAsync
-  - roundAlpha
-  - setRelaunchCommand
-  - toPaintPreview
-  - validateVariantNames
+  - `applyOpacity`
+  - `canLoadFontAsync`
+  - `clearPluginDataAsync`
+  - `colorToHex`
+  - `colorToHexAlpha`
+  - `createVariableLookup`
+  - `findInvalidVariants`
+  - `findNodeByIdAsync`
+  - `findStyleAsync`
+  - `findVariableAsync`
+  - `focusNodeByIdAsync`
+  - `focusNodesAsync`
+  - `getGradientHandlePositions`
+  - `getLibraryVariableCollectionsAsync`
+  - `hasRelaunchCommand`
+  - `hexAlphaToColor`
+  - `importComponentOrSetByKeyAsync`
+  - `isNodeShown`
+  - `isVariableAlias`
+  - `matchVariantName`
+  - `resolveColorValueAsync`
+  - `resolveVariableValueAsync`
+  - `roundAlpha`
+  - `setRelaunchCommand`
+  - `toPaintPreview`
+  - `validateVariantNames`
 
 - Fixed:
   - The README described `isLayerVisible` as walking the ancestor chain. It never did, and does not now: it answers
@@ -58,29 +73,29 @@
     the node half emptied.
 
 - Added:
-  - collectInstances
-  - describeNode
-  - getBoundVariableRefs
-  - getComponentSetOfVariant
-  - getNodeIdentity
-  - getPageOfNode
-  - getTopmostNodes
-  - hasInstanceAncestor
-  - isInstanceSwapTarget
-  - isLayerVisible
-  - isNodeAlive
-  - asSceneNode
-  - getBooleanPropertyKey
-    hasBooleanProperties
-  - getNodeKey
-  - getPropertyName
-  - hasDescendantMatching
-  - isRemoteNode
-  - parseVariantName
-  - walkNodeTree
-  - collectWidgetNodes
-  - getSourceWidgetNode
-  - readWidgetSyncedState
+  - `collectInstances`
+  - `describeNode`
+  - `getBoundVariableRefs`
+  - `getComponentSetOfVariant`
+  - `getNodeIdentity`
+  - `getPageOfNode`
+  - `getTopmostNodes`
+  - `hasInstanceAncestor`
+  - `isInstanceSwapTarget`
+  - `isLayerVisible`
+  - `isNodeAlive`
+  - `asSceneNode`
+  - `getBooleanPropertyKey`
+    `hasBooleanProperties`
+  - `getNodeKey`
+  - `getPropertyName`
+  - `hasDescendantMatching`
+  - `isRemoteNode`
+  - `parseVariantName`
+  - `walkNodeTree`
+  - `collectWidgetNodes`
+  - `getSourceWidgetNode`
+  - `readWidgetSyncedState`
 
 - Docs:
   - Every helper now carries a JSDoc block: what it answers, when to reach for it, and the edge cases behind the
@@ -93,14 +108,14 @@
 ### Version 1.1.0
 
 - Added:
-  - getPage
-  - isPageNode
+  - `getPage`
+  - `isPageNode`
 
 ### Version 1.0.0
 
 - Added:
-  - isComponentSetNode
-  - isComponentNode
-  - isFrameNode
-  - isInstanceNode
-  - isOneOfNodeType
+  - `isComponentSetNode`
+  - `isComponentNode`
+  - `isFrameNode`
+  - `isInstanceNode`
+  - `isOneOfNodeType`

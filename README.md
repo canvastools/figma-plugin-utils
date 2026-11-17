@@ -151,6 +151,27 @@ None of these keeps anything between calls: a cache of what resolved, or of what
 | `focusNodesAsync(nodes, options?)` | Their page, the viewport around them, and the selection when `select` is on |
 | `focusNodeByIdAsync(id, options?)` | The same, for the node an id names on any page                              |
 
+**Ordering**
+
+Fractional indexing: an item keeps its place in a list through a `position` string rather than a numeric index, so
+moving one item rewrites one row instead of renumbering the list. Pure arithmetic — works in a plugin's UI as well as in
+its sandbox.
+
+|                                                       |                                                                               |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `midpoint(a, b)`                                      | A position strictly between two, `null` standing for either end of the list   |
+| `findPositionAfter(prev)`, `findPositionBefore(next)` | A position after or before one — the end or the start of the list for `null`  |
+| `sortPositions(items)`                                | Items in list order by `position`, for anything read out of a map or a record |
+| `recalcPositions(items, currentOrder, updatedOrder)`  | New positions after a drag-and-drop; the same array back when nothing moved   |
+
+```ts
+import { findPositionAfter, recalcPositions, sortPositions } from 'figma-plugin-utils'
+
+const items = sortPositions([...map.values()])
+const appended = { id, position: findPositionAfter(items.at(-1)?.position ?? null) }
+const reordered = recalcPositions(items, currentIds, draggedIds)
+```
+
 **Stored data**
 
 |                                                   |                                                                                   |
@@ -170,6 +191,33 @@ None of these keeps anything between calls: a cache of what resolved, or of what
 |                       |                                                                                                                                     |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `clearChildren(node)` | Removes a node's children. Returns `false` and touches nothing for an instance or anything inside one, which Figma forbids emptying |
+
+**Storage and payment**
+
+|                                                             |                                                                                                    |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `new ClientStorage(options)`                                | A versioned store in `figma.clientStorage`: `data`, `initAsync()`, `writeAsync()`, `deleteAsync()` |
+| `new DocumentStorage(options)`                              | The same store in the plugin data of the document                                                  |
+| `new NodeStorage(options)`                                  | Versioned plugin data of any number of nodes under one key. `read` never writes                    |
+| `initStorageAsync(options)`                                 | The migration the stores use, for a backend of your own                                            |
+| `clientStorageAdapter(key)`, `pluginDataAdapter(node, key)` | The `read` / `write` pair of each backend. `write` says whether the value was stored               |
+| `new Payment(options)`                                      | The payment status and the checkout of Figma. `onPaid` runs one time when a purchase lands         |
+| `uuid()`                                                    | A random id for a stored entry                                                                     |
+
+These keep data for as long as the caller keeps the instance. None of them throws, and none of them talks to the user: a
+failure is a safe answer, a log line and a call of the caller's `onError`, where the project decides on a toast.
+
+**Logs**
+
+|                                       |                                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------- |
+| `createLogger(scope, { isLogEnabled? })` | A logger for one scope. The payload is a function, so a disabled logger is free |
+
+```ts
+const log = createLogger('selection', { isLogEnabled: () => config.debug })
+
+log(() => ({ nodes: selection.map((node) => node.name) }))
+```
 
 **Widgets**
 
