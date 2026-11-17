@@ -29,12 +29,22 @@
  * as by its sandbox. So does fractional indexing (`midpoint`, `sortPositions`,
  * `recalcPositions`, …), which keeps a stored list ordered by `position` strings.
  *
+ * `createLogger` gives each scope a logger with a payload built on demand. The
+ * switch is the caller's, so the package stays free of any project config.
+ *
  * The variable and style helpers (`findVariableAsync`, `findStyleAsync`,
  * `resolveVariableValueAsync`, `resolveColorValueAsync`, `createVariableLookup`,
  * `getLibraryVariableCollectionsAsync`) keep nothing between calls: a cache of
  * what resolved, or of what was refused, is the caller's to keep and to forget.
  * `createVariableLookup` holds what it is handed for as long as its caller
  * holds it, and no longer.
+ *
+ * The stores (`ClientStorage`, `DocumentStorage`, `NodeStorage`, `initStorageAsync`
+ * and the two adapters) and `Payment` are the same kind of primitive over
+ * `figma.clientStorage`, plugin data and `figma.payments`. A class instance keeps
+ * its data for as long as its caller keeps the instance. None of them throws, and
+ * none of them talks to the user: a failure is a safe answer, a log line and a
+ * call of the caller's `onError` / `onPaid`, where the project decides on a toast.
  */
 
 export { applyOpacity } from './applyOpacity'
@@ -43,13 +53,17 @@ export { asSceneNode } from './asSceneNode'
 export { canLoadFontAsync } from './canLoadFontAsync'
 export { clearChildren } from './clearChildren'
 export { clearPluginDataAsync } from './clearPluginDataAsync'
+export { ClientStorage } from './ClientStorage'
+export { clientStorageAdapter } from './clientStorageAdapter'
 export { collectInstances } from './collectInstances'
 export { collectWidgetNodes } from './collectWidgetNodes'
 export { colorToHex } from './colorToHex'
 export { colorToHexAlpha } from './colorToHexAlpha'
+export { createLogger } from './createLogger'
 export { createVariableLookup } from './createVariableLookup'
 
 export { describeNode } from './describeNode'
+export { DocumentStorage } from './DocumentStorage'
 
 export { findInvalidVariants } from './findInvalidVariants'
 export { findNodeByIdAsync } from './findNodeByIdAsync'
@@ -80,6 +94,7 @@ export { hasRelaunchCommand } from './hasRelaunchCommand'
 export { hexAlphaToColor } from './hexAlphaToColor'
 
 export { importComponentOrSetByKeyAsync } from './importComponentOrSetByKeyAsync'
+export { initStorageAsync } from './initStorageAsync'
 
 export { isComponentNode } from './isComponentNode'
 export { isComponentSetNode } from './isComponentSetNode'
@@ -97,7 +112,12 @@ export { isVariableAlias } from './isVariableAlias'
 
 export { isValidVariant } from './isValidVariant'
 export { matchVariantName } from './matchVariantName'
+
+export { NodeStorage } from './NodeStorage'
+
 export { parseVariantName } from './parseVariantName'
+export { Payment } from './Payment'
+export { pluginDataAdapter } from './pluginDataAdapter'
 export { validateVariantNames } from './validateVariantNames'
 
 export { readWidgetSyncedState } from './readWidgetSyncedState'
@@ -109,19 +129,34 @@ export { setRelaunchCommand } from './setRelaunchCommand'
 
 export { toPaintPreview } from './toPaintPreview'
 
+export { uuid } from './uuid'
+
 export { walkNodeTree } from './walkNodeTree'
 
 /* Types */
 
 export type { TCollectInstancesOptions } from './collectInstances'
 export type { TColor } from './colorTypes'
+export type { TLogger, TLoggerOptions } from './createLogger'
 export type { TVariableLookup } from './createVariableLookup'
 export type { TStyleOfType } from './findStyleAsync'
 export type { TPublishedRef } from './findVariableAsync'
 export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
 export type { TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
 export type { TInvalidVariantReason, TMatchedVariantName } from './matchVariantName'
+export type { TPaymentCheckoutOptions, TPaymentData, TPaymentOptions } from './Payment'
 export type { TResolveVariableValueOptions } from './resolveVariableValueAsync'
+export type {
+  TInitStorageOptions,
+  TNodeStoredData,
+  TNodeStoreOptions,
+  TStorageAdapter,
+  TStorageErrorHandler,
+  TStorageErrorKind,
+  TStoreOptions,
+  TSyncStorageAdapter,
+  TVersionedData,
+} from './storageTypes'
 export type { TGradientPreview, TPaintPreview, TPaintPreviewLayer } from './toPaintPreview'
 export type { TInvalidVariant, TValidatedVariants, TVariantName } from './validateVariantNames'
 export type { TWalkNodeTreeOptions, TWalkVerdict } from './walkNodeTree'

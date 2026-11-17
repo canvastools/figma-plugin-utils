@@ -192,6 +192,33 @@ const reordered = recalcPositions(items, currentIds, draggedIds)
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `clearChildren(node)` | Removes a node's children. Returns `false` and touches nothing for an instance or anything inside one, which Figma forbids emptying |
 
+**Storage and payment**
+
+|                                                             |                                                                                                    |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `new ClientStorage(options)`                                | A versioned store in `figma.clientStorage`: `data`, `initAsync()`, `writeAsync()`, `deleteAsync()` |
+| `new DocumentStorage(options)`                              | The same store in the plugin data of the document                                                  |
+| `new NodeStorage(options)`                                  | Versioned plugin data of any number of nodes under one key. `read` never writes                    |
+| `initStorageAsync(options)`                                 | The migration the stores use, for a backend of your own                                            |
+| `clientStorageAdapter(key)`, `pluginDataAdapter(node, key)` | The `read` / `write` pair of each backend. `write` says whether the value was stored               |
+| `new Payment(options)`                                      | The payment status and the checkout of Figma. `onPaid` runs one time when a purchase lands         |
+| `uuid()`                                                    | A random id for a stored entry                                                                     |
+
+These keep data for as long as the caller keeps the instance. None of them throws, and none of them talks to the user: a
+failure is a safe answer, a log line and a call of the caller's `onError`, where the project decides on a toast.
+
+**Logs**
+
+|                                       |                                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------- |
+| `createLogger(scope, { isLogEnabled? })` | A logger for one scope. The payload is a function, so a disabled logger is free |
+
+```ts
+const log = createLogger('selection', { isLogEnabled: () => config.debug })
+
+log(() => ({ nodes: selection.map((node) => node.name) }))
+```
+
 **Widgets**
 
 `getSourceWidgetNode()`, `collectWidgetNodes(pages, options?)` and `readWidgetSyncedState(node, key)` answer the same

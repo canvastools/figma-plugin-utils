@@ -1,10 +1,13 @@
 # Node
+node_modules
 *.log
 *.log.*
-node_modules
 
 # System
 .DS_Store
+
+# TypeScript
+*.tsbuildinfo
 
 # Build output
 dist
