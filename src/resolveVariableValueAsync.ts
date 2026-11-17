@@ -10,31 +10,23 @@ export type TResolveVariableValueOptions = {
 }
 
 /**
- * How far an alias chain is followed.
+ * The maximum number of aliases that the helper follows.
  *
- * A design system three tiers deep is the ordinary case, and eight is far past
- * any of them. A cap rather than a visited set: a cycle ends here without a
- * `Set` to carry, and a chain longer than this is not a value anybody meant.
+ * A design system with three levels is the usual case, and eight is far more than any.
+ * A limit is simpler than a set of visited variables: a cycle ends at the limit, and no real chain is longer.
  */
 const MAX_ALIAS_HOPS = 8
 
 /**
- * What a variable is worth in the mode its collection opens in — every alias on
- * the way followed, each in its own collection's default mode.
+ * The value of a variable in the default mode of its collection. The helper follows each alias, in the default mode of its collection.
  *
- * **Without a node.** `resolveForConsumer` answers the same question for a
- * node, in the modes that node is in; a plugin about to bind a variable to
- * something it has not drawn yet has no node to ask with, and this is what is
- * left. The default mode is the one every consumer resolves to unless something
- * says otherwise, so it is the honest single answer for a variable that has one
- * value per mode.
+ * **Without a node.** `resolveForConsumer` answers the same question for a node, in the modes of that node.
+ * A plugin that binds a variable to a node that it did not draw yet has no node. This helper is for that case.
+ * Each consumer resolves to the default mode when nothing else is set. So it is the correct single answer for a variable with one value for each mode.
  *
- * The value at the end of the chain is answered as Figma keeps it — a number, a
- * string, a boolean, a colour, or anything else the API stores in its place,
- * such as a colour whose opacity is a variable of its own (see
- * `resolveColorValueAsync`). `null` when the chain cannot be finished: a
- * variable or a collection that does not resolve, a mode with no value, a chain
- * past `maxHops`.
+ * The value at the end of the chain is as Figma keeps it: a number, a string, a boolean, a color or another stored shape.
+ * One such shape is a color with a variable for its opacity (see `resolveColorValueAsync`).
+ * The result is `null` when the chain does not end. Causes: a variable or a collection that does not resolve, a mode with no value, more than `maxHops` aliases.
  *
  * @example
  * const value = await resolveVariableValueAsync(variable)

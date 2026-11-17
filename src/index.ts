@@ -1,50 +1,38 @@
 /**
- * `figma-plugin-utils` — helpers for working with the Figma node tree from a
- * plugin sandbox.
+ * `figma-plugin-utils`: helpers for the Figma node tree in a plugin sandbox.
  *
- * Everything here is a primitive: it answers one question about a node or a
- * tree and knows nothing about why it is being asked. Policy — what counts as
- * part of a component, which node stands for "the component", how a run reports
- * itself — belongs to the module doing the asking.
+ * Each helper is a primitive: it answers one question about a node or a tree. It does not know the reason for the question.
+ * The policy belongs to the module that asks: what is part of a component, which node is "the component", how a run reports.
  *
- * Two conventions run through the package:
+ * The package has two conventions:
  *
- * 1. Nothing throws. A helper that cannot answer returns the safe end of its
- *    type (`false`, `null`, an empty list) and logs, because a plugin taken down
- *    by one bad node is worse than a partial answer.
- * 2. Nodes are never assumed to be alive. A deleted node throws on any property
- *    access, and every helper that walks or reads one guards for it.
+ * - Nothing throws. A helper that cannot answer returns the safe end of its type (`false`, `null`, an empty list) and logs.
+ *   A plugin that one bad node stops is worse than a partial answer.
+ * - A node is not always alive. A deleted node throws on each property read, and each helper that reads a node guards for it.
  *
- * The traversal helpers take predicates rather than flags, so the caller keeps
- * its own rules and this package keeps the walking.
+ * The walk helpers take predicates, not flags. So the caller keeps its rules, and this package keeps the walk.
  *
- * A handful of helpers answer the same kind of question about widget nodes
- * (`getSourceWidgetNode`, `collectWidgetNodes`, `readWidgetSyncedState`). They
- * follow both conventions above and need nothing beyond `@figma/plugin-typings`;
- * in a plugin, where `figma.widgetId` is undefined, each returns its empty
- * answer rather than throwing.
+ * Some helpers answer the same questions about widget nodes: `getSourceWidgetNode`, `collectWidgetNodes`, `readWidgetSyncedState`.
+ * They follow the two conventions and need only `@figma/plugin-typings`.
+ * In a plugin, `figma.widgetId` is `undefined`, and each of them returns its empty answer.
  *
- * The colour helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`,
- * `roundAlpha`) touch no Figma API at all, and are read by a plugin's UI as well
- * as by its sandbox. So does fractional indexing (`midpoint`, `sortPositions`,
- * `recalcPositions`, …), which keeps a stored list ordered by `position` strings.
+ * The color helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`, `roundAlpha`) use no Figma API.
+ * So the UI of a plugin uses them too, as does its sandbox.
+ * The fractional indexes (`midpoint`, `sortPositions`, `recalcPositions`, …) also use no Figma API. They keep a stored list in order.
  *
- * `createLogger` gives each scope a logger with a payload built on demand. The
- * switch is the caller's, so the package stays free of any project config.
+ * `createLogger` gives a logger to each scope. The logger builds its payload only when it prints.
+ * The caller owns the switch, so the package has no config of a project.
  *
- * The variable and style helpers (`findVariableAsync`, `findStyleAsync`,
- * `resolveVariableValueAsync`, `resolveColorValueAsync`, `createVariableLookup`,
- * `getLibraryVariableCollectionsAsync`) keep nothing between calls: a cache of
- * what resolved, or of what was refused, is the caller's to keep and to forget.
- * `createVariableLookup` holds what it is handed for as long as its caller
- * holds it, and no longer.
+ * The variable and style helpers keep nothing between calls: `findVariableAsync`, `findStyleAsync`, `resolveVariableValueAsync`,
+ * `resolveColorValueAsync`, `createVariableLookup`, `getLibraryVariableCollectionsAsync`.
+ * The caller keeps a cache of the results or of the refusals, and the caller clears it.
+ * `createVariableLookup` holds its data while its caller holds the lookup.
  *
- * The stores (`ClientStorage`, `DocumentStorage`, `NodeStorage`, `initStorageAsync`
- * and the two adapters) and `Payment` are the same kind of primitive over
- * `figma.clientStorage`, plugin data and `figma.payments`. A class instance keeps
- * its data for as long as its caller keeps the instance. None of them throws, and
- * none of them talks to the user: a failure is a safe answer, a log line and a
- * call of the caller's `onError` / `onPaid`, where the project decides on a toast.
+ * The stores and `Payment` are primitives of the same kind: `ClientStorage`, `DocumentStorage`, `NodeStorage`, `initStorageAsync`
+ * and the two adapters.
+ * They work over `figma.clientStorage`, plugin data and `figma.payments`. An instance keeps its data while its caller keeps the instance.
+ * They do not throw and do not show messages to the user.
+ * A failure gives a safe answer, a log line and a call of `onError` or `onPaid` of the caller. The project decides about a toast.
  */
 
 export { applyOpacity } from './applyOpacity'

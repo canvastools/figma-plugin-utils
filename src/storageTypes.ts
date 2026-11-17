@@ -32,7 +32,7 @@ export type TSyncStorageAdapter<T> = {
 export type TInitStorageOptions<T extends TVersionedData> = {
   /** The current version of the plugin. */
   version: number
-  /** The shape written on a first run and merged in when a key is missing. */
+  /** The shape that the store writes on a first run and merges in for an absent key. */
   defaults: T
   /** Told about a corrupt value. The call still returns the defaults. */
   onError?: TStorageErrorHandler
@@ -43,7 +43,7 @@ export type TStoreOptions<T extends TVersionedData> = {
   key: string
   /** The current version of the plugin. A different stored version triggers a merge. */
   version: number
-  /** The shape written on a first run and merged in when a key is missing. */
+  /** The shape that the store writes on a first run and merges in for an absent key. */
   defaults: T
   /** Told about a failed read or write, after the store logged it. */
   onError?: TStorageErrorHandler

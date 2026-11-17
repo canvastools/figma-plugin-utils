@@ -1,13 +1,12 @@
 /**
  * Narrows a node to a `ComponentNode`.
  *
- * A type predicate rather than a plain comparison: after the check TypeScript
- * knows about `key`, `remote` and the component property definitions, so the
- * branch needs no cast.
+ * It is a type predicate, not a plain comparison. After the check, TypeScript knows `key`, `remote` and the component property definitions.
+ * So the branch needs no cast.
  *
- * Matches a master only. An instance of it is an `InstanceNode`, and a variant
- * inside a set is a `ComponentNode` too — use `isComponentSetVariant` when the
- * two have to be told apart.
+ * It matches a main component only. An instance of it is an `InstanceNode`. A variant in a set is a `ComponentNode` too.
+ *
+ * - Use `isComponentSetVariant` to tell a variant from a separate component.
  */
 const isComponentNode = (node: BaseNode): node is ComponentNode => {
   return node.type === 'COMPONENT'

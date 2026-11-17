@@ -1,13 +1,10 @@
 /**
- * True when the node still exists and can be read.
+ * `true` when the node still exists and the plugin can read it.
  *
- * Not an alias of `node.removed`: a node that is really gone answers any
- * property access — `removed` included — with a throw, which is why the check is
- * guarded. Anything holding a node across an `await` needs this, since the user
- * is free to delete or undo something while the call is in flight.
+ * It is not the same as `node.removed`. A node that is really gone throws on each property read, also on `removed`. So the check has a guard.
+ * Code that holds a node across an `await` needs it: the user can delete or undo during the call.
  *
- * The positive form is deliberate: nearly every use is a guard, and `!isNodeAlive`
- * reads better at the top of a function than a double negative would.
+ * The name is positive because almost each use is a guard. `!isNodeAlive` at the top of a function reads better than a double negative.
  *
  * @example
  * const mainComponent = await instance.getMainComponentAsync()

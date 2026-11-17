@@ -1,12 +1,10 @@
 /**
  * Narrows a node to a `PageNode`.
  *
- * A type predicate rather than a plain comparison: after the check TypeScript
- * knows about `selection`, `loadAsync` and the page level plugin data, so the
- * branch needs no cast.
+ * It is a type predicate, not a plain comparison. After the check, TypeScript knows `selection`, `loadAsync` and the plugin data of the page.
+ * So the branch needs no cast.
  *
- * Mostly used to end an ancestor walk, which is exactly what `getPageOfNode`
- * already does — prefer that over walking `parent` by hand.
+ * - Use `getPageOfNode` to end a walk of the ancestors. Do not walk `parent` by hand.
  */
 const isPageNode = (node: BaseNode): node is PageNode => {
   return node.type === 'PAGE'

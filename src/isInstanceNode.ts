@@ -1,12 +1,10 @@
 /**
  * Narrows a node to an `InstanceNode`.
  *
- * A type predicate rather than a plain comparison: after the check TypeScript
- * knows about `getMainComponentAsync`, `componentProperties`, `isExposedInstance`
- * and the rest, so the branch needs no cast.
+ * It is a type predicate, not a plain comparison.
+ * After the check, TypeScript knows `getMainComponentAsync`, `componentProperties`, `isExposedInstance` and the other members. So the branch needs no cast.
  *
- * Being an instance is also what makes a node read only in practice — see
- * `hasInstanceParent` for the same question asked about a node's ancestors.
+ * An instance is read only in practice. `hasInstanceAncestor` asks the same question about the ancestors of a node.
  */
 const isInstanceNode = (node: BaseNode): node is InstanceNode => {
   return node.type === 'INSTANCE'

@@ -1,17 +1,14 @@
 /**
  * The readable name of a component property key.
  *
- * Figma keys a non variant property as `Show icon#12:3` — the name the designer
- * typed, plus an internal id that keeps two properties of the same name apart.
- * The suffix has to stay in the key, because that is what the API and
- * `componentPropertyReferences` speak, and it has to go from anything a user
- * reads.
+ * Figma keys a property that is not a variant as `Show icon#12:3`: the name of the designer and an internal id.
+ * The id keeps two properties with the same name apart. The key keeps the suffix, because the API and `componentPropertyReferences` use it.
+ * A text for a user does not show it.
  *
- * The suffix is only stripped when it really looks like one. A property named
- * `Tag #1` keeps its name, because `1` is not `id:index` — cutting at the first
- * `#` would quietly rename it.
+ * The helper removes the suffix only when it has the form of a suffix. A property `Tag #1` keeps its name: `1` is not `id:index`.
+ * A cut at the first `#` changes the name with no error.
  *
- * VARIANT keys carry no suffix at all, so they pass through untouched.
+ * VARIANT keys have no suffix, so they stay the same.
  *
  * @example
  * getPropertyName('Show icon#12:3')   // 'Show icon'

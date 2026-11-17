@@ -45,23 +45,18 @@ const collectNameKeys = (variants: readonly TVariantName[]): string[] => {
 }
 
 /**
- * Which variants of a set name a state, and why the others do not.
+ * Which variants of a set name a state, and the reason for each other variant.
  *
- * Pure — the names and the keys are passed in — so a caller that has read the
- * set already pays nothing more; `findInvalidVariants` reads them for a caller
- * that has not.
+ * It is pure: the caller gives the names and the keys. So a caller that already read the set pays nothing more.
+ * `findInvalidVariants` reads them for a caller that did not.
  *
- * **A set declaring no variant properties is checked against its own names.**
- * A set Figma considers broken — two variants naming one state, a name that is
- * not a property string — declares no variant properties to a plugin (measured
- * on one of each: no `VARIANT` definition came back).
- * Checked against nothing, every name mentions a property the set does not
- * declare, and the reason the set is broken is lost under a reason that is true
- * of every variant of it. So the keys are taken from the names that parse, and
- * each name is checked against the others.
+ * **A set that declares no variant properties is checked against its own names.**
+ * Figma breaks a set when two variants name one state or a name is not a property string.
+ * Such a set declares no variant properties to a plugin. A test in Figma showed no `VARIANT` definition for each case.
+ * A check against no keys says that each name has an undeclared property. That reason is true for each variant and hides the real reason.
+ * So the helper takes the keys from the names that parse, and checks each name against the others.
  *
- * Duplicates are found among the names that parsed, on their values, in the
- * order the variants came: the first one to say a state keeps it.
+ * The helper finds duplicates among the parsed names, by their values, in the order of the variants. The first variant with a state keeps it.
  *
  * @example
  * const { valid, invalid } = validateVariantNames(

@@ -4,14 +4,12 @@ import { colorToHex } from './colorToHex'
 import { toHexByte } from './toHexByte'
 
 /**
- * A colour as eight hex digits, `#RRGGBBAA` — the alpha last and always written.
+ * A color as eight hex digits, `#RRGGBBAA`. The alpha is last and always present.
  *
- * Always eight rather than six for an opaque colour, so that a stored colour has
- * one shape and the read back is one parse — and `figma.util.solidPaint` takes
- * the same string back. Upper case, as `colorToHex`.
+ * It writes eight digits also for an opaque color. So a stored color has one shape, and a read needs one parse.
+ * `figma.util.solidPaint` takes the same string. The letters are upper case, as in `colorToHex`.
  *
- * A paint keeps its alpha in `opacity` rather than in the colour; fold it in
- * with `applyOpacity` first.
+ * - Multiply the `opacity` of a paint into the color with `applyOpacity` first. A paint keeps its alpha in `opacity`, not in the color.
  *
  * @example
  * colorToHexAlpha({ r: 0.592, g: 0.278, b: 1, a: 1 })   // '#9747FFFF'

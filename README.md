@@ -1,19 +1,17 @@
 # figma-plugin-utils
 
-Helpers for working with the Figma node tree from a plugin sandbox.
+Helpers for the Figma node tree in a plugin sandbox.
 
-Everything here is a primitive: it answers one question about a node or a tree and knows nothing about why it is
-being asked.
+Each helper is a primitive: it answers one question about a node or a tree. It does not know the reason for the question.
+The module that asks keeps the policy: what is part of a component, which node is "the component", how a run reports.
 
-Policy: what counts as part of a component, which node stands for "the component", how a run reports itself – stays in the module doing the asking.
+The walk helpers take predicates, not flags. So a caller keeps its rules, and this package keeps the walk.
 
-The traversal helpers take predicates rather than flags, so a caller
-keeps its own rules and this package keeps the walking.
+Two conventions apply to the whole package. They are the reason for the package:
 
-Two conventions run through the whole package, and they are the reason it exists as a package at all:
-
-1. **Nothing throws.** A helper that cannot answer returns the safe end of its type `false`, `null`, an empty list and logs. A plugin taken down by one bad node is worse than a partial answer.
-2. **Nodes are never assumed to be alive.** A deleted node throws on any property access, and every helper that walks or reads one guards for it.
+1. **Nothing throws.** A helper that cannot answer returns the safe end of its type (`false`, `null`, an empty list) and logs.
+   A plugin that one bad node stops is worse than a partial answer.
+2. **A node is not always alive.** A deleted node throws on each property read. Each helper that reads a node guards for it.
 
 ## Install
 
@@ -21,11 +19,10 @@ Two conventions run through the whole package, and they are the reason it exists
 npm install figma-plugin-utils
 ```
 
-The package is ESM-only and typed against [`@figma/plugin-typings`](https://www.npmjs.com/package/@figma/plugin-typings),
-which your plugin already needs for the `figma` global. Nothing is bundled with it and there are no runtime
-dependencies.
+The package is ESM only. Its types use [`@figma/plugin-typings`](https://www.npmjs.com/package/@figma/plugin-typings),
+and a plugin needs that package for the `figma` global already. The package has no runtime dependencies.
 
-It ships one module per helper, so importing one function does not pull in the rest:
+It has one module for each helper, so an import of one function does not load the others:
 
 ```ts
 import { walkNodeTree, isLayerVisible, collectInstances } from 'figma-plugin-utils'
@@ -33,7 +30,7 @@ import { walkNodeTree, isLayerVisible, collectInstances } from 'figma-plugin-uti
 
 ## Example
 
-Collecting every visible instance under the selection, without descending into hidden branches:
+This example collects each visible instance under the selection, and does not go into hidden branches:
 
 ```ts
 import { collectInstances, isLayerVisible } from 'figma-plugin-utils'
@@ -46,9 +43,9 @@ const instances = figma.currentPage.selection.flatMap((node) =>
 )
 ```
 
-`walkNodeTree` is the loop underneath the collectors, for questions they do not answer. The visitor returns a verdict:
-nothing to carry on, `'skip'` to leave the node's children alone, `'stop'` to end the walk, which is what makes it
-usable for questions answered by the first hit.
+`walkNodeTree` is the loop under the collectors, for the questions that they do not answer. The visit returns a decision:
+no value to continue, `'skip'` to skip the children of the node, `'stop'` to end the walk.
+`'stop'` serves the questions that the first match answers.
 
 ```ts
 import { walkNodeTree } from 'figma-plugin-utils'
@@ -62,107 +59,106 @@ walkNodeTree(figma.currentPage, (node, depth) => {
 })
 ```
 
-Nodes are visited in the order a designer sees in the layers panel – a node, then everything inside it, then its next
-sibling. That is a promise, not an implementation detail: walk results end up in lists a user reads.
+The walk visits the nodes in the order of the layers panel: a node, then all the nodes in it, then its next sibling.
+That order is a promise: the results of a walk go into lists that a user reads.
 
 ## API
 
-**Traversal**
+**Walks**
 
-|                                          |                                                                                        |
-| ---------------------------------------- | -------------------------------------------------------------------------------------- |
-| `walkNodeTree(root, visit, options?)`    | Every node under a root, one call per node. `visit` returns `void \| 'skip' \| 'stop'` |
-| `collectInstances(node, options?)`       | Instances below a node. Does not walk inside the instances it finds unless asked       |
-| `hasDescendantMatching(node, predicate)` | Whether anything below a node matches — stops at the first hit                         |
-| `getTopmostNodes(nodes)`                 | Drops the nodes that are already contained by another node in the list                 |
+|                                          |                                                                                            |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `walkNodeTree(root, visit, options?)`    | Each node under a root, one call for each node. `visit` returns `void \| 'skip' \| 'stop'` |
+| `collectInstances(node, options?)`       | The instances below a node. It does not go into a found instance unless asked              |
+| `hasDescendantMatching(node, predicate)` | Whether a node below a node matches. It stops at the first match                           |
+| `getTopmostNodes(nodes)`                 | Removes the nodes that another node of the list contains                                   |
 
 **Type guards and node questions**
 
 |                                                                                        |                                                                                    |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `isComponentNode`, `isComponentSetNode`, `isFrameNode`, `isInstanceNode`, `isPageNode` | Narrowing guards on `BaseNode`                                                     |
-| `isOneOfNodeType(node, typeList)`                                                      | Whether the node is one of several types                                           |
-| `isNodeAlive(node)`                                                                    | Whether the handle still points at something — a deleted node throws on any access |
+| `isComponentNode`, `isComponentSetNode`, `isFrameNode`, `isInstanceNode`, `isPageNode` | Type guards on `BaseNode`                                                          |
+| `isOneOfNodeType(node, typeList)`                                                      | Whether the node has one of the types                                              |
+| `isNodeAlive(node)`                                                                    | Whether the handle still points at a node. A deleted node throws on each read      |
 | `isRemoteNode(node)`                                                                   | Whether the node comes from a library                                              |
-| `isLayerVisible(node, options?)`                                                       | The layer's own flag, optionally counting what a boolean property switches off     |
-| `isNodeShown(node)`                                                                    | Visibility along the whole ancestor chain, up to the page                          |
-| `hasInstanceAncestor(node)`                                                            | Whether anything above the node is an instance. Says nothing about the node itself |
-| `asSceneNode(node)`                                                                    | A `SceneNode` or `null`, for the many API calls typed as `BaseNode`                |
-| `findNodeByIdAsync(id, types)`                                                         | The node an id names if it is one of the types, narrowed to them, or `null`        |
+| `isLayerVisible(node, options?)`                                                       | The flag of the layer. As an option, it counts the layers that a boolean turns off |
+| `isNodeShown(node)`                                                                    | The visibility along the whole chain of ancestors, up to the page                  |
+| `hasInstanceAncestor(node)`                                                            | Whether an ancestor of the node is an instance. The node itself does not count     |
+| `asSceneNode(node)`                                                                    | A `SceneNode` or `null`, for the API calls that give a `BaseNode`                  |
+| `findNodeByIdAsync(id, types)`                                                         | The node of an id when it has one of the types, narrowed to them, or `null`        |
 
 **Identity**
 
-|                         |                                                                                           |
-| ----------------------- | ----------------------------------------------------------------------------------------- |
-| `getNodeKey(node)`      | The published key, for a node that has one                                                |
-| `getNodeIdentity(node)` | The key when there is one, the id otherwise — what to store when both kinds of node occur |
-| `describeNode(node)`    | `{ id, name }` that survives a dead node, for logs and error messages                     |
-| `getPageOfNode(node)`   | The page a node is on, or `null` — a remote or detached node has none                     |
+|                         |                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| `getNodeKey(node)`      | The publish key of a node that has one                                              |
+| `getNodeIdentity(node)` | The key when there is one, the id otherwise. Store it when both types of node occur |
+| `describeNode(node)`    | `{ id, name }`, also for a dead node, for logs and error messages                   |
+| `getPageOfNode(node)`   | The page of a node, or `null`. A remote or detached node has no page                |
 
 **Components, variants, properties**
 
-|                                                                                     |                                                                                      |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `getMainComponentOfInstanceAsync(instance)`                                         | The instance's main component. Stays on the variant rather than climbing to its set  |
-| `getComponentSetOfVariant(component)`                                               | The set a variant belongs to, or `null`                                              |
-| `isComponentSetVariant(node)`                                                       | Whether a node is a variant inside a component set                                   |
-| `parseVariantName(name)`                                                            | `'Size=Large, State=Hover'` → `{ Size: 'Large', State: 'Hover' }`                    |
-| `isValidVariant(input)`                                                             | Whether a string parses as a variant name                                            |
-| `getPropertyName(key)`                                                              | The readable half of `'Show icon#12:3'`                                              |
-| `getBooleanPropertyKey(node)`, `hasBooleanProperties(node)`                         | Boolean property keys on a node and on a component                                   |
-| `getKeysOfInstanceSwapProperties(node)`, `isInstanceSwapTarget(instance, swapKeys)` | Instance-swap properties                                                             |
-| `getBoundVariableRefs(node)`                                                        | Every variable bound on a node, from all three places Figma keeps them, deduplicated |
-| `matchVariantName(name, keys)`                                                      | A variant name's values, checked against the keys its set declares                   |
-| `validateVariantNames(variants, keys)`, `findInvalidVariants(set)`                  | Which variants of a set say no state of their own, and why — duplicates included     |
-| `importComponentOrSetByKeyAsync(key, preferType?, options?)`                        | A published component or set by key, whichever it is: `found`, `empty` or `failed`   |
+|                                                                                     |                                                                                        |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `getMainComponentOfInstanceAsync(instance)`                                         | The main component of the instance. It stays on the variant and does not go to the set |
+| `getComponentSetOfVariant(component)`                                               | The set of a variant, or `null`                                                        |
+| `isComponentSetVariant(node)`                                                       | Whether a node is a variant in a component set                                         |
+| `parseVariantName(name)`                                                            | `'Size=Large, State=Hover'` → `{ Size: 'Large', State: 'Hover' }`                      |
+| `isValidVariant(input)`                                                             | Whether a string parses as a variant name                                              |
+| `getPropertyName(key)`                                                              | The readable half of `'Show icon#12:3'`                                                |
+| `getBooleanPropertyKey(node)`, `hasBooleanProperties(node)`                         | The boolean property keys of a node and of a component                                 |
+| `getKeysOfInstanceSwapProperties(node)`, `isInstanceSwapTarget(instance, swapKeys)` | The instance swap properties                                                           |
+| `getBoundVariableRefs(node)`                                                        | Each variable that a node binds, from the three places of Figma, with no duplicates    |
+| `matchVariantName(name, keys)`                                                      | The values of a variant name, checked against the keys of its set                      |
+| `validateVariantNames(variants, keys)`, `findInvalidVariants(set)`                  | The variants of a set with no state of their own, and the reason. Duplicates too       |
+| `importComponentOrSetByKeyAsync(key, preferType?, options?)`                        | A published component or set by key: `found`, `empty` or `failed`                      |
 
-**Colour and paints**
+**Color and paints**
 
-These take and give plain numbers and strings, so the colour ones work in a plugin's UI as well as in its sandbox.
+These helpers take and give plain numbers and strings. So the color helpers work in the UI of a plugin and in its sandbox.
 Hex is always upper case.
 
-|                                               |                                                                             |
-| --------------------------------------------- | --------------------------------------------------------------------------- |
-| `colorToHex(color)`, `colorToHexAlpha(color)` | `#RRGGBB` and `#RRGGBBAA` out of channels in 0–1                            |
-| `hexAlphaToColor(hex)`                        | Six or eight hex digits back to `TColor`, or `null`                         |
-| `roundAlpha(alpha)`                           | An alpha to a whole percentage, for comparing a stored one with a typed one |
-| `applyOpacity(color, opacity?)`               | A paint's `opacity` folded into the colour's alpha                          |
-| `getGradientHandlePositions(paint)`           | A gradient's start, end and width handles, out of `gradientTransform`       |
+|                                               |                                                                          |
+| --------------------------------------------- | ------------------------------------------------------------------------ |
+| `colorToHex(color)`, `colorToHexAlpha(color)` | `#RRGGBB` and `#RRGGBBAA` from channels in 0–1                           |
+| `hexAlphaToColor(hex)`                        | Six or eight hex digits back to `TColor`, or `null`                      |
+| `roundAlpha(alpha)`                           | An alpha as a whole percent, to compare a stored alpha with a typed one  |
+| `applyOpacity(color, opacity?)`               | The `opacity` of a paint multiplied into the alpha of the color          |
+| `getGradientHandlePositions(paint)`           | The start, end and width handles of a gradient, from `gradientTransform` |
 
 **Variables and styles**
 
-None of these keeps anything between calls: a cache of what resolved, or of what was refused, is the caller's.
+These helpers keep nothing between calls. The caller keeps a cache of the results and of the refusals.
 
-|                                                  |                                                                                                      |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `findVariableAsync(ref)`                         | The variable a stored `{ id, key }` names here: by id when it carries the key, else imported         |
-| `findStyleAsync(ref, type)`                      | The same for a style of one type, narrowed to it — `'TEXT'` answers a `TextStyle`                    |
-| `getLibraryVariableCollectionsAsync()`           | The enabled libraries' collections, or `[]` — without the `teamlibrary` permission the getter throws |
-| `createVariableLookup(variables?, collections?)` | Variables and collections by id, asking the API only for what it was not handed                      |
-| `resolveVariableValueAsync(variable, options?)`  | A variable's value in its collection's default mode, aliases followed, without a node                |
-| `resolveColorValueAsync(value, options?)`        | The colour such a value draws as — a colour whose opacity is a variable included — or `null`         |
-| `isVariableAlias(value)`                         | Whether a value is a reference to a variable                                                         |
-| `toPaintPreview(paints)`                         | Paints as a swatch draws them: colours, gradients with their handles, bottom first, or `null`        |
+|                                                  |                                                                                                 |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `findVariableAsync(ref)`                         | The variable of a stored `{ id, key }` in this file: by id when the key matches, else by import |
+| `findStyleAsync(ref, type)`                      | The same for a style of one type, narrowed to it. `'TEXT'` gives a `TextStyle`                  |
+| `getLibraryVariableCollectionsAsync()`           | The collections of the enabled libraries, or `[]`. Without `teamlibrary`, the getter throws     |
+| `createVariableLookup(variables?, collections?)` | Variables and collections by id. It asks the API only for the items that it did not get         |
+| `resolveVariableValueAsync(variable, options?)`  | The value of a variable in the default mode of its collection, with aliases, without a node     |
+| `resolveColorValueAsync(value, options?)`        | The color of such a value, also a color with a variable opacity, or `null`                      |
+| `isVariableAlias(value)`                         | Whether a value is a reference to a variable                                                    |
+| `toPaintPreview(paints)`                         | Paints as a swatch draws them: colors, gradients with handles, from the bottom, or `null`       |
 
 **Canvas**
 
-|                                    |                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------- |
-| `focusNodesAsync(nodes, options?)` | Their page, the viewport around them, and the selection when `select` is on |
-| `focusNodeByIdAsync(id, options?)` | The same, for the node an id names on any page                              |
+|                                    |                                                                                  |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
+| `focusNodesAsync(nodes, options?)` | The page of the nodes, the viewport around them, and the selection with `select` |
+| `focusNodeByIdAsync(id, options?)` | The same for the node of an id, on any page                                      |
 
-**Ordering**
+**Order**
 
-Fractional indexing: an item keeps its place in a list through a `position` string rather than a numeric index, so
-moving one item rewrites one row instead of renumbering the list. Pure arithmetic — works in a plugin's UI as well as in
-its sandbox.
+Fractional indexes: an item keeps its place in a list with a `position` string, not a number index.
+So a move of one item changes one row and does not number the list again. The math uses no Figma API, so it works in the UI of a plugin and in its sandbox.
 
-|                                                       |                                                                               |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `midpoint(a, b)`                                      | A position strictly between two, `null` standing for either end of the list   |
-| `findPositionAfter(prev)`, `findPositionBefore(next)` | A position after or before one — the end or the start of the list for `null`  |
-| `sortPositions(items)`                                | Items in list order by `position`, for anything read out of a map or a record |
-| `recalcPositions(items, currentOrder, updatedOrder)`  | New positions after a drag-and-drop; the same array back when nothing moved   |
+|                                                       |                                                                            |
+| ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| `midpoint(a, b)`                                      | A position between two. `null` is an end of the list                       |
+| `findPositionAfter(prev)`, `findPositionBefore(next)` | A position after or before one. `null` gives the end or the start          |
+| `sortPositions(items)`                                | The items in list order by `position`, for the values of a map or a record |
+| `recalcPositions(items, currentOrder, updatedOrder)`  | New positions after a drag and drop. The same array when nothing moved     |
 
 ```ts
 import { findPositionAfter, recalcPositions, sortPositions } from 'figma-plugin-utils'
@@ -174,23 +170,23 @@ const reordered = recalcPositions(items, currentIds, draggedIds)
 
 **Stored data**
 
-|                                                   |                                                                                   |
-| ------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `hasRelaunchCommand(node, command)`               | Whether a node carries a relaunch command                                         |
-| `setRelaunchCommand(node, command, description?)` | Adds one command to the ones a node carries — `setRelaunchData` replaces them all |
-| `clearPluginDataAsync(keys)`                      | Every entry under the plugin's keys off the root and every node, counted          |
+|                                                   |                                                                                        |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `hasRelaunchCommand(node, command)`               | Whether a node has a relaunch command                                                  |
+| `setRelaunchCommand(node, command, description?)` | Adds one command to the commands of a node. `setRelaunchData` replaces all of them     |
+| `clearPluginDataAsync(keys)`                      | Removes each entry of the keys of the plugin from the root and each node, with a count |
 
 **Fonts**
 
-|                              |                                                      |
-| ---------------------------- | ---------------------------------------------------- |
-| `canLoadFontAsync(fontName)` | Whether a font loads, before deciding to write in it |
+|                              |                                            |
+| ---------------------------- | ------------------------------------------ |
+| `canLoadFontAsync(fontName)` | Whether a font loads, before a write in it |
 
-**Mutation**
+**Changes to nodes**
 
-|                       |                                                                                                                                     |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `clearChildren(node)` | Removes a node's children. Returns `false` and touches nothing for an instance or anything inside one, which Figma forbids emptying |
+|                       |                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `clearChildren(node)` | Removes the children of a node. For an instance and its content it returns `false` and changes nothing |
 
 **Storage and payment**
 
@@ -198,20 +194,20 @@ const reordered = recalcPositions(items, currentIds, draggedIds)
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `new ClientStorage(options)`                                | A versioned store in `figma.clientStorage`: `data`, `initAsync()`, `writeAsync()`, `deleteAsync()` |
 | `new DocumentStorage(options)`                              | The same store in the plugin data of the document                                                  |
-| `new NodeStorage(options)`                                  | Versioned plugin data of any number of nodes under one key. `read` never writes                    |
-| `initStorageAsync(options)`                                 | The migration the stores use, for a backend of your own                                            |
-| `clientStorageAdapter(key)`, `pluginDataAdapter(node, key)` | The `read` / `write` pair of each backend. `write` says whether the value was stored               |
-| `new Payment(options)`                                      | The payment status and the checkout of Figma. `onPaid` runs one time when a purchase lands         |
+| `new NodeStorage(options)`                                  | Versioned plugin data of many nodes under one key. `read` does not write                           |
+| `initStorageAsync(options)`                                 | The migration of the stores, for your own backend                                                  |
+| `clientStorageAdapter(key)`, `pluginDataAdapter(node, key)` | The `read` and `write` pair of each backend. `write` says if the value was stored                  |
+| `new Payment(options)`                                      | The payment status and the checkout of Figma. `onPaid` runs one time after a purchase              |
 | `uuid()`                                                    | A random id for a stored entry                                                                     |
 
-These keep data for as long as the caller keeps the instance. None of them throws, and none of them talks to the user: a
-failure is a safe answer, a log line and a call of the caller's `onError`, where the project decides on a toast.
+These classes keep data while the caller keeps the instance. They do not throw and do not show messages to the user.
+A failure gives a safe answer, a log line and a call of `onError` of the caller. The project decides about a toast.
 
 **Logs**
 
-|                                       |                                                                                 |
-| ------------------------------------- | ------------------------------------------------------------------------------- |
-| `createLogger(scope, { isLogEnabled? })` | A logger for one scope. The payload is a function, so a disabled logger is free |
+|                                          |                                                                                          |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `createLogger(scope, { isLogEnabled? })` | A logger for one scope. The payload is a function, so a logger that is off costs nothing |
 
 ```ts
 const log = createLogger('selection', { isLogEnabled: () => config.debug })
@@ -222,11 +218,10 @@ log(() => ({ nodes: selection.map((node) => node.name) }))
 **Widgets**
 
 `getSourceWidgetNode()`, `collectWidgetNodes(pages, options?)` and `readWidgetSyncedState(node, key)` answer the same
-kind of question about widget nodes. They need nothing beyond `@figma/plugin-typings`; in a plugin, where
-`figma.widgetId` is undefined, each returns its empty answer rather than throwing.
+questions about widget nodes. They need only `@figma/plugin-typings`.
+In a plugin, `figma.widgetId` is `undefined`, and each of them returns its empty answer.
 
-Every helper carries a doc comment explaining what it does and why it is shaped that way — the types shipped with the
-package bring those into your editor.
+Each helper has a JSDoc: what it does and why it works this way. The types of the package show it in your editor.
 
 ## Development
 
@@ -237,7 +232,7 @@ npm run lint
 npm run format
 ```
 
-See [CHANGELOG.md](CHANGELOG.md) for what changed between versions.
+The changes between versions are in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

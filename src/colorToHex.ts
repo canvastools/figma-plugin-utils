@@ -1,11 +1,10 @@
 import { toHexByte } from './toHexByte'
 
 /**
- * A colour as six hex digits, `#RRGGBB` — the alpha, if there is one, left out.
+ * A color as six hex digits, `#RRGGBB`, without the alpha.
  *
- * Upper case, always: a colour is read in stored data and typed back into a hex
- * field, and the same colour must not come out in two spellings depending on
- * which helper wrote it last. `colorToHexAlpha` is the same rule with the alpha.
+ * The letters are always upper case. A plugin reads a color from stored data and writes it back into a hex field.
+ * The same color must have one spelling, from each helper. `colorToHexAlpha` has the same rule with the alpha.
  *
  * @example
  * colorToHex({ r: 0.592, g: 0.278, b: 1 })   // '#9747FF'

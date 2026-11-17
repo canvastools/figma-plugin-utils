@@ -1,18 +1,13 @@
 /**
  * Whether an instance is the target of an INSTANCE_SWAP property.
  *
- * Such an instance is a slot rather than a fixed part of the component: what it
- * points at right now is whatever the property happens to be set to. The keys
- * come from `getKeysOfInstanceSwapProperties`, read once from the component
- * being walked rather than per layer.
+ * Such an instance is a variable place, not a fixed part of the component. Its content is the current value of the property.
+ * The keys come from `getKeysOfInstanceSwapProperties`. The caller reads them once from the component, not for each layer.
  *
- * That is why it is usually worth excluding when a component's content is being
- * described: what a slot holds today is the default, not part of the component.
- * It is equally worth keeping when the question is "what is actually used in
- * this file" — hence a filter rather than a rule baked into the traversal.
+ * - Exclude these instances when you describe the content of a component. The current value is only the default.
+ * - Keep them when the question is "what does this file use". So this is a filter and not a rule of the walk.
  *
- * An empty key list means the component declares no swap properties, so nothing
- * can be a target and the answer is always false.
+ * An empty key list means that the component declares no swap properties. Then no instance is a target, and the answer is `false`.
  *
  * @example
  * const swapKeys = getKeysOfInstanceSwapProperties(component) ?? []

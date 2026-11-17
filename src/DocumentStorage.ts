@@ -62,7 +62,7 @@ class DocumentStorage<T extends TVersionedData> {
     return this
   }
 
-  /** Stores `data`. `false` when the store is not initialised or Figma refused the write. */
+  /** Stores `data`. `false` when the store is not initialized or Figma refused the write. */
   async writeAsync(): Promise<boolean> {
     if (!this.adapter) {
       reportStorageError(

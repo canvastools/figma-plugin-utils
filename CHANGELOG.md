@@ -3,17 +3,16 @@
 ### Version 2.2.0
 
 - Added:
-  - createLogger: a logger for one scope; the payload is a function, and `isLogEnabled` is the switch of the project
-  - Added
-    - `ClientStorage`
-    - `DocumentStorage`
-    - `NodeStorage`
-    - `initStorageAsync` (was `initStorage`)
-    - `clientStorageAdapter`
-    - `pluginDataAdapter`
-    - `Payment`
-    - `uuid`
-    - fractionalIndex: `findPositionAfter`, `findPositionBefore`, `midpoint`, `recalcPositions`, `sortPositions`
+  - `createLogger`: a logger for one scope. The payload is a function, and `isLogEnabled` is the switch of the project
+  - `ClientStorage`
+  - `DocumentStorage`
+  - `NodeStorage`
+  - `initStorageAsync` (was `initStorage`)
+  - `clientStorageAdapter`
+  - `pluginDataAdapter`
+  - `Payment`
+  - `uuid`
+  - Fractional indexes: `findPositionAfter`, `findPositionBefore`, `midpoint`, `recalcPositions`, `sortPositions`
 
 ### Version 2.1.0
 
@@ -46,31 +45,26 @@
   - `validateVariantNames`
 
 - Fixed:
-  - The README described `isLayerVisible` as walking the ancestor chain. It never did, and does not now: it answers
-    about the layer itself. `isNodeShown` is the one that walks up to the page.
+  - The README said that `isLayerVisible` walks the chain of ancestors. It does not: it answers about the layer itself.
+    `isNodeShown` walks up to the page.
 
 ### Version 2.0.0
 
-- Breaking:
-  - `getPage` → `getPageOfNode`. Returns `PageNode | null` instead of `PageNode`. The old one recursed on `parent`
-    without checking it, so a remote component or a detached node — both of which end their ancestor chain at `null` —
-    took it down.
-  - `getNestedInstances` → `collectInstances`. Takes `{ descendIntoInstances, include, descend }`. It no longer walks
-    inside the instances it finds by default: their children mirror their own master, so that content is reached again
-    through the master itself. Filtering moved from every caller into the `include` / `descend` predicates.
-  - `getMainComponentOfInstanceAsync` no longer climbs from a variant to its component set, and is typed
-    `Promise<ComponentNode | null>` accordingly. The climb hid the variant from every caller — use
-    `getComponentSetOfVariant` on the result when the set is what is wanted.
-  - `hasInstanceParent` → `hasInstanceAncestor`, and it no longer counts the node itself: an instance answers `false`
-    about itself, since nothing above it is an instance. The old name said "parent" while answering about the node,
-    which is why call sites ended up written as `hasInstanceParent(node) || node.type === 'INSTANCE'` — that is now
-    `isInstanceNode(node) || hasInstanceAncestor(node)`, and means what it reads as.
-  - `getKeysOfInstanceSwapProperties` returns `string[]` instead of `string[] | undefined`. Unreadable definitions now
-    give an empty list: with no keys nothing can be a swap target, which is what every caller's `?? []` already made
-    of it.
-  - `clearChildren` returns `boolean` instead of `void`, and refuses to touch the content of an instance or of
-    anything nested in one. Figma forbids removing those children, so the old version threw partway through and left
-    the node half emptied.
+- Changed, not compatible with version 1:
+  - `getPage` → `getPageOfNode`. It returns `PageNode | null`, not `PageNode`. The old helper followed `parent` and did not
+    check it. A remote component or a detached node ends its chain of ancestors at `null`, and both stopped the old helper.
+  - `getNestedInstances` → `collectInstances`. It takes `{ descendIntoInstances, include, descend }`.
+    By default it does not go into a found instance: the children of an instance repeat its main component.
+    The caller reaches that content through the main component. The filter moved from each caller into the `include` and `descend` predicates.
+  - `getMainComponentOfInstanceAsync` does not go up from a variant to its component set. Its type is `Promise<ComponentNode | null>`.
+    The step up hid the variant from each caller. Use `getComponentSetOfVariant` on the result when you need the set.
+  - `hasInstanceParent` → `hasInstanceAncestor`. It does not count the node itself: an instance gives `false`, because no ancestor is an instance.
+    The old name said "parent" but answered about the node. So call sites had `hasInstanceParent(node) || node.type === 'INSTANCE'`.
+    The new form is `isInstanceNode(node) || hasInstanceAncestor(node)`, and it means what it says.
+  - `getKeysOfInstanceSwapProperties` returns `string[]`, not `string[] | undefined`. Definitions that it cannot read give an empty list.
+    With no keys, no instance is a swap target. Each caller already did the same with `?? []`.
+  - `clearChildren` returns `boolean`, not `void`. It does not change the content of an instance or of a node in an instance.
+    Figma does not let a plugin remove those children, so the old helper threw in the middle and left the node half empty.
 
 - Added:
   - `collectInstances`
@@ -86,7 +80,7 @@
   - `isNodeAlive`
   - `asSceneNode`
   - `getBooleanPropertyKey`
-    `hasBooleanProperties`
+  - `hasBooleanProperties`
   - `getNodeKey`
   - `getPropertyName`
   - `hasDescendantMatching`
@@ -98,8 +92,8 @@
   - `readWidgetSyncedState`
 
 - Docs:
-  - Every helper now carries a JSDoc block: what it answers, when to reach for it, and the edge cases behind the
-    guards. Examples are there where a call site says more than a paragraph would.
+  - Each helper has a JSDoc: what it answers, when to use it, and the edge cases of the guards.
+    An example is there when a call site says more than a paragraph.
 
 ### Version 1.2.0
 

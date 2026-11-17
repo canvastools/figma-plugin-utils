@@ -3,9 +3,9 @@ import type { TColor } from './colorTypes'
 import { getGradientHandlePositions } from './getGradientHandlePositions'
 
 /**
- * A gradient as a preview draws it: the paint's matrix turned into the three
- * handles — start, end and width, in the unit square of whatever it paints —
- * and every stop's colour with the paint's opacity folded in.
+ * A gradient as a preview draws it.
+ * The matrix of the paint becomes three handles: start, end and width, in the unit square of the painted area.
+ * The color of each stop includes the opacity of the paint.
  */
 export type TGradientPreview = {
   type: 'gradient-linear' | 'gradient-radial' | 'gradient-angular'
@@ -13,7 +13,7 @@ export type TGradientPreview = {
   gradientStops: { color: TColor; position: number }[]
 }
 
-/* One paint of a preview: a colour or a gradient */
+/* One paint of a preview: a color or a gradient */
 export type TPaintPreviewLayer = TColor | TGradientPreview
 
 /* One paint as itself, or several, bottom first */
@@ -37,17 +37,14 @@ const toGradientPreview = (paint: GradientPaint): TGradientPreview => ({
 })
 
 /**
- * A list of paints — a paint style's, a node's fills — as what a swatch of
- * them draws, bottom first as Figma keeps them.
+ * A list of paints (of a paint style, the fills of a node) as a swatch draws it, from the bottom up.
  *
- * Plain data out of the paints: a solid as its colour, its opacity folded into
- * the alpha; a gradient by its kind, its handles worked back out of
- * `gradientTransform` and its stops' colours carrying the paint's opacity. A
- * diamond gradient is drawn as a radial one.
+ * The result is plain data from the paints. A solid gives its color, with its opacity in the alpha.
+ * A gradient gives its type, its handles from `gradientTransform` and the colors of its stops with the opacity of the paint.
+ * A diamond gradient becomes a radial gradient.
  *
- * A hidden paint draws nothing and is left out; an image, a video or a pattern
- * has nothing a swatch can draw and is left out too. One paint left is answered
- * as itself rather than as a list of one; `null` when nothing is left.
+ * The result omits a hidden paint. It also omits an image, a video and a pattern: a swatch cannot draw them.
+ * When one paint is left, the result is that paint, not a list of one. When no paint is left, the result is `null`.
  *
  * @example
  * const preview = toPaintPreview(style.paints)

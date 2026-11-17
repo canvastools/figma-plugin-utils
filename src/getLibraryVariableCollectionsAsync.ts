@@ -1,17 +1,12 @@
 /**
- * The variable collections of the libraries enabled in this file, or an empty
- * list.
+ * The variable collections of the libraries that are enabled in this file, or an empty list.
  *
- * **The getter is what throws, not the call.** Without `"teamlibrary"` in the
- * manifest's permissions, reaching for `figma.teamLibrary` throws `in
- * get_teamLibrary: "teamlibrary" permission not specified in manifest.json` — so
- * a `.catch` on the promise never sees it. Guarded around both, so a plugin
- * without the permission, or a build where it was dropped, answers with no
- * libraries rather than with nothing at all.
+ * **The getter throws, not the call.** Without `"teamlibrary"` in the permissions of the manifest, a read of `figma.teamLibrary` throws
+ * `in get_teamLibrary: "teamlibrary" permission not specified in manifest.json`. So a `.catch` on the promise does not see it.
+ * The helper guards both. A plugin without the permission gives an empty list and does not fail.
  *
- * Only the *enabled* libraries are listed, and the API cannot enable one; there
- * is no listing call for library **styles** at all. A key stored elsewhere
- * resolves far more widely than this lists — see `findVariableAsync`.
+ * The list has only the enabled libraries, and the API cannot enable a library. The API has no list call for library **styles**.
+ * A stored key resolves in many more libraries than this list: see `findVariableAsync`.
  *
  * @example
  * const collections = await getLibraryVariableCollectionsAsync()

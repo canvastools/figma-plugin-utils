@@ -1,13 +1,11 @@
 /**
- * Fractional indexing for ordered lists.
+ * Fractional indexes for ordered lists.
  *
- * An item keeps its place in a list through a `position` string rather than a
- * numeric index, so inserting or moving one item rewrites one row instead of
- * renumbering the list. Positions are read as base-36 fractions over the
- * alphabet `0-9a-z` (`'m'` ≈ 0.61…) and compared lexicographically.
+ * An item keeps its place in a list with a `position` string, not a number index.
+ * So an insert or a move changes one row and does not number the list again.
+ * A position is a base-36 fraction in the alphabet `0-9a-z` (`'m'` ≈ 0.61…). Positions compare as strings.
  *
- * Generated values never end in `'0'`, so a smaller position can always be
- * derived later — inserting between two neighbours never runs out of room.
+ * A generated value does not end in `'0'`. So a smaller position is always available, and an insert between two neighbors always has room.
  */
 
 const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz'
@@ -45,10 +43,11 @@ const midpoint = (a: string | null, b: string | null): string => {
     const l = i < left.length ? left[i] : 0
     const r = bOpen ? BASE : i < right.length ? right[i] : -1
 
-    /** b exhausted while still bounding: b is `a` plus trailing zeros (or all
-     * zeros) — nothing fits strictly between/below. Only reachable with
-     * positions this module never generates (legacy data). Degrade to ''
-     * (sorts before any non-empty position) or to the common prefix. */
+    /**
+     * `b` ends while it is still a bound: `b` is `a` with zeros at the end, or only zeros.
+     * No position fits between or below. Only old data has such positions: this module does not make them.
+     * The function then gives `''` (it sorts before each other position) or the common prefix.
+     */
     if (r === -1) {
       return !a ? '' : toString(output)
     }
@@ -97,8 +96,9 @@ const compareFractionalPositions = (a: string, b: string): number => {
 }
 
 /**
- * List order by `position`. A map or a record gives no order guarantee of its
- * own, so anything read out of one is sorted through here before it is shown.
+ * Sorts a list by `position`. A map or a record does not keep an order.
+ *
+ * - Sort the values of a map or a record with this function before you show them.
  */
 const sortPositions = <T extends { position: string }>(items: ReadonlyArray<T>): T[] =>
   [...items].sort((a, b) => compareFractionalPositions(a.position, b.position))
@@ -106,14 +106,12 @@ const sortPositions = <T extends { position: string }>(items: ReadonlyArray<T>):
 /* Reordering */
 
 /**
- * Reassign positions after a drag-and-drop: `updatedOrder` is the list of ids
- * in their new order, `currentOrder` the order they had.
+ * Gives new positions after a drag and drop. `updatedOrder` is the new order of the ids, `currentOrder` is the old order.
  *
- * Returns `items` untouched — the same reference — when nothing moved, and when
- * `updatedOrder` is not a permutation of the current ids. An order built from
- * outdated client state would otherwise silently drop the items missing from
- * it; keeping the current state lets the caller return the full dataset and the
- * client re-sync.
+ * It returns `items` unchanged, the same reference, when no item moved.
+ * It also returns `items` when `updatedOrder` is not a permutation of the current ids.
+ * An order from old client data can omit items, and a new order without them loses them.
+ * With the current data, the caller returns the full data set and the client gets it again.
  */
 const recalcPositions = <T extends { id: string; position: string }>(
   items: T[],

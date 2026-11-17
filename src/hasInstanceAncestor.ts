@@ -1,16 +1,13 @@
 /**
- * Whether a node sits inside an instance.
+ * Whether a node is in an instance.
  *
- * The node itself does not count: an instance placed on the page answers
- * `false`, because nothing above it is an instance. Ask
- * `isInstanceNode(node) || hasInstanceAncestor(node)` when the node's own type
- * should count too — which is the question behind "can the user edit this",
- * since an instance is as locked as its content.
+ * The node itself does not count. An instance on the page gives `false`, because no ancestor is an instance.
  *
- * That split is the whole point of the rename from `hasInstanceParent`, which
- * counted the node itself while its name said otherwise.
+ * - Use `isInstanceNode(node) || hasInstanceAncestor(node)` when the type of the node counts too. That is the question "can the user edit this".
  *
- * The walk goes all the way up: one plain frame in between changes nothing.
+ * An instance is as locked as its content. The old name `hasInstanceParent` counted the node itself, and the name said otherwise.
+ *
+ * The walk goes up to the top: a plain frame between the node and the instance changes nothing.
  *
  * @example
  * hasInstanceAncestor(node)                             // "is it nested in an instance"

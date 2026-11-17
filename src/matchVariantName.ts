@@ -18,22 +18,17 @@ export type TMatchedVariantName =
   | { status: 'invalid'; reason: Exclude<TInvalidVariantReason, 'DUPLICATE'>; property: string | null }
 
 /**
- * The property values of one variant, checked against the properties its set
- * declares.
+ * The property values of one variant, checked against the properties that its set declares.
  *
- * Reading the pairs out of the name is `parseVariantName`, and it stops where
- * the string stops meaning anything on its own: whether `Size` is a property of
- * *this* set is a question about the set, and that check is what this adds.
+ * `parseVariantName` reads the pairs from the name. It stops where the string alone says nothing more.
+ * Whether `Size` is a property of this set is a question about the set. This helper adds that check.
  *
- * Figma stores the state of a variant nowhere but in its name, and the name is
- * editable text like any other layer name. Renaming it by hand leaves a
- * component that still renders while every tool reading variants starts lying,
- * so nothing is trusted until it is checked. Three ways it can go wrong, told
- * apart because they mean different things to whoever has to fix them — see
- * `TInvalidVariantReason`. `property` names the one at fault, where there is one.
+ * Figma stores the state of a variant only in its name, and the name is editable text like each layer name.
+ * A rename by hand leaves a component that still renders, and each tool that reads variants gives wrong results.
+ * So the helper checks each value. There are three types of error, and each needs a different fix: see `TInvalidVariantReason`.
+ * `property` names the wrong property, when there is one.
  *
- * Every declared key has to be present, which also catches a name that repeats
- * one property and leaves out another: the repeat overwrites itself.
+ * Each declared key must be present. This also catches a name that repeats one property and omits another: the repeat overwrites itself.
  *
  * @example
  * matchVariantName('Size=M, Type=Primary', ['Size', 'Type'])

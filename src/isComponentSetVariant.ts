@@ -1,15 +1,11 @@
 /**
- * Whether a node is a component that lives inside a component set — that is, one
- * variant of a component rather than a standalone one.
+ * Whether a node is a component in a component set: one variant of a component, not a separate component.
  *
- * The distinction matters wherever a component is counted or named. Twelve
- * variants are one component in a library and twelve entries in a node tree, and
- * a variant's own name is its property string (`Size=M, Type=Primary`), not
- * anything a user would recognise — the readable name is on the set.
+ * The difference is important when a plugin counts or names components.
+ * Twelve variants are one component in a library and twelve entries in a node tree.
+ * The name of a variant is its property string (`Size=M, Type=Primary`), not a name for a user. The readable name is on the set.
  *
- * Returns a boolean rather than narrowing the node, so a caller that needs the
- * set itself should use `getComponentSetOfVariant`, which answers both questions
- * at once.
+ * - Use `getComponentSetOfVariant` when you need the set. This helper returns a boolean and does not narrow the type.
  */
 const isComponentSetVariant = (node: BaseNode): boolean => {
   try {

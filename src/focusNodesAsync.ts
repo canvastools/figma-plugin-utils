@@ -1,23 +1,17 @@
 import { getPageOfNode } from './getPageOfNode'
 
 /**
- * Goes to nodes on the canvas: their page, the viewport around them, and — when
- * asked — the selection.
+ * Goes to nodes on the canvas: their page, the viewport around them and, as an option, the selection.
  *
- * **Whether it selects is an option, because "focus" means two opposite
- * things.** "Go and look" leaves the selection alone — selecting would answer
- * whatever the plugin hangs off the selection, and cost the user what they were
- * working on. "Here is what you are working on now" selects, and the selection
- * is then the whole point.
+ * **The selection is an option, because "focus" has two opposite meanings.**
+ * "Go and look" does not change the selection. A new selection starts the selection logic of the plugin, and the user loses the current work.
+ * "This is your work now" selects the nodes. Then the selection is the purpose of the call.
  *
- * One page for all of them, the first node's: a selection lives on one page,
- * and nodes found together are expected to stand together. Crossing to another
- * page disturbs the selection either way — a page carries its own, and Figma
- * reports the change.
+ * All the nodes go to one page, the page of the first node. A selection is on one page, and nodes that a caller finds together stay together.
+ * A move to another page changes the selection in each case: each page has its own selection, and Figma reports the change.
  *
- * Answers whether it went anywhere: `false` for no nodes, for a node with no
- * page (a remote or detached one), and for anything Figma refused — never a
- * throw.
+ * It returns `true` when it went to the nodes. It returns `false` for no nodes, for a node with no page (a remote or detached node) and for a refusal of Figma.
+ * It does not throw.
  *
  * @example
  * await focusNodesAsync([frame])                    // look
