@@ -1,6 +1,6 @@
 # figma-plugin-utils
 
-What the package is and its conventions are in `README.md` and in the comment of `src/index.ts`. Read them before a change.
+What the package is and its conventions are in `docs/` and in the comment of `src/index.ts`. Read `docs/usage.md` before a change.
 
 ## Commands
 
@@ -24,5 +24,5 @@ npm run prod        # lint + typecheck + build
 ## Docs
 
 - Follow `rules/language.md` (ASD-STE100) and `rules/docs.md`.
-- Search the JSDoc and `README.md` before you write. Do not write the same fact in two places.
+- Search the JSDoc, `docs/` and `README.md` before you write. Do not write the same fact in two places.
 - Change the docs in the same change as the code.

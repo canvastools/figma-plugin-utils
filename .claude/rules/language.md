@@ -7,7 +7,7 @@ paths:
 
 # Language
 
-These conventions apply to each JSDoc in `src`, to `README.md`, `CHANGELOG.md` and to each file in `.claude`.
+These conventions apply to each JSDoc in `src`, to `README.md`, to each file in `docs`, `CHANGELOG.md` and to each file in `.claude`.
 
 The language is English in the style of ASD-STE100 (Simplified Technical English), with American spelling.
 The American spelling also applies to each comment in the code.
