@@ -20,7 +20,7 @@ import { walkNodeTree } from './walkNodeTree'
  * - Catch the error in the predicate when the caller must report the failure, not only log it.
  *
  * @example
- * hasDescendantMatching(frame, (node) => node.getPluginData('spec') !== '')
+ * hasDescendantMatching(frame, (node) => node.getPluginData('my-plugin') !== '')
  */
 const hasDescendantMatching = (node: BaseNode, predicate: (node: SceneNode) => boolean): boolean => {
   let isMatching = false

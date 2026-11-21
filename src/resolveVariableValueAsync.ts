@@ -3,9 +3,9 @@ import type { TVariableLookup } from './createVariableLookup'
 import { isVariableAlias } from './isVariableAlias'
 
 export type TResolveVariableValueOptions = {
-  /* Where the chain's variables and collections are found. A fresh one, asking the API, by default */
+  /** Where the helper finds the variables and the collections of the chain. Without it, the helper makes a new lookup that asks the API. */
   lookup?: TVariableLookup
-  /* How many aliases are followed before giving up. 8 by default */
+  /** The maximum number of aliases that the helper follows. After that number, the result is `null`. */
   maxHops?: number
 }
 

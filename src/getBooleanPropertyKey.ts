@@ -11,10 +11,10 @@
  *
  * The key is as Figma stores it, with its suffix (`Show icon#12:3`). The definitions use the same key.
  *
- * - Pass the key through `getPropertyName` before a user sees it.
- *
  * The helper gives `null` for a layer with no binding, for a node type with no references and for a node that it cannot read.
  * All three mean the same for a caller: this layer has no boolean.
+ *
+ * - Pass the key through `getPropertyName` before a user sees it.
  *
  * @example
  * const key = getBooleanPropertyKey(layer)

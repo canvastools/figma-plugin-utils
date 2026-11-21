@@ -2,6 +2,11 @@
 export type TImportByKeyOutcome =
   { status: 'found'; node: ComponentNode | ComponentSetNode } | { status: 'empty' } | { status: 'failed'; message: string }
 
+export type TImportByKeyOptions = {
+  /** The helper calls it before each import call. Use it to count or limit the most expensive call of a plugin. */
+  onApiCall?: () => void
+}
+
 /**
  * Imports a published component or component set by its key, for the type that the key has.
  *
@@ -22,8 +27,6 @@ export type TImportByKeyOutcome =
  *
  * - Search the document first.
  *
- * The helper calls `onApiCall` before each try. A caller uses it to count or limit the most expensive call of a plugin.
- *
  * @example
  * const outcome = await importComponentOrSetByKeyAsync(key, 'COMPONENT_SET')
  *
@@ -32,7 +35,7 @@ export type TImportByKeyOutcome =
 const importComponentOrSetByKeyAsync = async (
   key: string,
   preferType: NodeType = 'COMPONENT',
-  options: { onApiCall?: () => void } = {},
+  options: TImportByKeyOptions = {},
 ): Promise<TImportByKeyOutcome> => {
   const imports =
     preferType === 'COMPONENT_SET'

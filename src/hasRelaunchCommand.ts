@@ -5,9 +5,9 @@
  * A plugin that marks forty nodes after a run gets forty events of its own edits.
  * `setRelaunchCommand` does this check too.
  *
- * - Call it before `setRelaunchCommand` when the plugin has work before the write. An example is a mark of ownership.
- *
  * It returns `false` for a node that it cannot read.
+ *
+ * - Call it before `setRelaunchCommand` when the plugin has work before the write. An example is a mark of ownership.
  *
  * @example
  * if (!hasRelaunchCommand(node, 'run')) setRelaunchCommand(node, 'run', 'Open the plugin')

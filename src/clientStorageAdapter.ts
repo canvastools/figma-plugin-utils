@@ -1,6 +1,7 @@
 import type { TStorageAdapter, TStorageErrorHandler } from './storageTypes'
 
-import { isQuotaError, reportStorageError } from './reportStorageError'
+import { isQuotaError } from './isQuotaError'
+import { reportStorageError } from './reportStorageError'
 
 /**
  * `figma.clientStorage` as a storage adapter: for each user, the same in each file.

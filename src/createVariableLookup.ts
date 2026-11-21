@@ -1,9 +1,7 @@
 /**
- * Where a reader of variable values finds the variables and collections it
- * passes through.
+ * Where a reader of variable values finds the variables and the collections of a chain.
  *
- * Both answer `null` rather than throw — for an id this file has never seen, and
- * for one the API refused.
+ * Both functions give `null` and do not throw: for an id that this file does not know, and for an id that the API refused.
  */
 export type TVariableLookup = {
   collectionAsync: (id: string) => Promise<VariableCollection | null>

@@ -1,5 +1,5 @@
-import { isSamePublished } from './findVariableAsync'
 import type { TPublishedRef } from './findVariableAsync'
+import { isSamePublished } from './isSamePublished'
 
 /* A style by the `type` Figma gives it */
 export type TStyleOfType = {

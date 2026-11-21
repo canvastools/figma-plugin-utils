@@ -5,19 +5,17 @@ import { pluginDataAdapter } from './pluginDataAdapter'
 import { reportStorageError } from './reportStorageError'
 
 /**
- * A store in the plugin data of the document: per file, shared by everyone who edits it.
+ * A store in the plugin data of the document: for each file, the same for each user who edits it.
  *
- * The same surface as `ClientStorage`: `data`, `initAsync()`, `writeAsync()`.
- * The document node is found in `initAsync`, so a store can be made before Figma
- * has a current page.
+ * It has these members of `ClientStorage`: `data`, `initAsync()`, `writeAsync()`.
+ * The store finds the document node in `initAsync`, so a project can make a store before Figma has a current page.
  *
- * Nothing throws. Without a document node `initAsync` reports `unavailable` and
- * keeps the defaults in `data`; `writeAsync` before a successful `initAsync`
- * reports `unavailable` and gives `false`.
+ * Nothing throws. Without a document node, `initAsync` reports `unavailable` and keeps the defaults in `data`.
+ * A `writeAsync` before a successful `initAsync` reports `unavailable` and gives `false`.
  *
  * @example
  * const documentStorage = await new DocumentStorage<TDocumentData>({
- *   key: config.storages.document.key,
+ *   key: 'my-plugin',
  *   version: config.version,
  *   defaults: { lastUsedVersion: config.version, templates: [] },
  * }).initAsync()

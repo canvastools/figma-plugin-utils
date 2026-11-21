@@ -14,7 +14,7 @@ import { isNodeAlive } from './isNodeAlive'
 export type TWalkVerdict = void | 'skip' | 'stop'
 
 export type TWalkNodeTreeOptions = {
-  /* Whether `root` itself is visited. False by default — the usual question is about the content */
+  /** Whether the walk visits `root` itself. The usual question is about the content of the root. */
   includeRoot?: boolean
 }
 

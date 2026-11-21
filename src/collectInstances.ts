@@ -4,22 +4,20 @@ export type TCollectInstancesOptions = {
   /**
    * Whether the walk goes into the children of a found instance.
    *
-   * It is `false` by default, and that is the useful default. The children of an instance repeat its main component.
+   * The children of an instance repeat its main component.
    * The caller finds them again, one time, when it resolves the main component. A walk into each instance reads the same content many times.
    */
   descendIntoInstances?: boolean
-  /* Whether a found instance is kept. Everything is kept by default */
+  /** Whether the result keeps a found instance. Without it, the result keeps each instance. */
   include?: (instance: InstanceNode) => boolean
-  /* Whether the walk goes inside a container. Everything is walked by default */
+  /** Whether the walk goes into a container. Without it, the walk goes into each container. */
   descend?: (container: SceneNode) => boolean
 }
 
 /**
  * The instances in a node.
  *
- * It replaces the old `getNestedInstances`. That helper always went into each node and left the filter to the caller.
- * So each caller wrote its own visibility and property rules, and checked the type of the root and not of the current layer.
- *
+ * A walk that goes into each node leaves the filter to each caller. Then each caller writes its own visibility and property rules.
  * Both predicates answer about one layer. So the caller keeps the policy (what is part of a component).
  * `walkNodeTree` keeps the walk, as for each other walk in this package.
  *
@@ -31,7 +29,7 @@ export type TCollectInstancesOptions = {
  * collectInstances(component)
  *
  * @example
- * // Only what is on screen, skipping swappable slots
+ * // Only what is on screen. A swap target is not kept
  * collectInstances(component, {
  *   include: (instance) => isLayerVisible(instance) && !isInstanceSwapTarget(instance, swapKeys),
  *   descend: (container) => isLayerVisible(container),

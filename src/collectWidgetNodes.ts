@@ -1,5 +1,12 @@
+export type TCollectWidgetNodesOptions = {
+  /** The id of the widget whose nodes the helper collects. */
+  widgetId?: string
+  /** The ids of the nodes to leave out, usually the source widget itself. */
+  excludeIds?: readonly string[]
+}
+
 /**
- * Each node of one widget on the given pages.
+ * Each node of one widget on the given pages. Without `widgetId`, it collects the nodes of the widget that asks.
  *
  * It is the walk half of a feature that works on the other instances of a widget.
  * Examples: a copy of the state from one widget to the others, a count, a list in a picker.
@@ -11,19 +18,11 @@
  * So one bad page does not make the result of the other pages smaller with no error.
  *
  * @example
- * const pages = await loadPagesAsync()
+ * await figma.loadAllPagesAsync()
  *
- * const targets = collectWidgetNodes(pages, { excludeIds: [source.id] })
+ * const targets = collectWidgetNodes(figma.root.children, { excludeIds: [source.id] })
  */
-const collectWidgetNodes = (
-  pages: readonly PageNode[],
-  options: {
-    /** The default is `figma.widgetId`: the widget that asks */
-    widgetId?: string
-    /** Nodes to leave out, typically the source widget itself */
-    excludeIds?: readonly string[]
-  } = {},
-): WidgetNode[] => {
+const collectWidgetNodes = (pages: readonly PageNode[], options: TCollectWidgetNodesOptions = {}): WidgetNode[] => {
   const { widgetId = figma.widgetId, excludeIds } = options
 
   /* A plugin has no widget id, and no widget nodes of its own to collect */

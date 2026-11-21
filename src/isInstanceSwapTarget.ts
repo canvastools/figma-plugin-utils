@@ -10,7 +10,7 @@
  * An empty key list means that the component declares no swap properties. Then no instance is a target, and the answer is `false`.
  *
  * @example
- * const swapKeys = getKeysOfInstanceSwapProperties(component) ?? []
+ * const swapKeys = getKeysOfInstanceSwapProperties(component)
  *
  * const fixedInstances = instances.filter((instance) => !isInstanceSwapTarget(instance, swapKeys))
  */

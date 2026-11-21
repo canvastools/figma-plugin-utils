@@ -1,3 +1,8 @@
+export type TIsLayerVisibleOptions = {
+  /** Whether a layer that a component property turns off counts as visible. */
+  countPropertyBound?: boolean
+}
+
 /**
  * Whether a layer is visible. As an option, it also counts the layers that a component property turns off.
  *
@@ -13,7 +18,7 @@
  * isLayerVisible(layer)                                // strictly what is on
  * isLayerVisible(layer, { countPropertyBound: true })  // plus what a property switches off
  */
-const isLayerVisible = (node: SceneNode, options: { countPropertyBound?: boolean } = {}): boolean => {
+const isLayerVisible = (node: SceneNode, options: TIsLayerVisibleOptions = {}): boolean => {
   try {
     if (node.visible) {
       return true

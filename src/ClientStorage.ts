@@ -18,7 +18,7 @@ import { reportStorageError } from './reportStorageError'
  *
  * @example
  * const clientStorage = await new ClientStorage<TClientData>({
- *   key: config.storages.client.key,
+ *   key: 'my-plugin',
  *   version: config.version,
  *   defaults: { lastUsedVersion: config.version, templates: [] },
  *   onError: (kind) => figma.notify(kind === 'quota' ? 'The storage is full' : 'Changes were not saved', { error: true }),

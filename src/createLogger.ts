@@ -1,12 +1,12 @@
 /**
  * What a scope logs with. The payload is a function: see `createLogger`.
  */
-type TLogger = (build: () => unknown) => void
+export type TLogger = (build: () => unknown) => void
 
-type TLoggerOptions = {
+export type TLoggerOptions = {
   /**
-   * Whether the logger prints now. Read on each call, so a switch that changes at run time works.
-   * Without it the logger always prints.
+   * Whether the logger prints now. The logger reads it at each call, so a switch that changes at run time works.
+   * Without it, the logger always prints.
    */
   isLogEnabled?: () => boolean
 }
@@ -39,4 +39,3 @@ const createLogger =
   }
 
 export { createLogger }
-export type { TLogger, TLoggerOptions }

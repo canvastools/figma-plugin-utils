@@ -2,7 +2,7 @@
 export type TPaymentData = {
   /** `figma.payments.status.type === 'PAID'` */
   isPaid: boolean
-  /** Not paid, and still inside the trial window */
+  /** `true` when the user did not pay and the trial is not over. */
   isTrial: boolean
   daysSinceFirstRun: number
 }
@@ -11,14 +11,14 @@ export type TPaymentOptions = {
   /** The length of the free trial in days. Leave it out, or pass `0`, for no trial. */
   trialDays?: number
   /**
-   * Called one time when `readStatus` first sees the status change from unpaid
-   * to paid. This is where a project shows its toast.
+   * The function that `readStatus` calls one time, when it first sees a change from unpaid to paid.
+   * A project shows its toast here.
    */
   onPaid?: (data: TPaymentData) => void
 }
 
 export type TPaymentCheckoutOptions = {
-  /** Defaults to `PAID_FEATURE` during the trial and to `TRIAL_ENDED` after it. */
+  /** The screen before the checkout. Without it, the checkout shows `PAID_FEATURE` during the trial and `TRIAL_ENDED` after it. */
   interstitial?: 'PAID_FEATURE' | 'TRIAL_ENDED' | 'SKIP'
 }
 
@@ -62,18 +62,19 @@ const isWithinTrial = (trialDays: number | undefined): boolean =>
  * Nothing throws. Where Figma does not support payments, the status is "not paid".
  *
  * @example
- * // A gate for a paid feature. A trial counts as access.
- * if (!Payment.checkIsPaid({ trialDays: config.trialDays })) return
+ * // A gate for a paid feature. A trial counts as access
+ * if (!Payment.checkIsPaid({ trialDays: 7 })) return
  *
  * @example
- * // One instance for the payment channel of the bridge
+ * // A paywall: one instance, and a read of the status at each poll
  * const payment = new Payment({
- *   trialDays: config.trialDays,
+ *   trialDays: 7,
  *   onPaid: () => figma.notify('Full access unlocked'),
  * })
  *
- * resolve: () => payment.readStatus()
- * openCheckout: () => payment.openPaymentAsync()
+ * const status = payment.readStatus()
+ *
+ * if (!status.isPaid) await payment.openPaymentAsync()
  */
 class Payment {
   private options: TPaymentOptions
@@ -86,7 +87,7 @@ class Payment {
   }
 
   /**
-   * `true` when the user has paid or, with `trialDays`, is still inside the trial.
+   * `true` when the user paid or, with `trialDays`, when the trial is not over.
    * Without options it is the paid status alone.
    */
   static checkIsPaid({ trialDays }: Pick<TPaymentOptions, 'trialDays'> = {}): boolean {

@@ -1,19 +1,10 @@
+import { isSamePublished } from './isSamePublished'
+
 /**
  * The stored reference to a variable or a style: the id in the file where the user picked it, and its publish key.
  * The key is `null` or empty for an item that is not published.
  */
 export type TPublishedRef = { id: string; key: string | null }
-
-/**
- * Whether the item that an id found is the item of the reference.
- *
- * **An id names one item in one file.** A local id like `VariableID:1:4` is a usual id of a different variable in each other file.
- * So an id that resolves proves nothing. Only its key proves the match.
- * A reference with no key matches by its id: an unpublished item has no other identity.
- * That is safe in the file where the user picked it, and a risk in other files.
- * A public plugin cannot tell the files apart: `figma.fileKey` exists only for private plugins.
- */
-const isSamePublished = (ref: TPublishedRef, found: { key: string }): boolean => !ref.key || found.key === ref.key
 
 /**
  * The variable that a stored reference names in this file, or `null`. The id comes first, the key second.
@@ -46,4 +37,4 @@ const findVariableAsync = async (ref: TPublishedRef): Promise<Variable | null> =
   return figma.variables.importVariableByKeyAsync(ref.key).catch(() => null)
 }
 
-export { findVariableAsync, isSamePublished }
+export { findVariableAsync }

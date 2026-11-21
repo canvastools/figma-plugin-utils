@@ -6,24 +6,23 @@ import { reportStorageError } from './reportStorageError'
 /**
  * A store in the plugin data of nodes: one key, any number of nodes.
  *
- * Unlike `ClientStorage` and `DocumentStorage` it holds no node and no data.
- * The node goes into each call, so one store serves every node with the key.
+ * `ClientStorage` and `DocumentStorage` hold their data. This store holds no node and no data.
+ * Each call gets the node, so one store serves each node with the key.
  *
- * Every write is stamped with `lastUsedVersion`, and `read` gives the stamp back.
- * So the project can tell a current node from one to migrate or to drop. The
- * store migrates nothing, and `read` never writes: to look at a node must not tag it.
+ * The store writes `lastUsedVersion` into each entry, and `read` gives that version back.
+ * So the project tells a current node from a node to migrate or to remove.
+ * The store migrates nothing, and `read` does not write: a read must not mark a node.
  *
- * Nothing throws, and a node is never assumed to be alive: a node that is gone
- * reads as no data and refuses a write.
+ * Nothing throws. The store does not assume that a node is alive: a node that is gone reads as no data and refuses a write.
  *
  * @example
- * const specStorage = new NodeStorage<TSpecData>({ key: 'spec', version: config.version })
+ * const nodeStorage = new NodeStorage<TNodeData>({ key: 'my-plugin', version: config.version })
  *
- * specStorage.write(node, { targetNodeId: target.id })
+ * nodeStorage.write(node, { sourceId: source.id })
  *
- * const data = specStorage.read(node)
+ * const data = nodeStorage.read(node)
  *
- * if (!data) return 'not a spec'
+ * if (!data) return 'no data'
  * if (data.lastUsedVersion < config.version) return 'migrate'
  */
 class NodeStorage<T> {
@@ -50,6 +49,7 @@ class NodeStorage<T> {
     return isWritten ? stamped : null
   }
 
+  /** `true` when the node has readable data under the key. */
   has(node: BaseNode): boolean {
     return this.read(node) !== null
   }

@@ -1,15 +1,15 @@
 import { parseVariantName } from './parseVariantName'
 
 /**
- * Why a variant's name says no state of its own.
+ * The reason why the name of a variant gives no state of its own.
  *
- * - `INVALID_NAME` — not a property string at all
- * - `UNKNOWN_PROPERTY` — names a property the set does not declare
- * - `INCOMPLETE` — leaves out a property the set declares
- * - `DUPLICATE` — says a state another variant of the set already says
+ * - `INVALID_NAME`: the name is not a property string.
+ * - `UNKNOWN_PROPERTY`: the name has a property that the set does not declare.
+ * - `INCOMPLETE`: the name does not have a property that the set declares.
+ * - `DUPLICATE`: the name gives the state of another variant of the set.
  *
- * The first three are about one name, and `matchVariantName` answers them; the
- * fourth is about two, and only `validateVariantNames` can.
+ * The first three reasons are about one name, and `matchVariantName` finds them.
+ * The fourth reason is about two names, and only `validateVariantNames` finds it.
  */
 export type TInvalidVariantReason = 'INVALID_NAME' | 'UNKNOWN_PROPERTY' | 'INCOMPLETE' | 'DUPLICATE'
 

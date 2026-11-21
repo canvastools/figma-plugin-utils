@@ -1,5 +1,10 @@
 import { getPageOfNode } from './getPageOfNode'
 
+export type TFocusNodesOptions = {
+  /** Whether the nodes become the selection. Use it when the nodes are the next work of the user. */
+  select?: boolean
+}
+
 /**
  * Goes to nodes on the canvas: their page, the viewport around them and, as an option, the selection.
  *
@@ -17,7 +22,7 @@ import { getPageOfNode } from './getPageOfNode'
  * await focusNodesAsync([frame])                    // look
  * await focusNodesAsync(drawn, { select: true })    // look, and work on it
  */
-const focusNodesAsync = async (nodes: SceneNode[], options: { select?: boolean } = {}): Promise<boolean> => {
+const focusNodesAsync = async (nodes: SceneNode[], options: TFocusNodesOptions = {}): Promise<boolean> => {
   const page = nodes.length ? getPageOfNode(nodes[0]) : null
 
   if (!page) {

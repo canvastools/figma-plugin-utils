@@ -1,5 +1,6 @@
 import { asSceneNode } from './asSceneNode'
 import { focusNodesAsync } from './focusNodesAsync'
+import type { TFocusNodesOptions } from './focusNodesAsync'
 
 /**
  * Goes to the node of an id, on its page. See `focusNodesAsync` for what "goes to" means.
@@ -10,7 +11,7 @@ import { focusNodesAsync } from './focusNodesAsync'
  * @example
  * await focusNodeByIdAsync(widgetId, { select: true })
  */
-const focusNodeByIdAsync = async (id: string, options: { select?: boolean } = {}): Promise<boolean> => {
+const focusNodeByIdAsync = async (id: string, options: TFocusNodesOptions = {}): Promise<boolean> => {
   try {
     const node = asSceneNode(await figma.getNodeByIdAsync(id))
 
