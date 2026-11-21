@@ -1,21 +1,17 @@
 import { isLayerVisible } from './isLayerVisible'
 
 /**
- * Whether a node is actually on the canvas — its own flag, and every frame it
- * sits in, up to the page.
+ * Whether a node is really on the canvas: its own flag and each frame above it, up to the page.
  *
- * **Hidden is hidden, whatever hid it.** `isLayerVisible` answers about one
- * layer, which is the right question inside a component, where a boolean
- * property switches layers off; this answers what a person can see, and a
- * visible instance inside a hidden frame is not something they can see.
+ * **A hidden node is hidden, for each cause.** `isLayerVisible` answers about one layer.
+ * That is the correct question in a component, where a boolean property turns layers off.
+ * This helper answers what a person sees, and a person does not see a visible instance in a hidden frame.
  *
- * Layers a property switches off are not counted as shown: this is about the
- * canvas, and a layer that is off is off. A page and the document have no
- * `visible` and end the walk. A dead handle answers `false` — the safe end of
- * the type, and the answer a deleted node deserves.
+ * A layer that a property turns off does not count as shown: this helper is about the canvas.
+ * A page and the document have no `visible`, and the walk ends at them.
+ * A dead handle gives `false`: the safe end of the type, and the correct answer for a deleted node.
  *
- * Walks the ancestors on every call. Inside a walk of a tree that already
- * prunes hidden branches, `isLayerVisible` on each node is the cheaper question.
+ * It walks the ancestors at each call. In a walk that already skips hidden branches, `isLayerVisible` on each node costs less.
  *
  * @example
  * const pointedAt = figma.currentPage.selection.filter(isNodeShown)

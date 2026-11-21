@@ -1,20 +1,16 @@
 import { isNodeAlive } from './isNodeAlive'
 
 /**
- * Whether a node lives in a library rather than in this document.
+ * Whether a node is in a library and not in this document.
  *
- * `remote` sits on components, component sets and styles, and is absent
- * everywhere else — so the bare property read is a type error on `SceneNode` and
- * a silent `undefined` on anything looser. This answers the question for any
- * node: something that cannot be remote is not remote.
+ * Components, component sets and styles have `remote`, and other nodes do not.
+ * So a direct read is a type error on `SceneNode` and an `undefined` with no error on a wider type.
+ * This helper answers for each node: a node that cannot be remote is not remote.
  *
- * What it decides, in practice: a remote node belongs to no page of this
- * document, cannot be edited, and is usually where a walk should stop — a design
- * system component is a dependency to report, not a tree to take apart.
+ * A remote node is on no page of this document, and a plugin cannot edit it. A walk usually stops at it.
+ * A component of a design system is a dependency to report, not a tree to take apart.
  *
- * False is also the answer for a node that could not be read, which is the safe
- * way round: treating an unreadable node as local means the caller looks at it
- * again rather than filing it under someone else's library.
+ * It returns `false` for a node that it cannot read. That is the safe side: the caller reads the node again and does not put it in a library.
  *
  * @example
  * const page = isRemoteNode(master) ? null : getPageOfNode(master)

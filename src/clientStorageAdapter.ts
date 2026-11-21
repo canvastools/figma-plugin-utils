@@ -1,13 +1,13 @@
 import type { TStorageAdapter, TStorageErrorHandler } from './storageTypes'
 
-import { isQuotaError, reportStorageError } from './reportStorageError'
+import { isQuotaError } from './isQuotaError'
+import { reportStorageError } from './reportStorageError'
 
 /**
- * `figma.clientStorage` as a storage adapter: per user, the same in every file.
+ * `figma.clientStorage` as a storage adapter: for each user, the same in each file.
  *
- * `read` gives `null` for a missing key and for a failed read. `write` gives
- * `false` when Figma refused the value, for example when the storage is full;
- * `onError` then gets `quota` or `write`.
+ * `read` gives `null` for an absent key and for a failed read.
+ * `write` gives `false` when Figma refuses the value, for example when the storage is full. `onError` then gets `quota` or `write`.
  *
  * @example
  * const { read, write } = clientStorageAdapter<TClientData>('my-plugin')

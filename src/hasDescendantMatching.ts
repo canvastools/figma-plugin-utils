@@ -1,29 +1,26 @@
 import { walkNodeTree } from './walkNodeTree'
 
 /**
- * Whether anything below a node satisfies the predicate.
+ * Whether a node below a node matches the predicate.
  *
- * The node itself is never tested — the question is about its content, and a
- * caller that also wants the node judged says so with one `||` rather than
- * having every caller that does not undo it.
+ * The helper does not test the node itself: the question is about its content.
+ * A caller that also needs the node tested adds one `||`. Other callers then do not remove a test of the node.
  *
- * It stops at the first hit, which is the whole reason to have it instead of
- * `findAll`: the usual question — "does this frame already contain one of my
- * plugin's nodes" — is answered by the first match, while `findAll` walks the
- * entire subtree and builds an array to then throw away.
+ * It stops at the first match. That is its reason to exist next to `findAll`.
+ * The usual question, "does this frame already contain a node of my plugin", needs only the first match.
+ * `findAll` walks the whole subtree and builds an array for nothing.
  *
- * The walk is depth first and iterative, so a deep tree cannot blow the stack,
- * and it goes into instances: their content is part of what sits below the node,
- * whatever it mirrors. Use the predicate to stop at one — `collectInstances` is
- * the helper for walks that treat an instance as a boundary.
+ * The walk is depth first and iterative, so a deep tree does not overflow the stack.
+ * It goes into instances: their content is below the node too. Use the predicate to stop at an instance.
+ * `collectInstances` is the helper for walks that stop at each instance.
  *
- * Never throws, because `walkNodeTree` does not: deleted nodes are skipped, and
- * a predicate that throws ends the walk with whatever it had already found — so
- * a broken check answers `false` rather than taking a plugin down. Catch inside
- * the predicate when a failure has to be reported rather than logged.
+ * It does not throw, because `walkNodeTree` does not. It skips deleted nodes.
+ * A predicate that throws ends the walk with the result so far. So a broken check gives `false` and does not stop the plugin.
+ *
+ * - Catch the error in the predicate when the caller must report the failure, not only log it.
  *
  * @example
- * hasDescendantMatching(frame, (node) => node.getPluginData('spec') !== '')
+ * hasDescendantMatching(frame, (node) => node.getPluginData('my-plugin') !== '')
  */
 const hasDescendantMatching = (node: BaseNode, predicate: (node: SceneNode) => boolean): boolean => {
   let isMatching = false

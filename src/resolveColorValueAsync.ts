@@ -5,10 +5,9 @@ import { resolveVariableValueAsync } from './resolveVariableValueAsync'
 import type { TResolveVariableValueOptions } from './resolveVariableValueAsync'
 
 /**
- * A colour whose opacity is a variable of its own, as Figma stores one in
- * `valuesByMode`: `{ color, opacity }` in place of a colour, with `opacity` an
- * alias to a number variable. Absent from the plugin typings, and not the
- * `VARIABLE_EXPRESSION` a composed colour is — measured on its own.
+ * A color with a variable for its opacity, as Figma stores it in `valuesByMode`.
+ * The value is `{ color, opacity }` in place of a color, and `opacity` is an alias to a number variable.
+ * The plugin typings do not have this shape. It is not a `VARIABLE_EXPRESSION` either: a test in Figma showed it.
  */
 type TColorWithOpacity = { color: RGBA; opacity: VariableAlias | number }
 
@@ -23,23 +22,18 @@ const isColor = (value: unknown): value is RGB | RGBA =>
   typeof value === 'object' && value !== null && 'r' in value && 'g' in value && 'b' in value
 
 /**
- * The colour a variable's value draws as, out of whatever Figma keeps in its
- * place.
+ * The color that the value of a variable draws, from the data that Figma keeps for it.
  *
- * - **A colour** is itself, its alpha made explicit.
- * - **A colour whose opacity is a variable** has that number read — down its
- *   own alias chain, in the default modes, as `resolveVariableValueAsync` reads
- *   — and multiplied into the colour's alpha. **The number is a percentage**:
- *   `72` was measured to draw as `0.72`, so reading it as written would clamp
- *   every translucent token to opaque without anything looking wrong. Whether it
- *   multiplies the colour's own alpha or replaces it was never told apart —
- *   every colour measured had an alpha of `1`, where the two agree — so
- *   multiplying is the reading right in every case measured, and it never makes
- *   a colour more opaque than its own value says.
- * - **Anything else** is `null`: a value Figma computes (`VARIABLE_EXPRESSION`),
- *   an opacity whose chain does not end in a number, a value of another type.
- *   Leaving it out is the only safe answer — the alternative is inventing a
- *   colour and calling it the variable's.
+ * - **A color** gives itself, with an explicit alpha.
+ * - **A color with a variable opacity** reads that number along its alias chain, in the default modes.
+ *   It reads as `resolveVariableValueAsync` does. The number then multiplies the alpha of the color.
+ * - **The number is a percent.** A test in Figma showed that `72` draws as `0.72`.
+ *   A read of the number as it is makes each translucent token opaque, and nothing shows the error.
+ * - **The multiplication is a choice.** The tests did not show if the number multiplies the alpha or replaces it.
+ *   Each tested color had an alpha of `1`, where the two give the same result.
+ *   A multiplication matches each test and does not make a color more opaque than its value.
+ * - **Other values give `null`**: a computed value (`VARIABLE_EXPRESSION`), an opacity that does not end in a number, a value of another type.
+ *   `null` is the only safe answer. The other answer is a color that the variable does not have.
  *
  * @example
  * const value = await resolveVariableValueAsync(variable, { lookup })

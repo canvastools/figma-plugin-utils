@@ -1,30 +1,28 @@
+export type TCollectWidgetNodesOptions = {
+  /** The id of the widget whose nodes the helper collects. */
+  widgetId?: string
+  /** The ids of the nodes to leave out, usually the source widget itself. */
+  excludeIds?: readonly string[]
+}
+
 /**
- * Every node of one widget across the given pages.
+ * Each node of one widget on the given pages. Without `widgetId`, it collects the nodes of the widget that asks.
  *
- * The traversal half of any "act on my other instances" feature — syncing state
- * from one widget to the rest, counting them, listing them in a picker. What
- * counts as a usable target is policy and stays with the caller: this returns
- * the nodes, in page order, and answers nothing about them.
+ * It is the walk half of a feature that works on the other instances of a widget.
+ * Examples: a copy of the state from one widget to the others, a count, a list in a picker.
+ * The caller decides which nodes are valid targets. This helper returns the nodes in page order and says nothing about them.
  *
- * Pages must already be loaded — `findWidgetNodesByWidgetId` throws on a page
- * that is not. A page that throws for any reason is skipped rather than taken
- * as an empty document, so one unreadable page cannot silently shrink the
- * result of the others.
+ * - Load the pages first. `findWidgetNodesByWidgetId` throws on a page that is not loaded.
+ *
+ * The helper skips a page that throws and does not read it as an empty document.
+ * So one bad page does not make the result of the other pages smaller with no error.
  *
  * @example
- * const pages = await loadPagesAsync()
+ * await figma.loadAllPagesAsync()
  *
- * const targets = collectWidgetNodes(pages, { excludeIds: [source.id] })
+ * const targets = collectWidgetNodes(figma.root.children, { excludeIds: [source.id] })
  */
-const collectWidgetNodes = (
-  pages: readonly PageNode[],
-  options: {
-    /** Defaults to `figma.widgetId` — the widget doing the asking */
-    widgetId?: string
-    /** Nodes to leave out, typically the source widget itself */
-    excludeIds?: readonly string[]
-  } = {},
-): WidgetNode[] => {
+const collectWidgetNodes = (pages: readonly PageNode[], options: TCollectWidgetNodesOptions = {}): WidgetNode[] => {
   const { widgetId = figma.widgetId, excludeIds } = options
 
   /* A plugin has no widget id, and no widget nodes of its own to collect */

@@ -1,13 +1,11 @@
 import type { TColor } from './colorTypes'
 
 /**
- * A hex colour of six or eight digits as a colour in 0–1, or `null` for
- * anything else.
+ * A hex color of six or eight digits as a color in 0–1, or `null` for other strings.
  *
- * Six digits are opaque. The `#` is optional and the case is not read. Three-
- * and four-digit shorthands are refused rather than guessed at: the colours a
- * plugin stores are written by `colorToHexAlpha`, and a short form in stored
- * data is a sign of something else having written there.
+ * Six digits are opaque. The `#` is optional, and the case of the letters is not important.
+ * The helper refuses the short forms of three and four digits and does not guess.
+ * `colorToHexAlpha` writes the colors that a plugin stores. A short form in stored data shows that other code wrote there.
  *
  * @example
  * hexAlphaToColor('#9747FF80')   // { r: 0.592…, g: 0.278…, b: 1, a: 0.501… }

@@ -19,14 +19,11 @@ const readVariantKeys = (set: ComponentSetNode): string[] => {
 }
 
 /**
- * What is wrong with the names of a set's variants — the same rule as
- * `validateVariantNames`, read off the set itself.
+ * The errors in the names of the variants of a set: the rule of `validateVariantNames`, read from the set.
  *
- * One getter and the names: no walk into anybody's content, so it is cheap
- * enough to ask of every component a list shows. Anything that is not a set has
- * no variant names to be wrong and answers an empty list; so does a set where
- * nothing is wrong. A set whose definitions cannot be read is checked against
- * its own names.
+ * It reads one getter and the names, and it does not walk content. So a list can call it for each component that it shows.
+ * A node that is not a set has no variant names and gives an empty list. A set with no errors also gives an empty list.
+ * A set whose definitions the helper cannot read is checked against its own names.
  *
  * @example
  * const broken = findInvalidVariants(set).length > 0

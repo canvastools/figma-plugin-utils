@@ -1,27 +1,22 @@
 import { hasInstanceAncestor } from './hasInstanceAncestor'
 
 /**
- * Removes every child of a node, leaving the node itself in place.
+ * Removes each child of a node. The node itself stays.
  *
- * Returns whether the node was actually cleared, so a caller can tell "emptied"
- * from "there was nothing to empty" without inspecting the node again.
+ * It returns `true` when it removed the children. So a caller tells "emptied" from "nothing to empty" without a second read.
  *
- * Iterates over a copy of `children`, because `remove()` mutates the array it is
- * being read from — walking the live one skips every second child.
+ * It loops over a copy of `children`. `remove()` changes the live array, and a loop over it skips each second child.
  *
- * Refuses to touch the content of an instance. Figma forbids removing the
- * children of one, and every `remove()` would throw halfway through, leaving the
- * node in whatever state the loop got to. Detach it first, or clear the master.
- * The check covers nesting too: a frame inside an instance is just as locked as
- * the instance itself.
+ * It does not change the content of an instance. Figma does not let a plugin remove the children of an instance.
+ * Each `remove()` throws, and the loop leaves the node half empty. The check also covers a frame in an instance.
  *
- * A node that cannot hold children at all is reported and left alone, since
- * asking a rectangle to be emptied is a mistake in the caller rather than a
- * state to recover from.
+ * It reports a node that cannot have children and does not change it. Such a call is an error of the caller.
+ *
+ * - Detach the instance first, or clear the main component.
  *
  * @example
  * if (!clearChildren(frame)) {
- *   // locked, a leaf, or already gone — the node was not touched
+ *   // A leaf, an instance or its content, or a node that is gone: the helper changed nothing
  * }
  */
 const clearChildren = (node: SceneNode): boolean => {

@@ -1,13 +1,11 @@
 /**
- * The node an id names, if it is one of the given types — or `null`.
+ * The node of an id when it has one of the given types, or `null`.
  *
- * **A node is not enough.** An id stored a while ago can resolve to something
- * that is no longer what it was stored as — a component detached into a frame
- * keeps its id — and such an id names nothing the caller can use, exactly as one
- * whose node was deleted. An id that is not a node at all throws inside Figma,
- * and that is the same answer: nothing.
+ * **A node is not enough.** An old stored id can resolve to a node that changed its type.
+ * A component that a designer detached into a frame keeps its id. For the caller, such an id names nothing, as an id of a deleted node.
+ * An id that is not a node throws in Figma, and the answer is the same: nothing.
  *
- * The answer is narrowed to the types asked for.
+ * The result has the narrowed type of the given types.
  *
  * @example
  * const master = await findNodeByIdAsync(id, ['COMPONENT', 'COMPONENT_SET'])

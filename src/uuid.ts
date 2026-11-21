@@ -1,8 +1,8 @@
 /**
- * A random id of four hex groups, for an entry the plugin stores: `'a3f1c-9b2e0-4d77a-1c05f'`.
+ * A random id of four hex groups, for an entry that the plugin stores: `'a3f1c-9b2e-4d77a-1c05f'`.
  *
- * Not an RFC 4122 UUID and not cryptographic: `Math.random` is the only source the
- * plugin sandbox is sure to have. Enough to tell apart the entries of one document.
+ * A group has one to five hex digits. The id is not an RFC 4122 UUID and is not cryptographic.
+ * `Math.random` is the only source that the plugin sandbox always has. The id is enough to tell apart the entries of one document.
  *
  * @example
  * entries.set(uuid(), { value, createdAt: new Date().toISOString() })

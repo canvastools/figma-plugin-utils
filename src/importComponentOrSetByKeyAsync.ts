@@ -2,30 +2,30 @@
 export type TImportByKeyOutcome =
   { status: 'found'; node: ComponentNode | ComponentSetNode } | { status: 'empty' } | { status: 'failed'; message: string }
 
+export type TImportByKeyOptions = {
+  /** The helper calls it before each import call. Use it to count or limit the most expensive call of a plugin. */
+  onApiCall?: () => void
+}
+
 /**
- * Imports a published component or component set by its key, whichever of the
- * two it is.
+ * Imports a published component or component set by its key, for the type that the key has.
  *
- * Figma has one import call per node type and no way to ask which one a key
- * belongs to, so both are tried — `preferType` only decides which goes first.
- * Adding variants to a component replaces it with a set holding it, and a key
- * written on either side of that edit still means the same component;
- * committing to one call would report that everyday case as an unreachable
- * library. The second call costs nothing when the first one answers, which is
- * the usual outcome.
+ * Figma has one import call for each node type and does not say which type a key has. So the helper tries both.
+ * `preferType` sets only which call comes first.
  *
- * Figma rejects an import both for "no published component with that key" and
- * for "the request failed", and does not say which — so a rejection is only
- * evidence that this key did not work right now, never that the component is
- * gone. Telling the two apart is the caller's business, which is why `empty`
- * and `failed` are separate outcomes rather than one `null`. `failed` carries
- * the first rejection: the fallback fails for its own reasons.
+ * A designer who adds variants to a component replaces it with a set that holds it. A key from before or after that change means the same component.
+ * With one call only, the helper reports this usual case as a library that is not available.
+ * The second call costs nothing when the first call answers, and that is the usual result.
  *
- * A local component that was never published has a key and cannot be imported
- * by it — look in the document first.
+ * Figma rejects an import for "no published component with that key" and for "the request failed". It does not say which.
+ * So a rejection shows only that the key did not work now. It does not show that the component is gone.
  *
- * `onApiCall` is called right before every attempt, for a caller counting or
- * capping the most expensive call a plugin makes.
+ * The caller tells the two cases apart. So `empty` and `failed` are separate results, not one `null`.
+ * `failed` holds the first rejection: the second call fails for its own reasons.
+ *
+ * A local component that is not published has a key, but an import by that key fails.
+ *
+ * - Search the document first.
  *
  * @example
  * const outcome = await importComponentOrSetByKeyAsync(key, 'COMPONENT_SET')
@@ -35,7 +35,7 @@ export type TImportByKeyOutcome =
 const importComponentOrSetByKeyAsync = async (
   key: string,
   preferType: NodeType = 'COMPONENT',
-  options: { onApiCall?: () => void } = {},
+  options: TImportByKeyOptions = {},
 ): Promise<TImportByKeyOutcome> => {
   const imports =
     preferType === 'COMPONENT_SET'

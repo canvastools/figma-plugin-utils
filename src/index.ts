@@ -1,50 +1,7 @@
 /**
- * `figma-plugin-utils` — helpers for working with the Figma node tree from a
- * plugin sandbox.
+ * `figma-plugin-utils`: helpers for the Figma node tree in a plugin sandbox.
  *
- * Everything here is a primitive: it answers one question about a node or a
- * tree and knows nothing about why it is being asked. Policy — what counts as
- * part of a component, which node stands for "the component", how a run reports
- * itself — belongs to the module doing the asking.
- *
- * Two conventions run through the package:
- *
- * 1. Nothing throws. A helper that cannot answer returns the safe end of its
- *    type (`false`, `null`, an empty list) and logs, because a plugin taken down
- *    by one bad node is worse than a partial answer.
- * 2. Nodes are never assumed to be alive. A deleted node throws on any property
- *    access, and every helper that walks or reads one guards for it.
- *
- * The traversal helpers take predicates rather than flags, so the caller keeps
- * its own rules and this package keeps the walking.
- *
- * A handful of helpers answer the same kind of question about widget nodes
- * (`getSourceWidgetNode`, `collectWidgetNodes`, `readWidgetSyncedState`). They
- * follow both conventions above and need nothing beyond `@figma/plugin-typings`;
- * in a plugin, where `figma.widgetId` is undefined, each returns its empty
- * answer rather than throwing.
- *
- * The colour helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`,
- * `roundAlpha`) touch no Figma API at all, and are read by a plugin's UI as well
- * as by its sandbox. So does fractional indexing (`midpoint`, `sortPositions`,
- * `recalcPositions`, …), which keeps a stored list ordered by `position` strings.
- *
- * `createLogger` gives each scope a logger with a payload built on demand. The
- * switch is the caller's, so the package stays free of any project config.
- *
- * The variable and style helpers (`findVariableAsync`, `findStyleAsync`,
- * `resolveVariableValueAsync`, `resolveColorValueAsync`, `createVariableLookup`,
- * `getLibraryVariableCollectionsAsync`) keep nothing between calls: a cache of
- * what resolved, or of what was refused, is the caller's to keep and to forget.
- * `createVariableLookup` holds what it is handed for as long as its caller
- * holds it, and no longer.
- *
- * The stores (`ClientStorage`, `DocumentStorage`, `NodeStorage`, `initStorageAsync`
- * and the two adapters) and `Payment` are the same kind of primitive over
- * `figma.clientStorage`, plugin data and `figma.payments`. A class instance keeps
- * its data for as long as its caller keeps the instance. None of them throws, and
- * none of them talks to the user: a failure is a safe answer, a log line and a
- * call of the caller's `onError` / `onPaid`, where the project decides on a toast.
+ * The conventions of the package are in `docs/usage.md`. The index of the helpers is in `docs/helpers.md`.
  */
 
 export { applyOpacity } from './applyOpacity'
@@ -59,6 +16,7 @@ export { collectInstances } from './collectInstances'
 export { collectWidgetNodes } from './collectWidgetNodes'
 export { colorToHex } from './colorToHex'
 export { colorToHexAlpha } from './colorToHexAlpha'
+export { colorToHsb } from './colorToHsb'
 export { createLogger } from './createLogger'
 export { createVariableLookup } from './createVariableLookup'
 
@@ -71,7 +29,8 @@ export { findStyleAsync } from './findStyleAsync'
 export { findVariableAsync } from './findVariableAsync'
 export { focusNodeByIdAsync } from './focusNodeByIdAsync'
 export { focusNodesAsync } from './focusNodesAsync'
-export { findPositionAfter, findPositionBefore, midpoint, recalcPositions, sortPositions } from './fractionalIndex'
+export { findPositionAfter } from './findPositionAfter'
+export { findPositionBefore } from './findPositionBefore'
 
 export { getBooleanPropertyKey } from './getBooleanPropertyKey'
 export { getBoundVariableRefs } from './getBoundVariableRefs'
@@ -92,6 +51,7 @@ export { hasDescendantMatching } from './hasDescendantMatching'
 export { hasInstanceAncestor } from './hasInstanceAncestor'
 export { hasRelaunchCommand } from './hasRelaunchCommand'
 export { hexAlphaToColor } from './hexAlphaToColor'
+export { hsbToColor } from './hsbToColor'
 
 export { importComponentOrSetByKeyAsync } from './importComponentOrSetByKeyAsync'
 export { initStorageAsync } from './initStorageAsync'
@@ -108,41 +68,47 @@ export { isNodeShown } from './isNodeShown'
 export { isOneOfNodeType } from './isOneOfNodeType'
 export { isPageNode } from './isPageNode'
 export { isRemoteNode } from './isRemoteNode'
-export { isVariableAlias } from './isVariableAlias'
-
 export { isValidVariant } from './isValidVariant'
+export { isVariableAlias } from './isVariableAlias'
 export { matchVariantName } from './matchVariantName'
+export { midpoint } from './midpoint'
 
 export { NodeStorage } from './NodeStorage'
 
 export { parseVariantName } from './parseVariantName'
 export { Payment } from './Payment'
 export { pluginDataAdapter } from './pluginDataAdapter'
-export { validateVariantNames } from './validateVariantNames'
 
 export { readWidgetSyncedState } from './readWidgetSyncedState'
+export { recalcPositions } from './recalcPositions'
 export { resolveColorValueAsync } from './resolveColorValueAsync'
 export { resolveVariableValueAsync } from './resolveVariableValueAsync'
 export { roundAlpha } from './roundAlpha'
 
 export { setRelaunchCommand } from './setRelaunchCommand'
+export { sortPositions } from './sortPositions'
 
 export { toPaintPreview } from './toPaintPreview'
 
 export { uuid } from './uuid'
+
+export { validateVariantNames } from './validateVariantNames'
 
 export { walkNodeTree } from './walkNodeTree'
 
 /* Types */
 
 export type { TCollectInstancesOptions } from './collectInstances'
-export type { TColor } from './colorTypes'
+export type { TCollectWidgetNodesOptions } from './collectWidgetNodes'
+export type { TColor, THsb } from './colorTypes'
 export type { TLogger, TLoggerOptions } from './createLogger'
 export type { TVariableLookup } from './createVariableLookup'
 export type { TStyleOfType } from './findStyleAsync'
 export type { TPublishedRef } from './findVariableAsync'
+export type { TFocusNodesOptions } from './focusNodesAsync'
 export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
-export type { TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
+export type { TImportByKeyOptions, TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
+export type { TIsLayerVisibleOptions } from './isLayerVisible'
 export type { TInvalidVariantReason, TMatchedVariantName } from './matchVariantName'
 export type { TPaymentCheckoutOptions, TPaymentData, TPaymentOptions } from './Payment'
 export type { TResolveVariableValueOptions } from './resolveVariableValueAsync'

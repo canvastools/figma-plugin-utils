@@ -1,18 +1,13 @@
 /**
- * Narrows a node the API handed back to a `SceneNode`, or null.
+ * Narrows a node from the API to a `SceneNode`, or gives `null`.
  *
- * `getNodeByIdAsync` answers with a `BaseNode`, and the document and its pages
- * are nodes too — neither of them is anything a plugin holding an id actually
- * means, and neither has the geometry, the parent chain or the visibility that
- * the code after the lookup goes on to read.
+ * `getNodeByIdAsync` gives a `BaseNode`, and the document and its pages are nodes too.
+ * A plugin with an id does not mean them. They have no geometry, no parent chain and no visibility, and the code after the lookup reads these.
  *
- * The cast is the honest part: every other `BaseNode` in a Figma document is a
- * scene node, so once those two types are ruled out there is nothing left to
- * check. Doing it here rather than at the call site is what keeps the assertion
- * in one place.
+ * The cast is correct: each other `BaseNode` in a Figma document is a scene node. After the helper excludes the two types, nothing is left to check.
+ * The helper keeps this assertion in one place, not at each call site.
  *
- * Null is also the answer for a node whose type cannot be read, which is the
- * same answer a deleted node deserves.
+ * It also gives `null` for a node whose type it cannot read. A deleted node gets the same answer.
  *
  * @example
  * const node = asSceneNode(await figma.getNodeByIdAsync(id))

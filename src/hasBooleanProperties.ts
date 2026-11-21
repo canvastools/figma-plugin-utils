@@ -1,18 +1,12 @@
 /**
- * Whether a component declares at least one BOOLEAN property.
+ * Whether a component declares one or more BOOLEAN properties.
  *
- * Boolean properties are what make a component have more states than it has
- * variants: every combination of them multiplies the states a single variant can
- * render in. Code that enumerates states — building a specification, a preview
- * grid, a coverage report — uses this to decide whether the variant list alone
- * is the whole story.
+ * Boolean properties give a component more states than variants. Each combination multiplies the states of one variant.
+ * Code that lists states (a specification, a preview grid, a coverage report) uses it to know if the variant list is complete.
  *
- * Reads the definitions off the component itself, so pass the master or the set,
- * never an instance.
+ * It also gives `false` when it cannot read the definitions. That is the safe side: "nothing more to list" and not a crash in the middle of a build.
  *
- * False is also the answer when the definitions cannot be read at all, which is
- * the safe way round: it means "nothing extra to enumerate" rather than a crash
- * halfway through a build.
+ * - Pass the main component or the set, not an instance. The helper reads the definitions on the component.
  */
 const hasBooleanProperties = (node: ComponentNode | ComponentSetNode): boolean => {
   try {

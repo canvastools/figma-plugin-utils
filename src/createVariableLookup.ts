@@ -1,9 +1,7 @@
 /**
- * Where a reader of variable values finds the variables and collections it
- * passes through.
+ * Where a reader of variable values finds the variables and the collections of a chain.
  *
- * Both answer `null` rather than throw — for an id this file has never seen, and
- * for one the API refused.
+ * Both functions give `null` and do not throw: for an id that this file does not know, and for an id that the API refused.
  */
 export type TVariableLookup = {
   collectionAsync: (id: string) => Promise<VariableCollection | null>
@@ -11,24 +9,18 @@ export type TVariableLookup = {
 }
 
 /**
- * A lookup of variables and collections that asks the API only for what it was
- * not handed.
+ * A lookup of variables and collections. It asks the API only for the items that it did not get.
  *
- * **What is already in hand is not asked for again.** A reader that has just
- * listed the local variables and collections — two calls — holds every default
- * mode and every local alias hop; asking Figma again per value is a call across
- * the sandbox boundary per variable at least, and three per alias. So the lists
- * seed it, and only what they do not hold — a library variable an alias
- * reaches, the collection of an imported one — goes to the API. Kept for as long
- * as the lookup is: a reader of many variables of one collection asks for that
- * collection once.
+ * **The lookup does not ask again for an item that it has.**
+ * A reader that listed the local variables and collections (two calls) has each default mode and each local alias.
+ * A new question for each value is at least one call across the sandbox boundary for each variable, and three for each alias.
+ * So the lists fill the lookup. Only the other items go to the API: a library variable that an alias reaches, the collection of an imported variable.
+ * The lookup keeps them while it exists. A reader of many variables of one collection asks for that collection once.
  *
- * **An answer is kept, a refusal is not.** A variable that is not here yet — one
- * of a library still being imported — may resolve a moment later, so `null` is
- * asked again the next time rather than remembered.
+ * **The lookup keeps an answer and does not keep a refusal.** A variable of a library that Figma still imports can resolve a moment later.
+ * So the lookup asks again for a `null` the next time.
  *
- * Nothing is shared between two lookups: each holds its own maps, so how long an
- * answer lives is decided by whoever created it.
+ * Two lookups share nothing: each has its own maps. So the creator of a lookup decides how long an answer lives.
  *
  * @example
  * const [variables, collections] = await Promise.all([

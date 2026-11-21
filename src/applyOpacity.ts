@@ -1,13 +1,11 @@
 import type { TColor } from './colorTypes'
 
 /**
- * A colour with an opacity folded into its alpha.
+ * A color with an opacity multiplied into its alpha.
  *
- * Figma keeps a paint's transparency in two places: `opacity` on the paint, and
- * the alpha of the colour itself where the colour has one — a gradient stop and
- * a variable's value do, a solid paint's colour does not. What is drawn is the
- * product of the two, and that product is the colour anybody outside the paint
- * means: a swatch, a hex string, a comparison.
+ * Figma keeps the transparency of a paint in two places: `opacity` on the paint and the alpha of the color.
+ * A gradient stop and the value of a variable have an alpha. The color of a solid paint does not.
+ * Figma draws the product of the two. A swatch, a hex string and a comparison need that product.
  *
  * @example
  * applyOpacity(paint.color, paint.opacity ?? 1)

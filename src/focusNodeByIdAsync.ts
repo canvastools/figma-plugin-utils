@@ -1,18 +1,17 @@
 import { asSceneNode } from './asSceneNode'
 import { focusNodesAsync } from './focusNodesAsync'
+import type { TFocusNodesOptions } from './focusNodesAsync'
 
 /**
- * Goes to the node an id names, on whatever page it stands — see
- * `focusNodesAsync` for what going there means.
+ * Goes to the node of an id, on its page. See `focusNodesAsync` for what "goes to" means.
  *
- * The id is enough: `getNodeByIdAsync` finds a node on a page that is not
- * loaded, so there is no page to pass and no page to walk. An id naming nothing,
- * or naming a page or the document, answers `false`.
+ * The id is enough: `getNodeByIdAsync` finds a node on a page that is not loaded. So the caller does not give or walk a page.
+ * An id of no node, of a page or of the document gives `false`.
  *
  * @example
  * await focusNodeByIdAsync(widgetId, { select: true })
  */
-const focusNodeByIdAsync = async (id: string, options: { select?: boolean } = {}): Promise<boolean> => {
+const focusNodeByIdAsync = async (id: string, options: TFocusNodesOptions = {}): Promise<boolean> => {
   try {
     const node = asSceneNode(await figma.getNodeByIdAsync(id))
 

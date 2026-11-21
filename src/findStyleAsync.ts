@@ -1,5 +1,5 @@
-import { isSamePublished } from './findVariableAsync'
 import type { TPublishedRef } from './findVariableAsync'
+import { isSamePublished } from './isSamePublished'
 
 /* A style by the `type` Figma gives it */
 export type TStyleOfType = {
@@ -10,17 +10,15 @@ export type TStyleOfType = {
 }
 
 /**
- * The style of the given type a stored reference names here — by its id first,
- * by its key second — or `null`.
+ * The style of the given type that a stored reference names in this file, or `null`. The id comes first, the key second.
  *
- * The same order and the same key check as `findVariableAsync`, for the same
- * reasons, and one more: a style is only the style asked for if Figma agrees
- * about its type, so one of another type is no answer.
+ * It uses the order and the key check of `findVariableAsync`, for the same reasons.
+ * It also checks the type: a style of another type is not the style of the reference.
  *
- * **A refused style is expensive.** Measured at 255–490 ms every time — Figma
- * caches nothing about a key it could not import — where a refused variable
- * costs that once. A caller resolving the same references more than once keeps
- * its own cache in front of this, refusals included.
+ * **A refused style is expensive.** A test showed 255–490 ms for each refusal: Figma caches nothing about a key that it did not import.
+ * A refused variable costs that time only once.
+ *
+ * - Keep a cache in front of this helper when you resolve the same references more than once. Cache the refusals too.
  *
  * @example
  * const style = await findStyleAsync({ id: binding.id, key: binding.key }, 'TEXT')

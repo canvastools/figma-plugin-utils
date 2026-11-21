@@ -1,15 +1,13 @@
 import { isNodeAlive } from './isNodeAlive'
 
 /**
- * The set a variant belongs to, or null for a standalone component.
+ * The set of a variant, or `null` for a separate component.
  *
- * This is the one climb the component tree allows: a master is never nested
- * inside another master, so a parent that is not a component set is just the
- * frame, section or page the component is organised in.
+ * This is the only step up that the component tree allows. A main component is not in another main component.
+ * So a parent that is not a component set is the frame, section or page that holds the component.
  *
- * Use it to choose the grain of an answer: the set is one entry per component,
- * the variant is one entry per state. Both ids are worth keeping — collapsing to
- * the set alone loses which variant an instance actually renders.
+ * - Use it to choose the unit of an answer: the set for each component, the variant for each state.
+ * - Keep both ids. With the set only, the caller loses the variant that an instance renders.
  *
  * @example
  * const componentSet = getComponentSetOfVariant(component)

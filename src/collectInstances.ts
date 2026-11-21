@@ -2,42 +2,34 @@ import { walkNodeTree } from './walkNodeTree'
 
 export type TCollectInstancesOptions = {
   /**
-   * Whether to walk the children of an instance that was found.
+   * Whether the walk goes into the children of a found instance.
    *
-   * False by default, and that default is the useful one: the children of an
-   * instance mirror its own master, so anything below it is found again — once,
-   * and for the master — as soon as that instance is resolved. Descending here
-   * walks the same content once per instance instead.
+   * The children of an instance repeat its main component.
+   * The caller finds them again, one time, when it resolves the main component. A walk into each instance reads the same content many times.
    */
   descendIntoInstances?: boolean
-  /* Whether a found instance is kept. Everything is kept by default */
+  /** Whether the result keeps a found instance. Without it, the result keeps each instance. */
   include?: (instance: InstanceNode) => boolean
-  /* Whether the walk goes inside a container. Everything is walked by default */
+  /** Whether the walk goes into a container. Without it, the walk goes into each container. */
   descend?: (container: SceneNode) => boolean
 }
 
 /**
- * The instances inside a node.
+ * The instances in a node.
  *
- * Replaces the older `getNestedInstances`, which always descended everywhere and
- * left filtering to the caller — so every caller reimplemented visibility and
- * property rules, and did it against the type of the root rather than the layer
- * in hand.
+ * A walk that goes into each node leaves the filter to each caller. Then each caller writes its own visibility and property rules.
+ * Both predicates answer about one layer. So the caller keeps the policy (what is part of a component).
+ * `walkNodeTree` keeps the walk, as for each other walk in this package.
  *
- * Both predicates are answers about one layer, which keeps the policy (what
- * counts as part of a component) with the caller and the traversal in
- * `walkNodeTree`, where every other walk in this package gets it too.
- *
- * Never throws: whatever was collected before a subtree went bad is returned as
- * the answer, since a partial list of instances is still useful and a deleted
- * layer mid walk is normal.
+ * It does not throw. When a subtree fails, it returns the instances that it collected before.
+ * A partial list is still useful, and a layer that a user deletes during a walk is normal.
  *
  * @example
  * // Everything, however deep
  * collectInstances(component)
  *
  * @example
- * // Only what is on screen, skipping swappable slots
+ * // Only what is on screen. A swap target is not kept
  * collectInstances(component, {
  *   include: (instance) => isLayerVisible(instance) && !isInstanceSwapTarget(instance, swapKeys),
  *   descend: (container) => isLayerVisible(container),

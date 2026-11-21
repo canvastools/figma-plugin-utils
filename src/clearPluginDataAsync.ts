@@ -1,17 +1,13 @@
 /**
- * Takes every entry under the given plugin data keys off the document — the
- * root and every node that carries one — and says how much it took.
+ * Removes each entry of the given plugin data keys from the document, from the root and from each node. It returns the count.
  *
- * The plugin's own keys only: plugin data is private to the plugin that wrote
- * it, so another plugin's entries are neither found nor touched. One indexed
- * search for the whole document rather than a walk, which is why it loads every
- * page first — `findAllWithCriteria` answers only for the pages in memory. On a
- * large file that load is the slow part, and it is paid once per session.
+ * It removes only the keys of this plugin. Plugin data is private to the plugin that wrote it, so the helper does not find the entries of another plugin.
+ * It uses one indexed search for the whole document, not a walk. So it loads each page first: `findAllWithCriteria` answers only for the loaded pages.
+ * On a large file the load is the slow part, and it happens once in a session.
  *
- * Plugin data has no delete: writing an empty string is how Figma removes an
- * entry, and an entry that is already empty is not counted.
+ * Plugin data has no delete: Figma removes an entry when a plugin writes an empty string. The count does not include an entry that is already empty.
  *
- * Shared plugin data and relaunch data are other stores and are left alone.
+ * The helper does not change shared plugin data and relaunch data. They are other stores.
  *
  * @example
  * const { nodes, entries } = await clearPluginDataAsync(['table', 'layout'])

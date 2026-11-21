@@ -5,23 +5,20 @@ import { initStorageAsync } from './initStorageAsync'
 import { reportStorageError } from './reportStorageError'
 
 /**
- * A `figma.clientStorage` store: per user, the same in every file.
+ * A `figma.clientStorage` store: for each user, the same in each file.
  *
- * The store owns the persistence and the versioning. The project owns the shape
- * of the data and what it does with it. The store keeps `data` for as long as
- * its caller keeps the store, and no longer.
+ * The store owns the persistence and the versions. The project owns the shape of the data and its use.
+ * The store keeps `data` while its caller keeps the store.
  *
- * `data` holds the defaults from construction until `initAsync` replaces them
- * with what was stored. It is never `undefined`: the plugin answers its UI from
- * the moment the file is evaluated, and a first `initAsync` takes two round
- * trips to Figma. `data` is a copy, so a change before the load does not edit
- * the defaults that the load merges with.
+ * `data` holds the defaults from the construction until `initAsync` replaces them with the stored data.
+ * It is never `undefined`: the plugin answers its UI when the file runs, and the first `initAsync` takes two round trips to Figma.
+ * `data` is a copy, so a change before the load does not change the defaults of the merge.
  *
  * Nothing throws. A failed write gives `false`, a log line and a call of `onError`.
  *
  * @example
  * const clientStorage = await new ClientStorage<TClientData>({
- *   key: config.storages.client.key,
+ *   key: 'my-plugin',
  *   version: config.version,
  *   defaults: { lastUsedVersion: config.version, templates: [] },
  *   onError: (kind) => figma.notify(kind === 'quota' ? 'The storage is full' : 'Changes were not saved', { error: true }),
@@ -68,8 +65,7 @@ class ClientStorage<T extends TVersionedData> {
   /**
    * Removes the key from `figma.clientStorage`, so the next `initAsync` is a first run.
    *
-   * `data` goes back to the defaults with it. The store stays alive after the
-   * call, and a later `writeAsync` would otherwise put the removed value back.
+   * `data` also goes back to the defaults. The store stays alive after the call, and a later `writeAsync` otherwise puts the removed value back.
    */
   async deleteAsync(): Promise<boolean> {
     try {

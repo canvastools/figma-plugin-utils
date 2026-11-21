@@ -1,12 +1,12 @@
 /**
  * What a scope logs with. The payload is a function: see `createLogger`.
  */
-type TLogger = (build: () => unknown) => void
+export type TLogger = (build: () => unknown) => void
 
-type TLoggerOptions = {
+export type TLoggerOptions = {
   /**
-   * Whether the logger prints now. Read on each call, so a switch that changes at run time works.
-   * Without it the logger always prints.
+   * Whether the logger prints now. The logger reads it at each call, so a switch that changes at run time works.
+   * Without it, the logger always prints.
    */
   isLogEnabled?: () => boolean
 }
@@ -14,13 +14,12 @@ type TLoggerOptions = {
 /**
  * A logger for one scope: `[scope] payload` in the console.
  *
- * The payload is built by a function, not passed as a value. A call site often maps
- * every node of a run into something readable, and a value would be built also in a
- * build where nobody reads the log. With a function, a disabled logger costs one check.
+ * A function builds the payload, and the caller does not pass a value.
+ * A call site often maps each node of a run into readable data. A value costs that work also in a build where nobody reads the log.
+ * With a function, a logger that is off costs one check.
  *
- * The package knows nothing of the project, so the switch is the caller's: `isLogEnabled`
- * reads the config of the project. A payload that throws is logged as an error and
- * does not take down the code that logs: nothing in this package throws.
+ * The package knows nothing of the project, so the caller owns the switch: `isLogEnabled` reads the config of the project.
+ * The logger logs a payload that throws as an error, and the code that logs continues. Nothing in this package throws.
  *
  * @example
  * const log = createLogger('selection', { isLogEnabled: () => config.debug })
@@ -40,4 +39,3 @@ const createLogger =
   }
 
 export { createLogger }
-export type { TLogger, TLoggerOptions }

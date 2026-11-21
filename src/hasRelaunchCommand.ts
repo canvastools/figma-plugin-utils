@@ -1,14 +1,13 @@
 /**
- * Whether a node already carries a relaunch command.
+ * Whether a node already has a relaunch command.
  *
- * Worth asking before every `setRelaunchCommand` when the plugin listens to
- * `documentchange`: relaunch data is stored data, so each write arrives there as
- * a change carrying `pluginData` — and a plugin marking forty nodes after a run
- * would otherwise hear forty edits it made itself. `setRelaunchCommand` asks it
- * too; asking first is for a caller that has something to do before a write,
- * such as claiming it as its own.
+ * Relaunch data is stored data. So each write comes to a `documentchange` listener as a change of `pluginData`.
+ * A plugin that marks forty nodes after a run gets forty events of its own edits.
+ * `setRelaunchCommand` does this check too.
  *
- * `false` for a node that cannot be read.
+ * It returns `false` for a node that it cannot read.
+ *
+ * - Call it before `setRelaunchCommand` when the plugin has work before the write. An example is a mark of ownership.
  *
  * @example
  * if (!hasRelaunchCommand(node, 'run')) setRelaunchCommand(node, 'run', 'Open the plugin')

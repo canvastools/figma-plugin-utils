@@ -1,15 +1,15 @@
 import { parseVariantName } from './parseVariantName'
 
 /**
- * Why a variant's name says no state of its own.
+ * The reason why the name of a variant gives no state of its own.
  *
- * - `INVALID_NAME` — not a property string at all
- * - `UNKNOWN_PROPERTY` — names a property the set does not declare
- * - `INCOMPLETE` — leaves out a property the set declares
- * - `DUPLICATE` — says a state another variant of the set already says
+ * - `INVALID_NAME`: the name is not a property string.
+ * - `UNKNOWN_PROPERTY`: the name has a property that the set does not declare.
+ * - `INCOMPLETE`: the name does not have a property that the set declares.
+ * - `DUPLICATE`: the name gives the state of another variant of the set.
  *
- * The first three are about one name, and `matchVariantName` answers them; the
- * fourth is about two, and only `validateVariantNames` can.
+ * The first three reasons are about one name, and `matchVariantName` finds them.
+ * The fourth reason is about two names, and only `validateVariantNames` finds it.
  */
 export type TInvalidVariantReason = 'INVALID_NAME' | 'UNKNOWN_PROPERTY' | 'INCOMPLETE' | 'DUPLICATE'
 
@@ -18,22 +18,17 @@ export type TMatchedVariantName =
   | { status: 'invalid'; reason: Exclude<TInvalidVariantReason, 'DUPLICATE'>; property: string | null }
 
 /**
- * The property values of one variant, checked against the properties its set
- * declares.
+ * The property values of one variant, checked against the properties that its set declares.
  *
- * Reading the pairs out of the name is `parseVariantName`, and it stops where
- * the string stops meaning anything on its own: whether `Size` is a property of
- * *this* set is a question about the set, and that check is what this adds.
+ * `parseVariantName` reads the pairs from the name. It stops where the string alone says nothing more.
+ * Whether `Size` is a property of this set is a question about the set. This helper adds that check.
  *
- * Figma stores the state of a variant nowhere but in its name, and the name is
- * editable text like any other layer name. Renaming it by hand leaves a
- * component that still renders while every tool reading variants starts lying,
- * so nothing is trusted until it is checked. Three ways it can go wrong, told
- * apart because they mean different things to whoever has to fix them — see
- * `TInvalidVariantReason`. `property` names the one at fault, where there is one.
+ * Figma stores the state of a variant only in its name, and the name is editable text like each layer name.
+ * A rename by hand leaves a component that still renders, and each tool that reads variants gives wrong results.
+ * So the helper checks each value. There are three types of error, and each needs a different fix: see `TInvalidVariantReason`.
+ * `property` names the wrong property, when there is one.
  *
- * Every declared key has to be present, which also catches a name that repeats
- * one property and leaves out another: the repeat overwrites itself.
+ * Each declared key must be present. This also catches a name that repeats one property and omits another: the repeat overwrites itself.
  *
  * @example
  * matchVariantName('Size=M, Type=Primary', ['Size', 'Type'])

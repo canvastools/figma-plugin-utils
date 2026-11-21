@@ -1,11 +1,10 @@
 /**
- * Whether a font can be loaded — and so whether text can be written in it.
+ * Whether a font loads, and so whether a plugin can write text in it.
  *
- * Writing to a text node needs its font loaded first, and a font can be
- * unavailable for reasons a plugin cannot see: not installed, not shared with
- * this team, a style the family does not have. Asking before deciding to use a
- * text style is cheaper than a write that throws halfway through a run. A font
- * that loads stays loaded, so the answer costs nothing the write would not pay.
+ * A write to a text node needs its font loaded first. A font can be unavailable for reasons that a plugin does not see.
+ * Examples: the font is not installed, the team does not share it, the family does not have the style.
+ * A check before the choice of a text style costs less than a write that throws in the middle of a run.
+ * A loaded font stays loaded, so the check costs nothing more than the write.
  *
  * @example
  * if (await canLoadFontAsync(style.fontName)) applyTextStyle(style)

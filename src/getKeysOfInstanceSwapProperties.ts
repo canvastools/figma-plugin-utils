@@ -1,20 +1,14 @@
 /**
- * The property keys of type INSTANCE_SWAP declared on a component.
+ * The keys of the INSTANCE_SWAP properties that a component declares.
  *
- * A key looks like `Icon#2:0` — the name plus the id Figma appends — and is what
- * a nested instance points at through `componentPropertyReferences`. Pair it
- * with `isInstanceSwapTarget` to tell a fixed layer from a swappable slot.
+ * A key looks like `Icon#2:0`: the name and the id that Figma adds. A nested instance points at it through `componentPropertyReferences`.
  *
- * Read it once per component being walked rather than once per layer: the
- * definitions live on the component, and building the list is the expensive half
- * of the check.
+ * The result is an empty list when the component declares no swap properties. It is also empty when the helper cannot read the definitions:
+ * a dead node, a removed library.
+ * With no keys, no instance is a swap target. So both cases mean the same for the only use of the list.
  *
- * An empty list is the answer both when the component declares no swap
- * properties and when the definitions could not be read at all — a dead node, a
- * library that is gone. Earlier versions returned `undefined` for the second
- * case, which every caller then flattened with `?? []` anyway: with no keys
- * nothing can be a swap target, so both situations mean the same thing to the
- * only thing this is used for.
+ * - Use it with `isInstanceSwapTarget` to tell a fixed layer from a variable place.
+ * - Read it once for each component of a walk, not for each layer. The list is the expensive half of the check.
  *
  * @example
  * const swapKeys = getKeysOfInstanceSwapProperties(component)

@@ -2,7 +2,7 @@
 export type TPaymentData = {
   /** `figma.payments.status.type === 'PAID'` */
   isPaid: boolean
-  /** Not paid, and still inside the trial window */
+  /** `true` when the user did not pay and the trial is not over. */
   isTrial: boolean
   daysSinceFirstRun: number
 }
@@ -11,14 +11,14 @@ export type TPaymentOptions = {
   /** The length of the free trial in days. Leave it out, or pass `0`, for no trial. */
   trialDays?: number
   /**
-   * Called one time when `readStatus` first sees the status change from unpaid
-   * to paid. This is where a project shows its toast.
+   * The function that `readStatus` calls one time, when it first sees a change from unpaid to paid.
+   * A project shows its toast here.
    */
   onPaid?: (data: TPaymentData) => void
 }
 
 export type TPaymentCheckoutOptions = {
-  /** Defaults to `PAID_FEATURE` during the trial and to `TRIAL_ENDED` after it. */
+  /** The screen before the checkout. Without it, the checkout shows `PAID_FEATURE` during the trial and `TRIAL_ENDED` after it. */
   interstitial?: 'PAID_FEATURE' | 'TRIAL_ENDED' | 'SKIP'
 }
 
@@ -51,31 +51,30 @@ const isWithinTrial = (trialDays: number | undefined): boolean =>
 /**
  * The payment status of the user and the checkout of Figma.
  *
- * It reads `figma.payments` and decides nothing: what a paid user gets, and what
- * a toast says, belong to the project. The trial length is an option, so the
- * same class serves a product with a trial and one without.
+ * It reads `figma.payments` and decides nothing: the project decides what a paid user gets and what a toast says.
+ * The trial length is an option, so the same class serves a product with a trial and a product without one.
  *
- * Figma sends no event when a purchase lands, so a paywall polls `readStatus`
- * while the checkout is open. The instance remembers the last status it gave,
- * for as long as its caller keeps the instance, and calls `onPaid` one time on
- * the poll that first sees the purchase. A first read that is already paid
- * calls nothing: to open the UI with a paid account is not a purchase.
+ * Figma sends no event after a purchase, so a paywall polls `readStatus` while the checkout is open.
+ * The instance keeps the last status, while its caller keeps the instance.
+ * It calls `onPaid` one time, on the first poll that sees the purchase.
+ * A first read with a paid status calls nothing: a UI that opens with a paid account is not a purchase.
  *
- * Nothing throws. Where payments are not supported, the status is "not paid".
+ * Nothing throws. Where Figma does not support payments, the status is "not paid".
  *
  * @example
- * // A gate for a paid feature. A trial counts as access.
- * if (!Payment.checkIsPaid({ trialDays: config.trialDays })) return
+ * // A gate for a paid feature. A trial counts as access
+ * if (!Payment.checkIsPaid({ trialDays: 7 })) return
  *
  * @example
- * // One instance for the payment channel of the bridge
+ * // A paywall: one instance, and a read of the status at each poll
  * const payment = new Payment({
- *   trialDays: config.trialDays,
+ *   trialDays: 7,
  *   onPaid: () => figma.notify('Full access unlocked'),
  * })
  *
- * resolve: () => payment.readStatus()
- * openCheckout: () => payment.openPaymentAsync()
+ * const status = payment.readStatus()
+ *
+ * if (!status.isPaid) await payment.openPaymentAsync()
  */
 class Payment {
   private options: TPaymentOptions
@@ -88,7 +87,7 @@ class Payment {
   }
 
   /**
-   * `true` when the user has paid or, with `trialDays`, is still inside the trial.
+   * `true` when the user paid or, with `trialDays`, when the trial is not over.
    * Without options it is the paid status alone.
    */
   static checkIsPaid({ trialDays }: Pick<TPaymentOptions, 'trialDays'> = {}): boolean {

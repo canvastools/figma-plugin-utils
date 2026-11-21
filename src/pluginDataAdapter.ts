@@ -1,19 +1,18 @@
 import type { TStorageErrorHandler, TSyncStorageAdapter } from './storageTypes'
 
-import { isQuotaError, reportStorageError } from './reportStorageError'
+import { isQuotaError } from './isQuotaError'
+import { reportStorageError } from './reportStorageError'
 
 /**
  * The plugin data of one node as a storage adapter: a JSON string under one key.
  *
- * Works for any node: the document root for data of the file, a scene node for
- * data of a layer.
+ * It works for each node: the document root for the data of the file, a scene node for the data of a layer.
  *
- * `read` gives `null` for no data, for text that is not JSON and for a node that
- * is gone. `write` gives `false` when the node is gone or Figma refused the value;
- * `onError` then gets `quota` or `write`.
+ * `read` gives `null` for no data, for text that is not JSON and for a node that is gone.
+ * `write` gives `false` when the node is gone or Figma refused the value. `onError` then gets `quota` or `write`.
  *
  * @example
- * const { read, write } = pluginDataAdapter<TSpecData>(node, 'spec')
+ * const { read, write } = pluginDataAdapter<TNodeData>(node, 'my-plugin')
  */
 const pluginDataAdapter = <T>(node: BaseNode, key: string, onError?: TStorageErrorHandler): TSyncStorageAdapter<T> => ({
   read: () => {
