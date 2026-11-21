@@ -58,7 +58,6 @@ The rules, the edge cases and the examples of a helper are in its JSDoc.
 
 **Color and paints**
 
-These helpers take and give plain numbers and strings. So the color helpers work in the UI of a plugin and in its sandbox.
 Hex is always upper case.
 
 |                                               |                                                                          |
@@ -71,8 +70,6 @@ Hex is always upper case.
 | `getGradientHandlePositions(paint)`           | The start, end and width handles of a gradient, from `gradientTransform` |
 
 **Variables and styles**
-
-These helpers keep nothing between calls. The caller keeps a cache of the results and of the refusals.
 
 |                                                  |                                                                                                 |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
@@ -95,7 +92,7 @@ These helpers keep nothing between calls. The caller keeps a cache of the result
 **Order**
 
 Fractional indexes: an item keeps its place in a list with a `position` string, not a number index.
-So a move of one item changes one row and does not number the list again. The math uses no Figma API, so it works in the UI of a plugin and in its sandbox.
+So a move of one item changes one row and does not number the list again.
 
 |                                                       |                                                                            |
 | ----------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -137,15 +134,12 @@ const reordered = recalcPositions(items, currentIds, draggedIds)
 |                                                             |                                                                                                    |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `new ClientStorage(options)`                                | A versioned store in `figma.clientStorage`: `data`, `initAsync()`, `writeAsync()`, `deleteAsync()` |
-| `new DocumentStorage(options)`                              | The same store in the plugin data of the document                                                  |
+| `new DocumentStorage(options)`                              | A store with `data`, `initAsync()` and `writeAsync()` in the plugin data of the document           |
 | `new NodeStorage(options)`                                  | Versioned plugin data of many nodes under one key. `read` does not write                           |
 | `initStorageAsync(options)`                                 | The migration of the stores, for your own backend                                                  |
 | `clientStorageAdapter(key)`, `pluginDataAdapter(node, key)` | The `read` and `write` pair of each backend. `write` says if the value was stored                  |
 | `new Payment(options)`                                      | The payment status and the checkout of Figma. `onPaid` runs one time after a purchase              |
 | `uuid()`                                                    | A random id for a stored entry                                                                     |
-
-These classes keep data while the caller keeps the instance. They do not throw and do not show messages to the user.
-A failure gives a safe answer, a log line and a call of `onError` of the caller. The project decides about a toast.
 
 **Logs**
 
@@ -161,9 +155,11 @@ log(() => ({ nodes: selection.map((node) => node.name) }))
 
 **Widgets**
 
-`getSourceWidgetNode()`, `collectWidgetNodes(pages, options?)` and `readWidgetSyncedState(node, key)` answer the same
-questions about widget nodes. They need only `@figma/plugin-typings`.
-In a plugin, `figma.widgetId` is `undefined`, and each of them returns its empty answer.
+|                                       |                                                                |
+| ------------------------------------- | -------------------------------------------------------------- |
+| `getSourceWidgetNode()`               | The widget node of the open UI: a selected node of this widget |
+| `collectWidgetNodes(pages, options?)` | Each node of one widget on the given pages                     |
+| `readWidgetSyncedState(node, key)`    | One key of the synced state of another widget node             |
 
 ## The walk
 

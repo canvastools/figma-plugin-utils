@@ -29,7 +29,9 @@ Its types use `@figma/plugin-typings`. The package has no runtime dependencies.
 
 ## Conventions
 
-1. Nothing throws. A helper that cannot answer returns the safe end of its type (`false`, `null`, an empty list) and logs.
+1. Nothing throws. A helper that cannot answer returns the safe end of its type (`false`, `null`, an empty list).
+   It logs an unexpected error. An expected refusal of Figma gives the safe answer with no log.
+   A partial answer is better than a plugin that one bad node stops.
 2. A node is not always alive. A deleted node throws on each property read. Each helper that reads a node guards for it.
 
 - Read the safe answer as a normal answer. Do not wrap a helper in `try`.

@@ -23,12 +23,13 @@ The language conventions are in `language.md`.
 
 The JSDoc of a helper has three sections, in this order:
 
-1. The description: one paragraph. It says what the helper gives and when to use it. It says why the helper works this way when a simpler way fails.
+1. The description: one or more paragraphs, in the limits of `language.md`. It says what the helper gives and when to use it. It says why the helper works this way when a simpler way fails.
 2. The instructions: a list. Each item says what to do or what not to do.
 3. The examples: one `@example` for each instruction that changes the code. An instruction that shows its code needs no example.
 
 - Write the safe answer of the helper in the description: `false`, `null` or an empty list.
 - Start the code of each example with a comment that names its case, when there are two or more.
+- Start a paragraph with a bold sentence when the paragraph gives the main reason of the helper.
 
 ## The files of `docs`
 
@@ -49,13 +50,14 @@ It must use the package from `docs/` and the JSDoc alone. `docs/usage.md` is the
 
 - Write one or two description sentences for a property.
 - Do not write the type or the default value. TypeScript gives them.
+- Write a default value only when the helper computes it at run time. TypeScript does not show it.
 - Set the default value in the parameters of the function.
 - Write `@param` only when the name and the type do not explain the parameter.
 
 ## README and CHANGELOG
 
 - Add a row to the table of its group in `docs/helpers.md` for each new helper. Write one description sentence in the row.
-- Add a line to `CHANGELOG.md` under the next version, in the group `Added`, `Changed` or `Removed`.
+- Add a line to `CHANGELOG.md` under the next version, in the group `Added`, `Changed`, `Removed` or `Fixed`.
 
 ## Comment in the code
 
