@@ -1,5 +1,16 @@
 # Changelog
 
+### Version 2.3.0
+
+- Added:
+  - Documentation for agents
+  - `colorToHsb`, `hsbToColor` and `THsb` type: a color in the HSB model, the model of the color picker of Figma
+  - Options types: `TCollectWidgetNodesOptions`, `TFocusNodesOptions`, `TImportByKeyOptions`, `TIsLayerVisibleOptions`
+
+- Fixed:
+  - `getTopmostNodes` threw on a deleted node in the list. It removes such a node and does not throw.
+  - The JSDoc of the options of `collectInstances`, `resolveVariableValueAsync` and `walkNodeTree` was not in the `.d.ts` files.
+
 ### Version 2.2.0
 
 - Added:
@@ -7,12 +18,15 @@
   - `ClientStorage`
   - `DocumentStorage`
   - `NodeStorage`
-  - `initStorageAsync` (was `initStorage`)
+  - `initStorageAsync`
   - `clientStorageAdapter`
   - `pluginDataAdapter`
   - `Payment`
   - `uuid`
   - Fractional indexes: `findPositionAfter`, `findPositionBefore`, `midpoint`, `recalcPositions`, `sortPositions`
+
+- Changed:
+  - `initStorage` → `initStorageAsync`
 
 ### Version 2.1.0
 
