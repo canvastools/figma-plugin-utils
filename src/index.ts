@@ -16,7 +16,7 @@
  * They follow the two conventions and need only `@figma/plugin-typings`.
  * In a plugin, `figma.widgetId` is `undefined`, and each of them returns its empty answer.
  *
- * The color helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`, `roundAlpha`) use no Figma API.
+ * The color helpers (`colorToHex`, `colorToHexAlpha`, `hexAlphaToColor`, `colorToHsb`, `hsbToColor`, `roundAlpha`) use no Figma API.
  * So the UI of a plugin uses them too, as does its sandbox.
  * The fractional indexes (`midpoint`, `sortPositions`, `recalcPositions`, …) also use no Figma API. They keep a stored list in order.
  *
@@ -47,6 +47,7 @@ export { collectInstances } from './collectInstances'
 export { collectWidgetNodes } from './collectWidgetNodes'
 export { colorToHex } from './colorToHex'
 export { colorToHexAlpha } from './colorToHexAlpha'
+export { colorToHsb } from './colorToHsb'
 export { createLogger } from './createLogger'
 export { createVariableLookup } from './createVariableLookup'
 
@@ -80,6 +81,7 @@ export { hasDescendantMatching } from './hasDescendantMatching'
 export { hasInstanceAncestor } from './hasInstanceAncestor'
 export { hasRelaunchCommand } from './hasRelaunchCommand'
 export { hexAlphaToColor } from './hexAlphaToColor'
+export { hsbToColor } from './hsbToColor'
 
 export { importComponentOrSetByKeyAsync } from './importComponentOrSetByKeyAsync'
 export { initStorageAsync } from './initStorageAsync'
@@ -124,7 +126,7 @@ export { walkNodeTree } from './walkNodeTree'
 /* Types */
 
 export type { TCollectInstancesOptions } from './collectInstances'
-export type { TColor } from './colorTypes'
+export type { TColor, THsb } from './colorTypes'
 export type { TLogger, TLoggerOptions } from './createLogger'
 export type { TVariableLookup } from './createVariableLookup'
 export type { TStyleOfType } from './findStyleAsync'
