@@ -1,6 +1,6 @@
 {
   "name": "figma-plugin-utils",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Helpers for working with the Figma node tree from a plugin sandbox.",
   "keywords": [
     "figma"
