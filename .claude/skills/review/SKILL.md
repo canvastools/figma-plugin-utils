@@ -108,14 +108,10 @@ The severity of a problem:
 | Check | Result |
 | ----- | ------ |
 
-| #   | Type | Severity | Place     | Rule (source)   | Finding | Proposed change |
-| --- | ---- | -------- | --------- | --------------- | ------- | --------------- |
-| 1   |      |          | file:line | rule (file:line) |         |                 |
-
-**Fixes to select**
-
-- #<n>: <fix A> / <fix B> — <what each fix changes>
-  (or "none")
+| #   | Type | Severity | Place     | Rule (source)    | Finding | Proposed change                    |
+| --- | ---- | -------- | --------- | ---------------- | ------- | ---------------------------------- |
+| 1   |      |          | file:line | rule (file:line) |         | <one change>                       |
+| 2   |      |          | file:line | rule (file:line) |         | **A:** <change><br>**B:** <change> |
 
 **Rules that the review read**
 
