@@ -1,14 +1,17 @@
 name: Release
 
+# A pull request to main: the checks only, so a missed version bump shows before the merge.
+# A push to main: the checks, then the GitHub Release and the npm publish.
+# Each push to main must carry a new version. A push without one fails the run.
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
-    paths:
-      - package.json
   workflow_dispatch:
 
 concurrency:
-  group: release
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -21,10 +24,11 @@ jobs:
       # Minting the OIDC token npm trusted publishing verifies
       id-token: write
 
+    env:
+      PUBLISH: ${{ github.event_name != 'pull_request' }}
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -35,68 +39,63 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
 
+      # Version higher than on npm, package-lock.json in sync, a CHANGELOG section, no `### Unpublished` left.
+      # Fails first, before the install and the build.
+      - name: Check the release
+        run: node scripts/check-release.mjs
+
       - name: Read version
         id: version
         run: |
-          version="$(node -p "require('./package.json').version")"
-          name="$(node -p "require('./package.json').name")"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "name=$name" >> "$GITHUB_OUTPUT"
-          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
-      # A push to main that only touched, say, the description must not try to
-      # republish a version that is already on the registry.
-      - name: Check whether this version is already published
-        id: published
-        run: |
-          if npm view "${{ steps.version.outputs.name }}@${{ steps.version.outputs.version }}" version >/dev/null 2>&1; then
-            echo "Version ${{ steps.version.outputs.version }} is already on npm — nothing to release."
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
-
+      # `npm ci` fails when package-lock.json does not match package.json.
       - name: Install dependencies
-        if: steps.published.outputs.exists == 'false'
         run: npm ci
 
-      - name: Typecheck
-        if: steps.published.outputs.exists == 'false'
-        run: npm run typecheck
+      - name: Check the format
+        run: npm run format:check
 
-      - name: Lint
-        if: steps.published.outputs.exists == 'false'
-        run: npm run lint
-
+      # Lint, typecheck, build: the same command as on a local machine.
       - name: Build
-        if: steps.published.outputs.exists == 'false'
-        run: npm run build
+        run: npm run prod
 
       # Catches a build that emitted nothing, or an `exports` map pointing at a
       # file the build does not produce — before the version is burned on npm.
       - name: Verify the package contents
-        if: steps.published.outputs.exists == 'false'
         run: |
-          test -f dist/index.js || { echo "dist/index.js missing"; exit 1; }
-          test -f dist/index.d.ts || { echo "dist/index.d.ts missing"; exit 1; }
+          test -f dist/index.js || { echo "::error::dist/index.js missing"; exit 1; }
+          test -f dist/index.d.ts || { echo "::error::dist/index.d.ts missing"; exit 1; }
           npm pack --dry-run
 
-      - name: Publish to npm
-        if: steps.published.outputs.exists == 'false'
-        run: npm publish --access public
-
-      - name: Extract release notes from CHANGELOG
-        if: steps.published.outputs.exists == 'false'
+      - name: Write the release notes
         run: node scripts/changelog-section.mjs "${{ steps.version.outputs.version }}" > RELEASE_NOTES.md
 
+      # Before the publish: a failed publish leaves a release that a re-run of the job completes.
+      # A re-run finds the release and does not create it again.
       - name: Create the GitHub Release
-        if: steps.published.outputs.exists == 'false'
+        if: env.PUBLISH == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME: ${{ steps.version.outputs.name }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          tar -czf "${{ steps.version.outputs.name }}-${{ steps.version.outputs.version }}-dist.tar.gz" dist
-          gh release create "${{ steps.version.outputs.tag }}" \
-            --title "${{ steps.version.outputs.tag }}" \
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "The release v$VERSION exists. It is not created again."
+            exit 0
+          fi
+          tar -czf "$NAME-$VERSION-dist.tar.gz" dist
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
             --notes-file RELEASE_NOTES.md \
             --target "$GITHUB_SHA" \
-            "${{ steps.version.outputs.name }}-${{ steps.version.outputs.version }}-dist.tar.gz"
+            "$NAME-$VERSION-dist.tar.gz"
+
+      - name: Publish to npm
+        if: env.PUBLISH == 'true'
+        run: npm publish --access public
+
+      - name: Summary
+        if: env.PUBLISH == 'true'
+        run: echo "## ✅ Published ${{ steps.version.outputs.name }}@${{ steps.version.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"

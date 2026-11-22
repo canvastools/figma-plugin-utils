@@ -57,7 +57,9 @@ It must use the package from `docs/` and the JSDoc alone. `docs/usage.md` is the
 ## README and CHANGELOG
 
 - Add a row to the table of its group in `docs/helpers.md` for each new helper. Write one description sentence in the row.
-- Add a line to `CHANGELOG.md` under the next version, in the group `Added`, `Changed`, `Removed` or `Fixed`.
+- Add a line to `CHANGELOG.md` under `### Unpublished`, in the group `Added`, `Changed`, `Removed` or `Fixed`.
+- Add the heading `### Unpublished` at the top of `CHANGELOG.md` when it does not exist.
+- Do not add a version heading. `npm run version:bump` renames `### Unpublished` to the version before the release.
 
 ## Comment in the code
 
