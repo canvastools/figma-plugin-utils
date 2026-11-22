@@ -11,7 +11,11 @@ npm run lint
 npm run format      # writes the files
 npm run format:check
 npm run prod        # lint + typecheck + build
+npm run version:bump -- patch | minor | major | x.y.z
+npm run release:check
 ```
+
+The release and the publication are in `PUBLICATION.md`.
 
 ## Code
 

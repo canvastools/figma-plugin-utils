@@ -1,6 +1,6 @@
 {
   "name": "figma-plugin-utils",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Helpers for working with the Figma node tree from a plugin sandbox.",
   "keywords": [
     "figma"
@@ -44,13 +44,15 @@
   },
   "scripts": {
     "build": "vite build",
-    "lockfile": "node scripts/update-lockfile.mjs",
     "watch": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prod": "npm run lint && npm run typecheck && vite build"
+    "prod": "npm run lint && npm run typecheck && vite build",
+    "lockfile": "node scripts/update-lockfile.mjs",
+    "version:bump": "node scripts/bump-version.mjs",
+    "release:check": "node scripts/check-release.mjs"
   }
 }
