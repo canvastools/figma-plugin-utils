@@ -14,23 +14,18 @@ The review changes no file. The user selects the changes, and the work starts af
 
 - Each problem has a type, a place as `file:line`, the rule with its source, and a proposed change.
 - Each problem with two or more possible fixes lists each fix. The report does not select one.
-- Each rule file and each skill in `.claude` is in the report as read, or in `Not verified`.
+- Each rule file and each skill in `.claude` is in the report as read, or in `Not verified`, or the report is one line.
 - The checks of the package from `Commands` in `.claude/CLAUDE.md` ran, and the report has their results.
 - No file of the package changed: `git status` shows the same list as before the review.
 
 ## Stop
 
-- Ask the user when a point of the task is not clear. Do not start the work while a question is open.
-- Do not select an interpretation for the user.
 - Ask the user in these cases:
   - The scope of the review is not clear: a change, a set of files or the whole package.
   - Two rules contradict each other, and the review needs one of them to judge the code.
   - A rule has two possible meanings, and the meaning changes a problem.
   - A problem is outside the package, for example in another package or in a project.
-- Ask the user when an instruction of the user breaks a rule of this package. Tell the user the rule.
-- Show the plan to the user before you change a file. Start the changes after the user agrees.
 - Do not change a file in the review. Write the change as a proposal in the report.
-- Do not commit, push or publish. The user does these actions.
 
 ## Steps
 
@@ -45,28 +40,34 @@ The review changes no file. The user selects the changes, and the work starts af
 4. Show the plan to the user in the plan format below. Start the next section after the user agrees.
    Why: a review of a wrong scope costs more than a question.
 
-### Review
+### Run the checks
 
-1. Run the checks of the package from `Commands` in `.claude/CLAUDE.md`. Do not run a command that writes files, for example `npm run format`.
-   Why: a script finds a mechanical violation faster and more surely than a read. The review changes no file.
-2. Read each file of the scope against each rule of the list. Write a problem for each violation.
-   Why: a script checks only a part of the rules. The rest needs a read.
-3. Compare the rules with each other: `CLAUDE.md`, the rules, the skills, `docs/` and the JSDoc. Write a problem for each contradiction.
-   Why: two rules that disagree make each later change wrong for one of them.
-4. Search for a fact that is in two places. Write a problem, and name the place that keeps the fact.
-   Why: two copies of a fact drift apart, and a reader cannot see which copy is true.
-5. Compare each fact in the text with the code. Write a problem for each fact that the code makes false.
-   Why: an old fact misleads a reader more than an absent fact.
-6. Find the documentation of a different package or of a project in the scope. Write a problem for it.
-   Why: each package documents itself. A copy in another package becomes old without an error.
-7. Find a frequent decision in the code that no rule names. Write it as a gap with a proposed rule.
-   Why: a decision without a rule changes from one author to the next.
-8. Write a proposed change for each problem. Give each possible fix when a problem has more than one.
+- Run the checks of the package from `Commands` in `.claude/CLAUDE.md`. Do not run a command that writes files, for example `npm run format`.
+  Why: a script finds a mechanical violation faster and more surely than a read. The review changes no file.
+
+### Find the problems
+
+- Read each file of the scope against each rule of the list. Write a problem for each violation.
+  Why: a script checks only a part of the rules. The rest needs a read.
+- Compare the rules with each other: `CLAUDE.md`, the rules, the skills, `docs/` and the JSDoc. Write a problem for each contradiction.
+  Why: two rules that disagree make each later change wrong for one of them.
+- Search for a fact that is in two places. Write a problem, and name the place that keeps the fact.
+  Why: two copies of a fact drift apart, and a reader cannot see which copy is true.
+- Compare each fact in the text with the code. Write a problem for each fact that the code makes false.
+  Why: an old fact misleads a reader more than an absent fact.
+- Find the documentation of a different package or of a project in the scope. Write a problem for it.
+  Why: each package documents itself. A copy in another package becomes old without an error.
+- Find a frequent decision in the code that no rule names. Write it as a gap with a proposed rule.
+  Why: a decision without a rule changes from one author to the next.
+
+### Report
+
+1. Write a proposed change for each problem. Give each possible fix when a problem has more than one.
    Why: the user selects the fix. The report gives the facts for that decision.
-9. Run `git status`. Check that the list of changed files is the same as before the review.
+2. Run `git status`. Check that the list of changed files is the same as before the review.
    Why: the review proposes changes and does not make them.
-10. Write the report in the report format below.
-    Why: the user decides which problems to fix and in which order.
+3. Write the report in the report format below.
+   Why: the user decides which problems to fix and in which order.
 
 ## Types of problems
 
@@ -101,6 +102,14 @@ The severity of a problem:
 ```
 
 ## Report format
+
+Write one line when the work finds no problems, each check passes and `Not verified` is empty:
+
+```md
+**No problems in <scope>.** Checks pass: <commands>. Rules read: <N> files.
+```
+
+Write the full report in the other cases.
 
 ```md
 **<N> problems in <scope>: <H> high, <M> medium, <L> low.** | **No problems in <scope>.**

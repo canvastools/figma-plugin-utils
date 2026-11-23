@@ -46,6 +46,7 @@ The American spelling also applies to each comment in the code.
 
 - Write a description as a paragraph.
 - Write the instructions as a list. Each item starts with an action verb.
+- Number the items of a list only when the order matters. Use `-` for items in any order.
 - Write a set of facts as a list when each fact stands alone. The limits of a description apply to each item.
 - Write a warning before the instruction that it applies to. Start it with `Caution:` and write it as a command.
 - Write a complex list of values as a vertical list.

@@ -2,6 +2,21 @@
 
 What the package is and its conventions are in `docs/`. Read `docs/usage.md` before a change.
 
+## Work with the user
+
+- Answer in the language of the user. Write the files in English by `rules/language.md`.
+- Ask the user when a point of the task is not clear. Do not start the work while a question is open.
+- Do not select an interpretation for the user.
+- Ask the user when an instruction of the user breaks a rule of this package. Tell the user the rule, and do not select a way for the user.
+- Show the plan to the user before you change a file. Start the changes after the user agrees.
+- Ask before a command that writes a file in git outside the task, for example a build into `dist/`.
+- Do not commit, push or publish. The user does these actions.
+- Start a report with the result in one sentence.
+- Write only that sentence when the work finds no problems, each check passes and `Not verified` is empty.
+- Keep a `Not verified` section in each other report, also when it is empty.
+- Put a check that did not run in `Not verified`. Do not report it as passed.
+- Name a place as `file:line`.
+
 ## Commands
 
 ```bash
