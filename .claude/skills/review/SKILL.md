@@ -13,9 +13,9 @@ The review changes no file. The user selects the changes, and the work starts af
 ## Done when
 
 - Each problem has a type, a place as `file:line`, the rule with its source, and a proposed change.
-- Each problem with two or more possible fixes lists each fix. The report does not select one.
+- Each problem with two or more possible fixes lists each fix in its row of the table. The report does not select one.
 - Each rule file and each skill in `.claude` is in the report as read, or in `Not verified`, or the report is one line.
-- The checks of the package from `Commands` in `.claude/CLAUDE.md` ran, and the report has their results.
+- The checks that change no file ran, and the report has their results.
 - No file of the package changed: `git status` shows the same list as before the review.
 
 ## Stop
@@ -42,8 +42,9 @@ The review changes no file. The user selects the changes, and the work starts af
 
 ### Run the checks
 
-- Run the checks of the package from `Commands` in `.claude/CLAUDE.md`. Do not run a command that writes files, for example `npm run format`.
-  Why: a script finds a mechanical violation faster and more surely than a read. The review changes no file.
+- Run the checks that change no file: `npm run lint`, `npm run typecheck`, `npm run format:check`.
+  Do not run `format`, `lint:fix`, `build`, `prod`, `lockfile` or `version:bump`: they write the files.
+  Why: a script finds a mechanical violation faster and more surely than a read.
 
 ### Find the problems
 
@@ -62,7 +63,7 @@ The review changes no file. The user selects the changes, and the work starts af
 
 ### Report
 
-1. Write a proposed change for each problem. Give each possible fix when a problem has more than one.
+1. Write a proposed change for each problem. Give each possible fix in the row, when a problem has more than one.
    Why: the user selects the fix. The report gives the facts for that decision.
 2. Run `git status`. Check that the list of changed files is the same as before the review.
    Why: the review proposes changes and does not make them.
@@ -109,7 +110,7 @@ Write one line when the work finds no problems, each check passes and `Not verif
 **No problems in <scope>.** Checks pass: <commands>. Rules read: <N> files.
 ```
 
-Write the full report in the other cases.
+Write the full report in the other cases. Write each fix of a problem in the cell `Proposed change`. Start each fix with its letter, and put `<br>` between two fixes.
 
 ```md
 **<N> problems in <scope>: <H> high, <M> medium, <L> low.** | **No problems in <scope>.**

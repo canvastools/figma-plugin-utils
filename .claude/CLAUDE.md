@@ -22,7 +22,7 @@ What the package is and its conventions are in `docs/`. Read `docs/usage.md` bef
 ```bash
 npm run build       # vite build → dist/
 npm run typecheck
-npm run lint
+npm run lint        # ESLint and the link check of the Markdown files
 npm run format      # writes the files
 npm run format:check
 npm run prod        # lint + typecheck + build
