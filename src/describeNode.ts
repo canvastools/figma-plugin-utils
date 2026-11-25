@@ -3,7 +3,8 @@ import { isNodeAlive } from './isNodeAlive'
 /**
  * The id and the name of a node, for a log line or a report entry.
  *
- * A description must not cause a second failure. The node in a report is often the node that failed, so both reads have a guard.
+ * A description must not cause a second failure. The node in a report is often the node that failed, so both reads have a
+ * guard.
  * A node that the helper cannot read gets empty strings and is not skipped. So the caller still has an entry to report.
  *
  * @example

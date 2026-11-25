@@ -11,7 +11,8 @@ import { reportStorageError } from './reportStorageError'
  * The store keeps `data` while its caller keeps the store.
  *
  * `data` holds the defaults from the construction until `initAsync` replaces them with the stored data.
- * It is never `undefined`: the plugin answers its UI when the file runs, and the first `initAsync` takes two round trips to Figma.
+ * It is never `undefined`: the plugin answers its UI when the file runs, and the first `initAsync` takes two round trips to
+ * Figma.
  * `data` is a copy, so a change before the load does not change the defaults of the merge.
  *
  * Nothing throws. A failed write gives `false`, a log line and a call of `onError`.
@@ -65,7 +66,8 @@ class ClientStorage<T extends TVersionedData> {
   /**
    * Removes the key from `figma.clientStorage`, so the next `initAsync` is a first run.
    *
-   * `data` also goes back to the defaults. The store stays alive after the call, and a later `writeAsync` otherwise puts the removed value back.
+   * `data` also goes back to the defaults. The store stays alive after the call, and a later `writeAsync` otherwise puts the
+   * removed value back.
    */
   async deleteAsync(): Promise<boolean> {
     try {

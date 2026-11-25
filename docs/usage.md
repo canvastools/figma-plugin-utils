@@ -7,7 +7,7 @@ The `.claude/CLAUDE.md` of a project imports it: `@../node_modules/figma-plugin-
 
 ## What the package gives
 
-Helpers for the Figma node tree in a plugin sandbox, the stores over `figma.clientStorage` and plugin data, the payment, the logs.
+Helpers for the Figma node tree in a plugin sandbox, the colors and paints, the variables and styles with `VariableCatalog`, the stores over `figma.clientStorage` and plugin data, the payment, the logs.
 Each helper is a primitive: it answers one question about a node or a tree. It does not know the reason for the question.
 The module that asks keeps the policy: what is part of a component, which node is "the component", how a run reports.
 
@@ -17,6 +17,11 @@ import { walkNodeTree, isLayerVisible, collectInstances } from 'figma-plugin-uti
 
 The package is ESM only, with one module for each helper. An import of one helper does not load the others.
 Its types use `@figma/plugin-typings`. The package has no runtime dependencies.
+
+The package has two entries:
+
+- `figma-plugin-utils`: each helper, for the plugin sandbox.
+- `figma-plugin-utils/ui`: the helpers that do not use the Figma API, for the UI of a plugin. Its types do not use the global types of Figma.
 
 ## Two sources of knowledge
 
@@ -36,10 +41,11 @@ Its types use `@figma/plugin-typings`. The package has no runtime dependencies.
 
 - Read the safe answer as a normal answer. Do not wrap a helper in `try`.
 - Give a walk helper a predicate for your rules. The package keeps the walk, and the project keeps the rules.
-- Keep the cache of the variable and style helpers in the project. They keep nothing between calls.
+- Keep the cache of the variable and style helpers in the project. They keep nothing between calls. `VariableCatalog` is the exception: keep one catalog in the plugin code.
 - Keep one instance of a store or of `Payment` for each key. The instance keeps the data while the project keeps the instance.
 - Show a message to the user from `onError` of a store. The package logs and does not show messages.
-- Use the color helpers and the fractional indexes in the UI too. They use no Figma API.
+- Import the helpers in the UI from `figma-plugin-utils/ui`. The types of the main entry use the global types of Figma, and they conflict with the DOM.
+- Import a type of Figma in the UI from `@figma/plugin-typings/plugin-api-standalone`: `import type { Paint } from '@figma/plugin-typings/plugin-api-standalone'`.
 - Use the widget helpers in a plugin too. There `figma.widgetId` is `undefined`, and each of them returns its empty answer.
 
 ## Read before a task

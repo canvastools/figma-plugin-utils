@@ -4,7 +4,8 @@ import { isValidVariant } from './isValidVariant'
  * The property values in the name of a variant.
  *
  * Figma stores the state of a variant only in its name, `Size=M, Type=Primary`. The name is editable text like each layer name.
- * This is the read half of `isValidVariant`. That check says that the string is well formed, and this helper turns it into pairs.
+ * This is the read half of `isValidVariant`. That check says that the string is well formed, and this helper turns it into
+ * pairs.
  * It validates first, so a bad name does not give a half parsed object.
  *
  * `null` means that the name is not a property string. A result does not mean that the values are correct.

@@ -1,10 +1,12 @@
+import type { RGBA } from '@figma/plugin-typings/plugin-api-standalone'
+
 /**
- * A color with each channel in 0–1, the alpha too.
+ * A color with each channel in 0–1, the alpha too. It is the `RGBA` of Figma.
  *
- * It has the shape of the `RGBA` of Figma, but the package declares it. So the UI of a plugin can use the color helpers, as its sandbox does.
- * The UI does not compile with `@figma/plugin-typings`, and the type of a color picker is the same four numbers with another name.
+ * The type comes from `@figma/plugin-typings/plugin-api-standalone`, a module without global declarations.
+ * So the UI of a plugin, which compiles with the DOM, uses the color helpers as its sandbox does.
  */
-export type TColor = { r: number; g: number; b: number; a: number }
+export type TColor = RGBA
 
 /**
  * A color in the HSB model: `h` is the hue in degrees, 0–360. `s`, `b` and `a` are in 0–1.

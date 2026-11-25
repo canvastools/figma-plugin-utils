@@ -1,12 +1,4 @@
-/**
- * Where a reader of variable values finds the variables and the collections of a chain.
- *
- * Both functions give `null` and do not throw: for an id that this file does not know, and for an id that the API refused.
- */
-export type TVariableLookup = {
-  collectionAsync: (id: string) => Promise<VariableCollection | null>
-  variableAsync: (id: string) => Promise<Variable | null>
-}
+import type { TVariableLookup } from './variableTypes'
 
 /**
  * A lookup of variables and collections. It asks the API only for the items that it did not get.
@@ -14,10 +6,12 @@ export type TVariableLookup = {
  * **The lookup does not ask again for an item that it has.**
  * A reader that listed the local variables and collections (two calls) has each default mode and each local alias.
  * A new question for each value is at least one call across the sandbox boundary for each variable, and three for each alias.
- * So the lists fill the lookup. Only the other items go to the API: a library variable that an alias reaches, the collection of an imported variable.
+ * So the lists fill the lookup. Only the other items go to the API:
+ * a library variable that an alias reaches, the collection of an imported variable.
  * The lookup keeps them while it exists. A reader of many variables of one collection asks for that collection once.
  *
- * **The lookup keeps an answer and does not keep a refusal.** A variable of a library that Figma still imports can resolve a moment later.
+ * **The lookup keeps an answer and does not keep a refusal.** A variable of a library that Figma still imports can resolve a
+ * moment later.
  * So the lookup asks again for a `null` the next time.
  *
  * Two lookups share nothing: each has its own maps. So the creator of a lookup decides how long an answer lives.

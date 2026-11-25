@@ -6,7 +6,8 @@ import { isNodeAlive } from './isNodeAlive'
  * A remote component is on no page of this document, and its chain of ancestors ends at `null`. A removed node is the same.
  * So `null` is a normal answer, not a failure. A walk of `parent` without a check stops at both.
  *
- * The parent of a main component is often a frame or a section, not the page. So this helper walks the whole chain and does not read `parent` once.
+ * The parent of a main component is often a frame or a section, not the page.
+ * So this helper walks the whole chain and does not read `parent` once.
  * The walk has a depth limit as a last guard against a broken chain.
  *
  * @example

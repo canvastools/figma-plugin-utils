@@ -9,7 +9,8 @@ import { isNodeAlive } from './isNodeAlive'
  * - `'stop'`: end the whole walk now.
  *
  * The visit returns one decision, and there is no second `descend` predicate. The two decisions use the same reads.
- * A caller that skips hidden branches already read the visibility. A second question runs the code of the caller twice for each node.
+ * A caller that skips hidden branches already read the visibility.
+ * A second question runs the code of the caller twice for each node.
  */
 export type TWalkVerdict = void | 'skip' | 'stop'
 
@@ -36,9 +37,11 @@ export type TWalkNodeTreeOptions = {
  * The order is a promise: the result of a walk goes into lists that a user reads. So the stack gets the children in reverse.
  *
  * The walk goes through a `PAGE` and does not visit it.
- * So a walk from the document gets the content of each page. The caller has no special case for a node that is not a `SceneNode`.
+ * So a walk from the document gets the content of each page. The caller has no special case for a node that is not a
+ * `SceneNode`.
  *
- * It does not throw. The visits before a bad subtree stay. A layer that a user deletes during a walk is normal, and a partial answer is better than none.
+ * It does not throw. The visits before a bad subtree stay. A layer that a user deletes during a walk is normal, and a partial
+ * answer is better than none.
  *
  * @example
  * // Everything inside the component

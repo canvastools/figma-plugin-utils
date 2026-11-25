@@ -2,7 +2,8 @@
  * The node of an id when it has one of the given types, or `null`.
  *
  * **A node is not enough.** An old stored id can resolve to a node that changed its type.
- * A component that a designer detached into a frame keeps its id. For the caller, such an id names nothing, as an id of a deleted node.
+ * A component that a designer detached into a frame keeps its id.
+ * For the caller, such an id names nothing, as an id of a deleted node.
  * An id that is not a node throws in Figma, and the answer is the same: nothing.
  *
  * The result has the narrowed type of the given types.

@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
 /**
- * Same lib build as the other workspace packages: ESM with `preserveModules`,
- * so every helper stays its own module and a consumer importing one function
- * never pulls the rest of the library into its bundle.
+ * ESM with `preserveModules`: each helper stays a module of its own.
+ * So a bundle that imports one helper gets only that helper.
+ * Two entries: `index` for the sandbox, `ui` for the code outside the sandbox.
  */
 export default defineConfig({
   plugins: [
@@ -16,9 +16,8 @@ export default defineConfig({
     target: 'es2020',
     minify: true,
     lib: {
-      entry: 'src/index.ts',
+      entry: { index: 'src/index.ts', ui: 'src/ui.ts' },
       formats: ['es'],
-      fileName: 'index',
     },
     rollupOptions: {
       output: {

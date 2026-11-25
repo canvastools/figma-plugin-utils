@@ -1,5 +1,29 @@
 # Changelog
 
+### Unpublished
+
+- Added:
+  - `VariableCatalog`: the variables of the file and of the enabled libraries and the styles of the file, as `TCatalogData` for a list of the UI. A library is read when the UI asks, in steps
+  - `bindVariableAsync`, `bindVariableToPaintAsync`: the binding of a node or of a paint to the variable of a `TPublishedRef` or of a row of the catalog
+  - `TVariableCatalogOptions`, `TScanCatalogOptions`: the options of `VariableCatalog` and of its `scanAsync`
+  - `figma-plugin-utils/ui`: the helpers that do not use the Figma API, for the UI of a plugin. Its types do not use the global types of Figma
+  - The types of the catalog: `TCatalogData`, `TCatalogItem`, `TCatalogVariable`, `TCatalogStyle`, `TCatalogLibrary`, `TCatalogCollection`, `TCatalogVariableValue`
+  - `modes` option of `resolveVariableValueAsync`: the mode of each collection, for example `node.resolvedVariableModes`
+  - `toSolidPaint`: a color with an alpha as a solid paint, the reverse of `applyOpacity`. It removes `boundVariables`, also for a new opacity alone
+  - `@figma/plugin-typings` `>=1.143.0` as a peer dependency
+
+- Changed:
+  - `TColor` is the `RGBA` of Figma
+  - The color and paint helpers take the types from `@figma/plugin-typings/plugin-api-standalone`. The UI of a plugin can call them with full types
+  - `TPublishedRef.id` can be `null`: a variable of a library that is not imported yet has only its key. `findVariableAsync` and `findStyleAsync` then go to the import
+  - `TStyleOfType` is generic: `TStyleOfType<'TEXT'>` is `TextStyle`. It covers each style type of Figma
+  - `preferType` of `importComponentOrSetByKeyAsync` accepts only `'COMPONENT'` and `'COMPONENT_SET'`
+  - `TLoggerOptions` is `TCreateLoggerOptions`, `TImportByKeyOptions` is `TImportComponentOrSetByKeyOptions`
+  - `getLibraryVariableCollectionsAsync` and `clearChildren` do not log an expected refusal of Figma
+
+- Fixed:
+  - `bindVariableAsync` and `bindVariableToPaintAsync` do not throw when Figma refuses a binding
+
 ### Version 2.3.0
 
 - Added:

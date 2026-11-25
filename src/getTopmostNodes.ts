@@ -9,8 +9,10 @@ import { isNodeAlive } from './isNodeAlive'
  *
  * It also removes the deleted nodes and each node that it cannot read. So the result is always safe.
  *
- * - Use it when the next step covers the whole subtree: a delete, an export, a new build, a count. Otherwise the step does the inner node twice.
- * - Do not use it when the step works on each node separately, for example a write to each matched node. That step needs the inner node too.
+ * - Use it when the next step covers the whole subtree: a delete, an export, a new build, a count.
+ *   Otherwise the step does the inner node twice.
+ * - Do not use it when the step works on each node separately, for example a write to each matched node.
+ *   That step needs the inner node too.
  *
  * @example
  * // Frame1 > Frame2, both matched

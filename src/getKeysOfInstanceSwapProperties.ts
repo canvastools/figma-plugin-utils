@@ -1,9 +1,11 @@
 /**
  * The keys of the INSTANCE_SWAP properties that a component declares.
  *
- * A key looks like `Icon#2:0`: the name and the id that Figma adds. A nested instance points at it through `componentPropertyReferences`.
+ * A key looks like `Icon#2:0`: the name and the id that Figma adds.
+ * A nested instance points at it through `componentPropertyReferences`.
  *
- * The result is an empty list when the component declares no swap properties. It is also empty when the helper cannot read the definitions:
+ * The result is an empty list when the component declares no swap properties.
+ * It is also empty when the helper cannot read the definitions:
  * a dead node, a removed library.
  * With no keys, no instance is a swap target. So both cases mean the same for the only use of the list.
  *

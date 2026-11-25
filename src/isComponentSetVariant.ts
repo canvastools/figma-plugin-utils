@@ -3,7 +3,8 @@
  *
  * The difference is important when a plugin counts or names components.
  * Twelve variants are one component in a library and twelve entries in a node tree.
- * The name of a variant is its property string (`Size=M, Type=Primary`), not a name for a user. The readable name is on the set.
+ * The name of a variant is its property string (`Size=M, Type=Primary`), not a name for a user.
+ * The readable name is on the set.
  *
  * - Use `getComponentSetOfVariant` when you need the set. This helper returns a boolean and does not narrow the type.
  */

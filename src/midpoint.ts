@@ -6,7 +6,8 @@ import { ALPHABET, BASE } from './fractionalAlphabet'
  * An item keeps its place in a list with a `position` string, not a number index.
  * So an insert or a move changes one row and does not number the list again.
  * A position is a base-36 fraction in the alphabet `0-9a-z` (`'m'` ≈ 0.61…). Positions compare as strings.
- * A new position does not end in `'0'`. So a smaller position is always available, and an insert between two neighbors always has room.
+ * A new position does not end in `'0'`. So a smaller position is always available, and an insert between two neighbors always
+ * has room.
  *
  * Old data can have a `b` that is `a` with zeros at the end, or only zeros. No position fits between or below.
  * Then the result is `''`, which sorts before each other position, or the common prefix.

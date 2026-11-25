@@ -3,10 +3,12 @@
  *
  * A node opens the iframe of a widget, but the sandbox does not get that node.
  * The widget id identifies the type of widget, and a document can have many nodes of it.
- * The selection gives the node. A widget opens its UI only from a node that the user just used, and the node stays selected while the UI is open.
+ * The selection gives the node. A widget opens its UI only from a node that the user just used, and the node stays selected
+ * while the UI is open.
  *
  * `null` is a normal answer, not a failure. A plugin project has no `figma.widgetId`.
- * A widget whose node the user deleted or deselected with the UI open also has no source. The caller handles both cases, usually with a close of the UI.
+ * A widget whose node the user deleted or deselected with the UI open also has no source.
+ * The caller handles both cases, usually with a close of the UI.
  *
  * @example
  * const node = getSourceWidgetNode()

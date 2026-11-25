@@ -1,8 +1,8 @@
-/* What one import produced. `empty` is "no such thing", `failed` is "could not ask" */
+/** The result of one import: `empty` for no such component, `failed` for a request that failed. */
 export type TImportByKeyOutcome =
   { status: 'found'; node: ComponentNode | ComponentSetNode } | { status: 'empty' } | { status: 'failed'; message: string }
 
-export type TImportByKeyOptions = {
+export type TImportComponentOrSetByKeyOptions = {
   /** The helper calls it before each import call. Use it to count or limit the most expensive call of a plugin. */
   onApiCall?: () => void
 }
@@ -13,7 +13,8 @@ export type TImportByKeyOptions = {
  * Figma has one import call for each node type and does not say which type a key has. So the helper tries both.
  * `preferType` sets only which call comes first.
  *
- * A designer who adds variants to a component replaces it with a set that holds it. A key from before or after that change means the same component.
+ * A designer who adds variants to a component replaces it with a set that holds it.
+ * A key from before or after that change means the same component.
  * With one call only, the helper reports this usual case as a library that is not available.
  * The second call costs nothing when the first call answers, and that is the usual result.
  *
@@ -34,8 +35,8 @@ export type TImportByKeyOptions = {
  */
 const importComponentOrSetByKeyAsync = async (
   key: string,
-  preferType: NodeType = 'COMPONENT',
-  options: TImportByKeyOptions = {},
+  preferType: (ComponentNode | ComponentSetNode)['type'] = 'COMPONENT',
+  options: TImportComponentOrSetByKeyOptions = {},
 ): Promise<TImportByKeyOutcome> => {
   const imports =
     preferType === 'COMPONENT_SET'

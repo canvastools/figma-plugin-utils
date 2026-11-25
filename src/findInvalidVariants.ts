@@ -1,4 +1,4 @@
-import type { TInvalidVariant } from './validateVariantNames'
+import type { TInvalidVariant } from './variantTypes'
 
 import { isComponentNode } from './isComponentNode'
 import { isComponentSetNode } from './isComponentSetNode'

@@ -10,7 +10,8 @@ import { isNodeAlive } from './isNodeAlive'
  * A remote node is on no page of this document, and a plugin cannot edit it. A walk usually stops at it.
  * A component of a design system is a dependency to report, not a tree to take apart.
  *
- * It returns `false` for a node that it cannot read. That is the safe side: the caller reads the node again and does not put it in a library.
+ * It returns `false` for a node that it cannot read. That is the safe side:
+ * the caller reads the node again and does not put it in a library.
  *
  * @example
  * const page = isRemoteNode(master) ? null : getPageOfNode(master)

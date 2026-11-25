@@ -67,20 +67,24 @@ Hex is always upper case.
 | `colorToHsb(color)`, `hsbToColor(hsb)`        | `TColor` to `THsb` and back: the hue in degrees, the rest in 0–1         |
 | `roundAlpha(alpha)`                           | An alpha as a whole percent, to compare a stored alpha with a typed one  |
 | `applyOpacity(color, opacity?)`               | The `opacity` of a paint multiplied into the alpha of the color          |
+| `toSolidPaint(color, base?)`                  | A color with an alpha as a solid paint, the alpha in `opacity`           |
 | `getGradientHandlePositions(paint)`           | The start, end and width handles of a gradient, from `gradientTransform` |
 
 **Variables and styles**
 
-|                                                  |                                                                                                 |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `findVariableAsync(ref)`                         | The variable of a stored `{ id, key }` in this file: by id when the key matches, else by import |
-| `findStyleAsync(ref, type)`                      | The same for a style of one type, narrowed to it. `'TEXT'` gives a `TextStyle`                  |
-| `getLibraryVariableCollectionsAsync()`           | The collections of the enabled libraries, or `[]`. Without `teamlibrary`, the getter throws     |
-| `createVariableLookup(variables?, collections?)` | Variables and collections by id. It asks the API only for the items that it did not get         |
-| `resolveVariableValueAsync(variable, options?)`  | The value of a variable in the default mode of its collection, with aliases, without a node     |
-| `resolveColorValueAsync(value, options?)`        | The color of such a value, also a color with a variable opacity, or `null`                      |
-| `isVariableAlias(value)`                         | Whether a value is a reference to a variable                                                    |
-| `toPaintPreview(paints)`                         | Paints as a swatch draws them: colors, gradients with handles, from the bottom, or `null`       |
+|                                                  |                                                                                                             |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `findVariableAsync(ref)`                         | The variable of a stored `{ id, key }` in this file: by id when the key matches, else by import             |
+| `findStyleAsync(ref, type)`                      | The same for a style of one type, narrowed to it. `'TEXT'` gives a `TextStyle`                              |
+| `getLibraryVariableCollectionsAsync()`           | The collections of the enabled libraries, or `[]`                                                           |
+| `createVariableLookup(variables?, collections?)` | Variables and collections by id. It asks the API only for the items that it did not get                     |
+| `resolveVariableValueAsync(variable, options?)`  | The value of a variable in the default mode of its collection or in `modes`, with aliases                   |
+| `resolveColorValueAsync(value, options?)`        | The color of such a value, also a color with a variable opacity, or `null`                                  |
+| `isVariableAlias(value)`                         | Whether a value is a reference to a variable                                                                |
+| `VariableCatalog`                                | The variables of the file and of the libraries and the styles of the file, as data for a UI list            |
+| `bindVariableAsync(node, field, ref)`            | Binds a property of a node to the variable of a reference or a row. A library variable gets an import first |
+| `bindVariableToPaintAsync(paint, ref)`           | A solid paint with its color bound to the variable of a reference or a row                                  |
+| `toPaintPreview(paints)`                         | Paints as a swatch draws them: colors, gradients with handles, from the bottom, or `null`                   |
 
 **Canvas**
 

@@ -1,7 +1,7 @@
 /**
  * Prints the CHANGELOG section for one version, for use as GitHub Release notes.
  * Fails when the version has no section or the section is empty, so a release
- * never goes out without notes. `scripts/check-release.mjs` runs it before the build.
+ * never goes out without notes. The release workflow runs it after the build.
  */
 import { findVersionSection, readChangelogLines } from './changelog.mjs'
 

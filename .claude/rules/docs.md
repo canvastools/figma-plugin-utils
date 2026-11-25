@@ -17,6 +17,7 @@ The language conventions are in `language.md`.
 
 - Each exported helper, class and method.
 - Each property of an options type.
+- Each property of an exported type, with `/** */`. A comment with `/* */` does not go into the `.d.ts` files.
 - A type of options needs no JSDoc of its own. The JSDoc is on each property.
 
 ## Helper
@@ -49,8 +50,8 @@ It must use the package from `docs/` and the JSDoc alone. `docs/usage.md` is the
 ## Property and parameter
 
 - Write one or two description sentences for a property.
-- Do not write the type or the default value. TypeScript gives them.
-- Write a default value only when the helper computes it at run time. TypeScript does not show it.
+- Do not write the type. TypeScript gives it.
+- Write a default that the signature does not show. Examples: a default of a destructured option, a default that the helper computes at run time.
 - Set the default value in the parameters of the function.
 - Write `@param` only when the name and the type do not explain the parameter.
 

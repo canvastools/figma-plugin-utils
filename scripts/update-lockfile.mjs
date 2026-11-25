@@ -1,14 +1,13 @@
 /**
  * Regenerates package-lock.json for CI.
  *
- * This package lives inside a pnpm workspace whose node_modules and lockfile
- * sit one directory above the git repository. Running `npm install
- * --package-lock-only` here resolves every dependency to a symlink in that
- * parent store and writes paths like `../node_modules/.pnpm/...` — a lockfile
- * that installs nothing on a CI runner while still exiting 0.
+ * A parent directory can hold a node_modules of its own, for example a pnpm store.
+ * Then `npm install --package-lock-only` here resolves each dependency to a symlink in that
+ * parent and writes paths like `../node_modules/.pnpm/...`. Such a lockfile installs nothing
+ * on a CI runner, and npm still exits 0.
  *
- * So the lockfile is built in a temporary directory outside the workspace,
- * where npm has no choice but to resolve against the registry, and copied back.
+ * So the script builds the lockfile in a temporary directory outside the parent,
+ * where npm resolves against the registry, and copies it back.
  *
  * Run this after changing anything in `dependencies` / `devDependencies`.
  * A plain version bump does not need it.

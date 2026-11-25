@@ -25,14 +25,16 @@ const isColor = (value: unknown): value is RGB | RGBA =>
  * The color that the value of a variable draws, from the data that Figma keeps for it.
  *
  * - **A color** gives itself, with an explicit alpha.
- * - **A color with a variable opacity** reads that number along its alias chain, in the default modes.
+ * - **A color with a variable opacity** reads that number along its alias chain, in the modes of `modes`, else in the default
+ *   modes.
  *   It reads as `resolveVariableValueAsync` does. The number then multiplies the alpha of the color.
  * - **The number is a percent.** A test in Figma showed that `72` draws as `0.72`.
  *   A read of the number as it is makes each translucent token opaque, and nothing shows the error.
  * - **The multiplication is a choice.** The tests did not show if the number multiplies the alpha or replaces it.
  *   Each tested color had an alpha of `1`, where the two give the same result.
  *   A multiplication matches each test and does not make a color more opaque than its value.
- * - **Other values give `null`**: a computed value (`VARIABLE_EXPRESSION`), an opacity that does not end in a number, a value of another type.
+ * - **Other values give `null`**: a computed value (`VARIABLE_EXPRESSION`), an opacity that does not end in a number, a value
+ *   of another type.
  *   `null` is the only safe answer. The other answer is a color that the variable does not have.
  *
  * @example

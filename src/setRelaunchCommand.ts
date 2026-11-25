@@ -6,10 +6,12 @@ import { isRemoteNode } from './isRemoteNode'
  * `setRelaunchData` **replaces** the whole map. A plugin that writes two commands one after the other keeps only the second.
  * This helper reads the map, adds the command and writes the map back.
  *
- * It writes nothing when the node already has the command with the same description. Each write is a `documentchange`: see `hasRelaunchCommand`.
+ * It writes nothing when the node already has the command with the same description. Each write is a `documentchange`:
+ * see `hasRelaunchCommand`.
  * It also writes nothing to a node from a library, because Figma refuses it.
  *
- * It returns `true` when it wrote. A node that it cannot write gives `false`. The button is a convenience, and the plugin opens from the menu.
+ * It returns `true` when it wrote. A node that it cannot write gives `false`.
+ * The button is a convenience, and the plugin opens from the menu.
  *
  * - Declare the command in `manifest.json` under `relaunchButtons`. Otherwise Figma shows nothing and gives no error.
  *

@@ -1,3 +1,5 @@
+import type { RGB } from '@figma/plugin-typings/plugin-api-standalone'
+
 import { toHexByte } from './toHexByte'
 
 /**
@@ -9,7 +11,6 @@ import { toHexByte } from './toHexByte'
  * @example
  * colorToHex({ r: 0.592, g: 0.278, b: 1 })   // '#9747FF'
  */
-const colorToHex = (color: { r: number; g: number; b: number }): string =>
-  `#${toHexByte(color.r)}${toHexByte(color.g)}${toHexByte(color.b)}`
+const colorToHex = (color: RGB): string => `#${toHexByte(color.r)}${toHexByte(color.g)}${toHexByte(color.b)}`
 
 export { colorToHex }

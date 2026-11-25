@@ -1,23 +1,13 @@
-import type { TInvalidVariantReason } from './matchVariantName'
+import type { TInvalidVariant } from './variantTypes'
 
 import { matchVariantName } from './matchVariantName'
 import { parseVariantName } from './parseVariantName'
 
-/* A variant as this check needs it: which one, and what it is called */
+/** A variant as this check needs it: its id and its name. */
 export type TVariantName = { id: string; name: string }
 
-export type TInvalidVariant = {
-  variantComponentId: string
-  variantName: string
-  reason: TInvalidVariantReason
-  /* The property at fault, for `UNKNOWN_PROPERTY` and `INCOMPLETE`. Null otherwise */
-  property: string | null
-  /* For `DUPLICATE` — the id of the variant that said these values first. Null otherwise */
-  duplicateOfId: string | null
-}
-
 export type TValidatedVariants = {
-  /* The variants whose names say a state of their own, in the order they came */
+  /** The variants with a name that gives a state of its own, in their order. */
   valid: { id: string; name: string; values: Record<string, string> }[]
   invalid: TInvalidVariant[]
 }
@@ -53,10 +43,12 @@ const collectNameKeys = (variants: readonly TVariantName[]): string[] => {
  * **A set that declares no variant properties is checked against its own names.**
  * Figma breaks a set when two variants name one state or a name is not a property string.
  * Such a set declares no variant properties to a plugin. A test in Figma showed no `VARIANT` definition for each case.
- * A check against no keys says that each name has an undeclared property. That reason is true for each variant and hides the real reason.
+ * A check against no keys says that each name has an undeclared property.
+ * That reason is true for each variant and hides the real reason.
  * So the helper takes the keys from the names that parse, and checks each name against the others.
  *
- * The helper finds duplicates among the parsed names, by their values, in the order of the variants. The first variant with a state keeps it.
+ * The helper finds duplicates among the parsed names, by their values, in the order of the variants.
+ * The first variant with a state keeps it.
  *
  * @example
  * const { valid, invalid } = validateVariantNames(

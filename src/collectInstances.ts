@@ -5,7 +5,8 @@ export type TCollectInstancesOptions = {
    * Whether the walk goes into the children of a found instance.
    *
    * The children of an instance repeat its main component.
-   * The caller finds them again, one time, when it resolves the main component. A walk into each instance reads the same content many times.
+   * The caller finds them again, one time, when it resolves the main component.
+   * A walk into each instance reads the same content many times.
    */
   descendIntoInstances?: boolean
   /** Whether the result keeps a found instance. Without it, the result keeps each instance. */
@@ -17,7 +18,8 @@ export type TCollectInstancesOptions = {
 /**
  * The instances in a node.
  *
- * A walk that goes into each node leaves the filter to each caller. Then each caller writes its own visibility and property rules.
+ * A walk that goes into each node leaves the filter to each caller.
+ * Then each caller writes its own visibility and property rules.
  * Both predicates answer about one layer. So the caller keeps the policy (what is part of a component).
  * `walkNodeTree` keeps the walk, as for each other walk in this package.
  *

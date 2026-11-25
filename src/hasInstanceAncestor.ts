@@ -6,7 +6,8 @@
  *
  * The walk goes up to the top: a plain frame between the node and the instance changes nothing.
  *
- * - Use `isInstanceNode(node) || hasInstanceAncestor(node)` when the type of the node counts too. That is the question "can the user edit this".
+ * - Use `isInstanceNode(node) || hasInstanceAncestor(node)` when the type of the node counts too.
+ *   That is the question "can the user edit this".
  *
  * @example
  * hasInstanceAncestor(node)                             // "is it nested in an instance"

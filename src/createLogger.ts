@@ -3,7 +3,7 @@
  */
 export type TLogger = (build: () => unknown) => void
 
-export type TLoggerOptions = {
+export type TCreateLoggerOptions = {
   /**
    * Whether the logger prints now. The logger reads it at each call, so a switch that changes at run time works.
    * Without it, the logger always prints.
@@ -15,7 +15,8 @@ export type TLoggerOptions = {
  * A logger for one scope: `[scope] payload` in the console.
  *
  * A function builds the payload, and the caller does not pass a value.
- * A call site often maps each node of a run into readable data. A value costs that work also in a build where nobody reads the log.
+ * A call site often maps each node of a run into readable data. A value costs that work also in a build where nobody reads the
+ * log.
  * With a function, a logger that is off costs one check.
  *
  * The package knows nothing of the project, so the caller owns the switch: `isLogEnabled` reads the config of the project.
@@ -27,7 +28,7 @@ export type TLoggerOptions = {
  * log(() => ({ nodes: selection.map((node) => node.name) }))
  */
 const createLogger =
-  (scope: string, options: TLoggerOptions = {}): TLogger =>
+  (scope: string, options: TCreateLoggerOptions = {}): TLogger =>
   (build) => {
     if (options.isLogEnabled && !options.isLogEnabled()) return
 

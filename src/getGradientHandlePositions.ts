@@ -1,3 +1,5 @@
+import type { GradientPaint, Vector } from '@figma/plugin-typings/plugin-api-standalone'
+
 /**
  * The positions of the start, the end and the width of a gradient in gradient space, for each gradient type.
  *
@@ -18,13 +20,16 @@ const GRADIENT_POINTS: Record<'linear' | 'centered', [number, number][]> = {
 }
 
 /**
- * The three handles of a gradient (start, end, width) in the unit square of the painted area, from the matrix of the plugin API.
+ * The three handles of a gradient (start, end, width) in the unit square of the painted area, from the matrix of the plugin
+ * API.
  *
  * The REST API and the editor describe a gradient by these handles (`gradientHandlePositions`).
  * The plugin API gives `gradientTransform`. It maps the unit square of the painted layer onto gradient space.
- * Its inverse puts the points of the gradient back onto the layer. These points are the handles, and a preview of the paint needs them.
+ * Its inverse puts the points of the gradient back onto the layer.
+ * These points are the handles, and a preview of the paint needs them.
  *
- * A matrix with no inverse makes the gradient a line. The helper then gives the points in gradient space: a preview of the stops is better than none.
+ * A matrix with no inverse makes the gradient a line. The helper then gives the points in gradient space:
+ * a preview of the stops is better than none.
  *
  * @example
  * const [start, end, width] = getGradientHandlePositions(paint)

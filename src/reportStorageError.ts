@@ -3,7 +3,8 @@ import type { TStorageErrorHandler, TStorageErrorKind } from './storageTypes'
 /**
  * The one way that a store reports a failure: a log line, then the handler of the caller.
  *
- * A store does not throw and does not show messages to the user. The project decides in the handler if the failure needs a toast.
+ * A store does not throw and does not show messages to the user. The project decides in the handler if the failure needs a
+ * toast.
  */
 const reportStorageError = (
   source: string,

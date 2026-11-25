@@ -36,12 +36,16 @@ The release and the publication are in `PUBLICATION.md`.
 
 - One helper in one file of `src/`, named as the helper: `getPageOfNode.ts` exports `getPageOfNode`.
 - Export each helper from `src/index.ts`, types with `export type`.
+- Export a helper from `src/ui.ts` too when it does not use `figma` and its types do not use the global types of Figma.
 - A helper is an arrow function, a store is a class. `export { name }` at the end of the file.
 - Names: `TName` for a type, `…Async` for a function that returns a promise.
   An adapter member that can be sync or async keeps its plain name: `read`, `write`.
 - Export a type at its declaration: `export type TName = …`.
-- Put a type that two or more files use in `<group>Types.ts`, for example `colorTypes.ts`.
+- Put a type that two or more files use in `<group>Types.ts`, for example `colorTypes.ts`. The options type of a helper stays in the file of the helper.
 - Declare the options of a helper as an exported type `T<Helper>Options`, not inline.
+- Import a type of Figma from `@figma/plugin-typings/plugin-api-standalone` in a file that `src/ui.ts` exports. Use the global types in the other files.
+- Derive a type from a type of Figma: `Pick`, an indexed access, `Extract`, `Parameters`. Do not copy its shape.
+- Check a list of the values of a Figma union with `satisfies Record<TUnion, …>`. Then a new value of `@figma/plugin-typings` stops the build.
 - Log a caught error as `console.log('Error in <name>() :', error)`.
 - No semicolons, single quotes, a comma after the last item, print width 128 (`.prettierrc`).
 - The package knows nothing of a project that uses it. No names, paths or rules of a project in the code or the docs.

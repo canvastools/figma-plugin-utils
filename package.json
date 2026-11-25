@@ -24,6 +24,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -31,10 +35,13 @@
     "docs"
   ],
   "sideEffects": false,
+  "peerDependencies": {
+    "@figma/plugin-typings": ">=1.143.0"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@figma/eslint-plugin-figma-plugins": "^1.0.0",
-    "@figma/plugin-typings": "*",
+    "@figma/plugin-typings": "^1.143.0",
     "eslint": "^10.7.0",
     "prettier": "^3.9.6",
     "typescript": "^5.9.3",

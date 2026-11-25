@@ -7,7 +7,8 @@ import { reportStorageError } from './reportStorageError'
  * `figma.clientStorage` as a storage adapter: for each user, the same in each file.
  *
  * `read` gives `null` for an absent key and for a failed read.
- * `write` gives `false` when Figma refuses the value, for example when the storage is full. `onError` then gets `quota` or `write`.
+ * `write` gives `false` when Figma refuses the value, for example when the storage is full.
+ * `onError` then gets `quota` or `write`.
  *
  * @example
  * const { read, write } = clientStorageAdapter<TClientData>('my-plugin')

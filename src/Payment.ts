@@ -18,8 +18,10 @@ export type TPaymentOptions = {
 }
 
 export type TPaymentCheckoutOptions = {
-  /** The screen before the checkout. Without it, the checkout shows `PAID_FEATURE` during the trial and `TRIAL_ENDED` after it. */
-  interstitial?: 'PAID_FEATURE' | 'TRIAL_ENDED' | 'SKIP'
+  /**
+   * The screen before the checkout. Without it, the checkout shows `PAID_FEATURE` during the trial and `TRIAL_ENDED` after it.
+   */
+  interstitial?: NonNullable<Parameters<PaymentsAPI['initiateCheckoutAsync']>[0]>['interstitial']
 }
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
@@ -29,7 +31,7 @@ const readDaysSinceFirstRun = (): number => {
   try {
     return (figma.payments?.getUserFirstRanSecondsAgo() ?? 0) / ONE_DAY_IN_SECONDS
   } catch (error) {
-    console.log('Error in Payment :', error)
+    console.log('Error in readDaysSinceFirstRun() :', error)
 
     return 0
   }
@@ -39,7 +41,7 @@ const readIsPaid = (): boolean => {
   try {
     return figma.payments?.status.type === 'PAID'
   } catch (error) {
-    console.log('Error in Payment :', error)
+    console.log('Error in readIsPaid() :', error)
 
     return false
   }
@@ -116,7 +118,7 @@ class Payment {
       try {
         this.options.onPaid?.(data)
       } catch (error) {
-        console.log('Error in the onPaid handler of Payment :', error)
+        console.log('Error in onPaid() :', error)
       }
     }
 

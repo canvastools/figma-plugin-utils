@@ -8,7 +8,8 @@ import { reportStorageError } from './reportStorageError'
  * It works with each backend: pass the `read` and `write` pair of `clientStorageAdapter`, of `pluginDataAdapter` or your own.
  *
  * - Nothing stored: it writes the defaults and returns them.
- * - The same version: it returns the value with the keys that `defaults` added after the write. So a new key needs no new version.
+ * - The same version: it returns the value with the keys that `defaults` added after the write.
+ *   So a new key needs no new version.
  * - Another version: it adds the absent keys, keeps the stored values and writes the current version.
  * - A value that is not an object with `lastUsedVersion`: it reports `corrupt` and starts again from the defaults.
  *   A store that refuses such a value at each launch gives the user a plugin that does not open.

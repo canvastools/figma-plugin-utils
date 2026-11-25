@@ -1,17 +1,6 @@
-import { parseVariantName } from './parseVariantName'
+import type { TInvalidVariantReason } from './variantTypes'
 
-/**
- * The reason why the name of a variant gives no state of its own.
- *
- * - `INVALID_NAME`: the name is not a property string.
- * - `UNKNOWN_PROPERTY`: the name has a property that the set does not declare.
- * - `INCOMPLETE`: the name does not have a property that the set declares.
- * - `DUPLICATE`: the name gives the state of another variant of the set.
- *
- * The first three reasons are about one name, and `matchVariantName` finds them.
- * The fourth reason is about two names, and only `validateVariantNames` finds it.
- */
-export type TInvalidVariantReason = 'INVALID_NAME' | 'UNKNOWN_PROPERTY' | 'INCOMPLETE' | 'DUPLICATE'
+import { parseVariantName } from './parseVariantName'
 
 export type TMatchedVariantName =
   | { status: 'parsed'; values: Record<string, string> }
@@ -28,7 +17,8 @@ export type TMatchedVariantName =
  * So the helper checks each value. There are three types of error, and each needs a different fix: see `TInvalidVariantReason`.
  * `property` names the wrong property, when there is one.
  *
- * Each declared key must be present. This also catches a name that repeats one property and omits another: the repeat overwrites itself.
+ * Each declared key must be present. This also catches a name that repeats one property and omits another:
+ * the repeat overwrites itself.
  *
  * @example
  * matchVariantName('Size=M, Type=Primary', ['Size', 'Type'])

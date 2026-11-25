@@ -1,3 +1,5 @@
+import type { RGB, RGBA } from '@figma/plugin-typings/plugin-api-standalone'
+
 import type { TColor } from './colorTypes'
 
 /**

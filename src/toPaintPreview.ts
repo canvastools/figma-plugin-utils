@@ -1,3 +1,5 @@
+import type { ColorStop, GradientPaint, Paint, Vector } from '@figma/plugin-typings/plugin-api-standalone'
+
 import { applyOpacity } from './applyOpacity'
 import type { TColor } from './colorTypes'
 import { getGradientHandlePositions } from './getGradientHandlePositions'
@@ -10,13 +12,13 @@ import { getGradientHandlePositions } from './getGradientHandlePositions'
 export type TGradientPreview = {
   type: 'gradient-linear' | 'gradient-radial' | 'gradient-angular'
   gradientHandlePositions: [Vector, Vector, Vector]
-  gradientStops: { color: TColor; position: number }[]
+  gradientStops: (Pick<ColorStop, 'position'> & { color: TColor })[]
 }
 
-/* One paint of a preview: a color or a gradient */
+/** One paint of a preview: a color or a gradient. */
 export type TPaintPreviewLayer = TColor | TGradientPreview
 
-/* One paint as itself, or several, bottom first */
+/** One paint, or a list of paints with the bottom paint first. */
 export type TPaintPreview = TPaintPreviewLayer | TPaintPreviewLayer[]
 
 const GRADIENT_TYPES: Record<GradientPaint['type'], TGradientPreview['type']> = {

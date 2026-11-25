@@ -7,7 +7,8 @@
  * - Exclude these instances when you describe the content of a component. The current value is only the default.
  * - Keep them when the question is "what does this file use". So this is a filter and not a rule of the walk.
  *
- * An empty key list means that the component declares no swap properties. Then no instance is a target, and the answer is `false`.
+ * An empty key list means that the component declares no swap properties.
+ * Then no instance is a target, and the answer is `false`.
  *
  * @example
  * const swapKeys = getKeysOfInstanceSwapProperties(component)

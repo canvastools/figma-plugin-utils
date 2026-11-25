@@ -10,7 +10,7 @@ import { hasInstanceAncestor } from './hasInstanceAncestor'
  * It does not change the content of an instance. Figma does not let a plugin remove the children of an instance.
  * Each `remove()` throws, and the loop leaves the node half empty. The check also covers a frame in an instance.
  *
- * It reports a node that cannot have children and does not change it. Such a call is an error of the caller.
+ * It does not change a node that cannot have children, and returns `false`.
  *
  * - Detach the instance first, or clear the main component.
  *
@@ -22,14 +22,10 @@ import { hasInstanceAncestor } from './hasInstanceAncestor'
 const clearChildren = (node: SceneNode): boolean => {
   try {
     if (!('children' in node)) {
-      console.log('clearChildren() : Children not found', node)
-
       return false
     }
 
     if (node.type === 'INSTANCE' || hasInstanceAncestor(node)) {
-      console.log('clearChildren() : Cannot remove the children of an instance', node)
-
       return false
     }
 

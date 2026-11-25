@@ -4,7 +4,8 @@
  * It is a readable form of the filters of a plugin, for example "frames, components and instances".
  * It needs no chain of comparisons and no `Set` at each call site.
  *
- * It gives a plain boolean and does not narrow the node. A narrowed type needs the exact tuple of types, and a filter usually does not need that work.
+ * It gives a plain boolean and does not narrow the node. A narrowed type needs the exact tuple of types, and a filter usually
+ * does not need that work.
  *
  * - Use `isFrameNode` and the other type predicates when the branch after the check needs the properties of the node.
  *

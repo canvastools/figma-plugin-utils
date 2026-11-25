@@ -18,7 +18,10 @@ export { colorToHex } from './colorToHex'
 export { colorToHexAlpha } from './colorToHexAlpha'
 export { colorToHsb } from './colorToHsb'
 export { createLogger } from './createLogger'
+export { bindVariableAsync } from './bindVariableAsync'
+export { bindVariableToPaintAsync } from './bindVariableToPaintAsync'
 export { createVariableLookup } from './createVariableLookup'
+export { VariableCatalog } from './VariableCatalog'
 
 export { describeNode } from './describeNode'
 export { DocumentStorage } from './DocumentStorage'
@@ -89,6 +92,7 @@ export { setRelaunchCommand } from './setRelaunchCommand'
 export { sortPositions } from './sortPositions'
 
 export { toPaintPreview } from './toPaintPreview'
+export { toSolidPaint } from './toSolidPaint'
 
 export { uuid } from './uuid'
 
@@ -101,15 +105,23 @@ export { walkNodeTree } from './walkNodeTree'
 export type { TCollectInstancesOptions } from './collectInstances'
 export type { TCollectWidgetNodesOptions } from './collectWidgetNodes'
 export type { TColor, THsb } from './colorTypes'
-export type { TLogger, TLoggerOptions } from './createLogger'
-export type { TVariableLookup } from './createVariableLookup'
+export type { TLogger, TCreateLoggerOptions } from './createLogger'
+export type {
+  TCatalogCollection,
+  TCatalogData,
+  TCatalogItem,
+  TCatalogLibrary,
+  TCatalogStyle,
+  TCatalogVariable,
+  TCatalogVariableValue,
+} from './catalogTypes'
+export type { TScanCatalogOptions, TVariableCatalogOptions } from './VariableCatalog'
 export type { TStyleOfType } from './findStyleAsync'
-export type { TPublishedRef } from './findVariableAsync'
 export type { TFocusNodesOptions } from './focusNodesAsync'
 export type { TBoundVariableRef, TBoundVariableSource } from './getBoundVariableRefs'
-export type { TImportByKeyOptions, TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
+export type { TImportComponentOrSetByKeyOptions, TImportByKeyOutcome } from './importComponentOrSetByKeyAsync'
 export type { TIsLayerVisibleOptions } from './isLayerVisible'
-export type { TInvalidVariantReason, TMatchedVariantName } from './matchVariantName'
+export type { TMatchedVariantName } from './matchVariantName'
 export type { TPaymentCheckoutOptions, TPaymentData, TPaymentOptions } from './Payment'
 export type { TResolveVariableValueOptions } from './resolveVariableValueAsync'
 export type {
@@ -124,5 +136,7 @@ export type {
   TVersionedData,
 } from './storageTypes'
 export type { TGradientPreview, TPaintPreview, TPaintPreviewLayer } from './toPaintPreview'
-export type { TInvalidVariant, TValidatedVariants, TVariantName } from './validateVariantNames'
+export type { TValidatedVariants, TVariantName } from './validateVariantNames'
+export type { TPublishedRef, TVariableLookup } from './variableTypes'
+export type { TInvalidVariant, TInvalidVariantReason } from './variantTypes'
 export type { TWalkNodeTreeOptions, TWalkVerdict } from './walkNodeTree'
