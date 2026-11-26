@@ -61,13 +61,10 @@ jobs:
       - name: Build
         run: npm run prod
 
-      # Catches a build that emitted nothing, or an `exports` map pointing at a
-      # file the build does not produce — before the version is burned on npm.
+      # Each file of `exports` exists and imports, and `npm pack` holds no source files —
+      # before the version is burned on npm.
       - name: Verify the package contents
-        run: |
-          test -f dist/index.js || { echo "::error::dist/index.js missing"; exit 1; }
-          test -f dist/index.d.ts || { echo "::error::dist/index.d.ts missing"; exit 1; }
-          npm pack --dry-run
+        run: node scripts/check-package.mjs
 
       - name: Write the release notes
         run: node scripts/changelog-section.mjs "${{ steps.version.outputs.version }}" > RELEASE_NOTES.md
