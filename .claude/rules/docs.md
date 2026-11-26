@@ -55,7 +55,7 @@ It must use the package from `docs/` and the JSDoc alone. `docs/usage.md` is the
 - Set the default value in the parameters of the function.
 - Write `@param` only when the name and the type do not explain the parameter.
 
-## README and CHANGELOG
+## CHANGELOG
 
 - Add a row to the table of its group in `docs/helpers.md` for each new helper. Write one description sentence in the row.
 - Add a line to `CHANGELOG.md` under `### Unpublished`, in the group `Added`, `Changed`, `Removed` or `Fixed`.
