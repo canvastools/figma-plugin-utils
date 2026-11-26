@@ -3,6 +3,8 @@
 ### Unpublished
 
 - Added:
+  - `colorToHsl`, `hslToColor`, `THsl`: a color as HSL and back
+  - `hsbToHsl`, `hslToHsb`: a color of HSB as HSL and back, with the hue of a gray kept
   - `VariableCatalog`: the variables of the file and of the enabled libraries and the styles of the file, as `TCatalogData` for a list of the UI. A library is read when the UI asks, in steps
   - `bindVariableAsync`, `bindVariableToPaintAsync`: the binding of a node or of a paint to the variable of a `TPublishedRef` or of a row of the catalog
   - `TVariableCatalogOptions`, `TScanCatalogOptions`: the options of `VariableCatalog` and of its `scanAsync`

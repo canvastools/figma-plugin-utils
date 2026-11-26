@@ -65,6 +65,8 @@ Hex is always upper case.
 | `colorToHex(color)`, `colorToHexAlpha(color)` | `#RRGGBB` and `#RRGGBBAA` from channels in 0–1                           |
 | `hexAlphaToColor(hex)`                        | Six or eight hex digits back to `TColor`, or `null`                      |
 | `colorToHsb(color)`, `hsbToColor(hsb)`        | `TColor` to `THsb` and back: the hue in degrees, the rest in 0–1         |
+| `colorToHsl(color)`, `hslToColor(hsl)`        | `TColor` to `THsl` and back: the hue in degrees, the rest in 0–1         |
+| `hsbToHsl(hsb)`, `hslToHsb(hsl)`              | `THsb` to `THsl` and back, with the hue of a gray kept                   |
 | `roundAlpha(alpha)`                           | An alpha as a whole percent, to compare a stored alpha with a typed one  |
 | `applyOpacity(color, opacity?)`               | The `opacity` of a paint multiplied into the alpha of the color          |
 | `toSolidPaint(color, base?)`                  | A color with an alpha as a solid paint, the alpha in `opacity`           |
