@@ -8,6 +8,9 @@
  * - CHANGELOG.md has no section for the version, or the section is empty;
  * - CHANGELOG.md has changes under `### Unpublished`: no version contains them.
  *
+ * With `--dry-run` each failure is a warning, and the exit code is 0. `release:check` uses it, so it runs
+ * before the version bump and goes on to the build. CI runs the check without the flag.
+ *
  * In GitHub Actions each failure is also an error annotation and a line in the
  * job summary, so a forgotten version bump is visible on the run page.
  */
@@ -52,6 +55,7 @@ const readPublishedVersions = (name) => {
   }
 }
 
+const DRY_RUN = process.argv.includes('--dry-run')
 const errors = []
 const { name, version } = readJson('package.json')
 
@@ -98,6 +102,14 @@ if (findUnpublishedSection(changelog)?.body) {
 
 if (errors.length === 0) {
   console.log(`${name}@${version} can be released.`)
+  process.exit(0)
+}
+
+if (DRY_RUN) {
+  for (const message of errors) {
+    console.warn(process.env.GITHUB_ACTIONS ? `::warning title=Release check::${message}` : `! ${message}`)
+  }
+  console.log(`${name}@${version}: ${errors.length} problems of the release. A dry run goes on.`)
   process.exit(0)
 }
 

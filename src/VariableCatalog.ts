@@ -58,13 +58,14 @@ export type TScanCatalogOptions = {
 type TRun = { aborted: boolean }
 
 /**
- * The variables and the styles that a list of the UI offers: the variables of the file and of the enabled libraries, and the
- * styles of the file.
+ * The variables and the styles that a list of the UI offers.
+ * They are the variables of the file and of the enabled libraries, and the styles of the file.
  * The catalog keeps them for the session. The UI gets `TCatalogData` and shows it with no change.
  *
  * `scanAsync` reads the variables and the styles of the file and the list of the libraries.
  * The libraries need `"teamlibrary"` in the permissions of the manifest.
  * Without it, the list has no libraries, and the catalog works with the file only.
+ *
  * `readLibrary` lists the variables of a library, then imports each variable of the given types for its value and its scopes.
  * An import is a call across the network, so the read sends the rows in steps and stops on `stopLibrary`.
  * A library is read once in a session. `refreshLibrary` reads it again from the start.

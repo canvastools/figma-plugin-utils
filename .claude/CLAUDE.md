@@ -21,13 +21,13 @@ What the package is and its conventions are in `docs/`. Read `docs/usage.md` bef
 
 ```bash
 npm run build       # vite build → dist/
+npm run prod        # format check + lint + typecheck + build
+npm run release:check  # check-release, prod, then check-package; see PUBLICATION.md
+npm run version:bump -- patch | minor | major | x.y.z
 npm run typecheck
-npm run lint        # ESLint and the link check of the Markdown files
+npm run lint        # ESLint, the language check and the link check of the Markdown files
 npm run format      # writes the files
 npm run format:check
-npm run prod        # lint + typecheck + build
-npm run version:bump -- patch | minor | major | x.y.z
-npm run release:check
 ```
 
 The release and the publication are in `PUBLICATION.md`.
@@ -36,7 +36,7 @@ The release and the publication are in `PUBLICATION.md`.
 
 - One helper in one file of `src/`, named as the helper: `getPageOfNode.ts` exports `getPageOfNode`.
 - Export each helper from `src/index.ts`, types with `export type`.
-- Export a helper from `src/ui.ts` too when it does not use `figma` and its types do not use the global types of Figma.
+- Export a helper from `src/ui.ts` too when it does not use `figma` or the global types of Figma.
 - A helper is an arrow function, a store is a class. `export { name }` at the end of the file.
 - Names: `TName` for a type, `…Async` for a function that returns a promise.
   An adapter member that can be sync or async keeps its plain name: `read`, `write`.

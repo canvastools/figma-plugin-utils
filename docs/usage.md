@@ -7,7 +7,8 @@ The `.claude/CLAUDE.md` of a project imports it: `@../node_modules/figma-plugin-
 
 ## What the package gives
 
-Helpers for the Figma node tree in a plugin sandbox, the colors and paints, the variables and styles with `VariableCatalog`, the stores over `figma.clientStorage` and plugin data, the payment, the logs.
+Helpers for the Figma node tree in a plugin sandbox, the colors and paints, and the variables and styles with `VariableCatalog`.
+Also the stores over `figma.clientStorage` and plugin data, the payment and the logs.
 Each helper is a primitive: it answers one question about a node or a tree. It does not know the reason for the question.
 The module that asks keeps the policy: what is part of a component, which node is "the component", how a run reports.
 
@@ -41,7 +42,8 @@ The package has two entries:
 
 - Read the safe answer as a normal answer. Do not wrap a helper in `try`.
 - Give a walk helper a predicate for your rules. The package keeps the walk, and the project keeps the rules.
-- Keep the cache of the variable and style helpers in the project. They keep nothing between calls. `VariableCatalog` is the exception: keep one catalog in the plugin code.
+- Keep the cache of the variable and style helpers in the project. They keep nothing between calls.
+- Keep one `VariableCatalog` in the plugin code. It is the exception: it keeps its data for the session.
 - Keep one instance of a store or of `Payment` for each key. The instance keeps the data while the project keeps the instance.
 - Show a message to the user from `onError` of a store. The package logs and does not show messages.
 - Import the helpers in the UI from `figma-plugin-utils/ui`. The types of the main entry use the global types of Figma, and they conflict with the DOM.

@@ -3,8 +3,8 @@ import type { RGBA, SolidPaint } from '@figma/plugin-typings/plugin-api-standalo
 /**
  * A color with an alpha as a solid paint: the channels go to `color`, the alpha goes to `opacity`.
  *
- * It is the reverse of `applyOpacity`. A color picker and a hex field give a color with an alpha,
- * and Figma keeps the transparency of a solid paint in `opacity`, not in the color.
+ * It is the reverse of `applyOpacity`. A color picker and a hex field give a color with an alpha.
+ * Figma keeps the transparency of a solid paint in `opacity`, not in the color.
  *
  * The result keeps the other properties of `base`, for example `visible` and `blendMode`.
  * It has no `boundVariables`: the new color is a value, not a variable.

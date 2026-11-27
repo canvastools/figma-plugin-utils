@@ -52,15 +52,16 @@
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch",
+    "prod": "npm run format:check && npm run lint && npm run typecheck && vite build",
+    "release:check": "node scripts/check-release.mjs --dry-run && npm run prod && node scripts/check-package.mjs",
+    "version:bump": "node scripts/bump-version.mjs",
+    "lockfile": "node scripts/update-lockfile.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . && node scripts/lint-links.mjs",
+    "lint": "eslint . && node scripts/lint-docs.mjs && node scripts/lint-links.mjs",
+    "lint:docs": "node scripts/lint-docs.mjs",
     "lint:links": "node scripts/lint-links.mjs",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prod": "npm run lint && npm run typecheck && vite build",
-    "lockfile": "node scripts/update-lockfile.mjs",
-    "version:bump": "node scripts/bump-version.mjs",
-    "release:check": "node scripts/check-release.mjs && npm run prod && node scripts/check-package.mjs"
+    "format:check": "prettier --check ."
   }
 }

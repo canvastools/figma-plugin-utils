@@ -27,6 +27,9 @@ The rules of the section are in `.claude/rules/docs.md`.
    ```
 
    It runs `scripts/check-release.mjs`, then `npm run prod`, then `scripts/check-package.mjs`. It stops at the first check that fails.
+   A problem of the version or of `CHANGELOG.md` is a warning here, so the command goes on to the build. CI makes it an error.
+   Run the command also before the bump.
+   After the bump, the command shows no warning of `check-release`.
 
 3. Commit and open a pull request from `dev` to `main`.
 
@@ -41,8 +44,7 @@ On a pull request to `main`, CI does the checks only. On a push to `main`, CI do
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Check the release           | The version is not higher than on npm. `package-lock.json` has another version. No changelog. Changes under `### Unpublished`. |
 | Install dependencies        | `package-lock.json` does not match `package.json`.                                                                             |
-| Check the format            | `npm run format:check` finds a file that is not formatted.                                                                     |
-| Build                       | `npm run prod`: lint, typecheck or build fails.                                                                                |
+| Build                       | `npm run prod`: the format check, lint, typecheck or build fails.                                                              |
 | Verify the package contents | `scripts/check-package.mjs`: a file of `exports` does not exist or does not import, or `npm pack` holds a source file.         |
 | Create the GitHub Release   | Push only. It creates the tag `v<version>` and the release with the notes and `dist`.                                          |
 | Publish to npm              | Push only. It publishes with npm trusted publishing.                                                                           |

@@ -11,6 +11,7 @@ These conventions apply to each JSDoc in `src`, to `README.md`, to each file in 
 
 The language is English in the style of ASD-STE100 (Simplified Technical English), with American spelling.
 The American spelling also applies to each comment in the code.
+`npm run lint` checks the JSDoc, `docs` and `.claude` with `scripts/lint-docs.mjs`. It does not read `README.md` and `CHANGELOG.md`.
 
 ## Words
 

@@ -5,8 +5,8 @@ import { findVariableAsync } from './findVariableAsync'
 /**
  * A copy of a solid paint with its color bound to the variable of a reference, for example a row of `VariableCatalog`.
  * A variable of a library gets an import first.
- * The result is the same paint when the variable does not resolve or Figma refuses the binding, for example for a variable that
- * is not `COLOR`.
+ * The result is the same paint when the variable does not resolve or Figma refuses the binding.
+ * Figma refuses it, for example, for a variable that is not `COLOR`.
  *
  * A paint is a value, not a node. Put the result into `fills` or `strokes` of the node.
  *

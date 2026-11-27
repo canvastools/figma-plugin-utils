@@ -54,10 +54,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check the format
-        run: npm run format:check
-
-      # Lint, typecheck, build: the same command as on a local machine.
+      # Format check, lint, typecheck, build: the same command as on a local machine.
       - name: Build
         run: npm run prod
 
